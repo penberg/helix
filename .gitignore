@@ -1,0 +1,14 @@
+#
+# Build artifacts:
+#
+/libhelix.a
+/helix-trace
+
+#
+# CMake-generated:
+#
+/CMakeCache.txt
+/CMakeFiles
+/Makefile
+/cmake_install.cmake
+/install_manifest.txt
