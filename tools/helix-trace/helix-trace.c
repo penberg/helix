@@ -8,6 +8,7 @@
 static const char *program;
 
 struct config {
+	const char *symbol;
 	const char *multicast_proto;
 	const char *multicast_addr;
 	int multicast_port;
@@ -20,9 +21,38 @@ static uv_buf_t alloc_packet(uv_handle_t* handle, size_t suggested_size)
 	return uv_buf_init(rx_buffer, sizeof(rx_buffer));
 }
 
+static void print_top(HelixOrderBookRef ob)
+{
+#if 0
+    uint64_t timestamp_in_sec = ob.timestamp() / 1000;
+    uint64_t hours   = timestamp_in_sec / 60 / 60;
+    uint64_t minutes = (timestamp_in_sec - (hours * 60 * 60)) / 60;
+    uint64_t seconds = (timestamp_in_sec - (hours * 60 * 60) - (minutes * 60));
+#endif
+
+    if (HelixOrderBookState(ob) == HELIX_TRADING_STATE_TRADING) {
+        printf("%s |\n",
+            HelixOrderBookSymbol(ob)
+            );
+#if 0
+        printf("%s | %02lu:%02lu:%02lu %lu | ORDER BOOK | %6lu  %.3f  %.3f  %-6lu |\n",
+            ob.symbol().c_str(), hours, minutes, seconds, ob.timestamp(),
+            ob.bid_size(0), (double)ob.bid_price(0)/10000.0,
+            (double)ob.ask_price(0)/10000.0, ob.ask_size(0));
+#endif
+    }
+}
+
+static void process_event(HelixOrderBookRef ob)
+{
+	print_top(ob);
+}
+
 static void recv_packet(uv_udp_t* handle, ssize_t nread, uv_buf_t buf, struct sockaddr* addr, unsigned flags)
 {
-	HelixSessionProcessPacket(NULL, buf.base, nread);
+	if (nread > 0) {
+		HelixSessionProcessPacket(handle->data, buf.base, nread);
+	}
 }
 
 static void libuv_error(const char *s)
@@ -40,6 +70,7 @@ static void usage(void)
 	fprintf(stdout,
 		"usage: %s [options]\n"
 		"  options:\n"
+		"    -s, --symbol symbol          Ticker symbol to listen to.\n"
 		"    -c, --multicast-proto proto  UDP multicast protocol listen to.\n"
 		"    -a, --multicast-addr addr    UDP multicast address to listen to.\n"
 		"    -p, --multicast-port port    UDP multicast port to listen to.\n"
@@ -49,6 +80,7 @@ static void usage(void)
 }
 
 static struct option trace_options[] = {
+	{"symbol",          required_argument, 0, 's'},
 	{"multicast-proto", required_argument, 0, 'c'},
 	{"multicast-addr",  required_argument, 0, 'a'},
 	{"multicast-port",  required_argument, 0, 'p'},
@@ -62,11 +94,14 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 		int opt_idx = 0;
 		int c;
 
-		c = getopt_long(argc, argv, "c:a:p:h", trace_options, &opt_idx);
+		c = getopt_long(argc, argv, "s:c:a:p:h", trace_options, &opt_idx);
 		if (c == -1)
 			break;
 
 		switch (c) {
+		case 's':
+			cfg->symbol = optarg;
+			break;
 		case 'c':
 			cfg->multicast_proto = optarg;
 			break;
@@ -86,15 +121,21 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 
 int main(int argc, char *argv[])
 {
-	struct config cfg = {};
+	HelixSessionRef session;
 	struct sockaddr_in addr;
-	HelixProtocol proto;
+	HelixProtocolRef proto;
+	struct config cfg = {};
 	uv_udp_t socket;
 	int err;
 
 	program = basename(argv[0]);
 
 	parse_options(&cfg, argc, argv);
+
+	if (!cfg.symbol) {
+		fprintf(stderr, "error: symbol is not specified. Use the '-s' option to specify it.\n");
+		exit(1);
+	}
 
 	if (!cfg.multicast_proto) {
 		fprintf(stderr, "error: multicast protocol is not specified. Use the '-c' option to specify it.\n");
@@ -117,10 +158,17 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
+	session = HelixSessionCreate(proto, cfg.symbol, process_event);
+	if (!proto) {
+		fprintf(stderr, "error: unable to create new session\n");
+		exit(1);
+	}
+
 	err = uv_udp_init(uv_default_loop(), &socket);
 	if (err) {
 		libuv_error("uv_udp_init");
 	}
+	socket.data = session;
 
 	addr = uv_ip4_addr("0.0.0.0", cfg.multicast_port);
 
