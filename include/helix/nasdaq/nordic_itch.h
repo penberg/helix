@@ -10,11 +10,11 @@
 #include <vector>
 #include <string>
 
-class moldudp_session;
-
 namespace helix {
 
 namespace nasdaq {
+
+class moldudp_session;
 
 class nordic_itch_session : public core::session {
 private:

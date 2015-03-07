@@ -4,6 +4,10 @@
 
 using namespace std;
 
+namespace helix {
+
+namespace nasdaq {
+
 moldudp_session::moldudp_session(shared_ptr<message_parser> parser)
     : _parser(parser)
     , _seq_num{1}
@@ -37,4 +41,8 @@ void moldudp_session::parse(const char *buf, size_t len)
     }
 
     assert(p == end);
+}
+
+}
+
 }

@@ -25,6 +25,10 @@
 #include <cstdint>
 #include <memory>
 
+namespace helix {
+
+namespace nasdaq {
+
 struct moldudp_header {
     char     Session[10];
     uint32_t SequenceNumber;
@@ -44,3 +48,7 @@ public:
 
     void parse(const char *p, size_t size);
 };
+
+}
+
+}
