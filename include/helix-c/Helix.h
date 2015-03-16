@@ -2,6 +2,7 @@
 #define HELIX_C_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,6 +27,16 @@ typedef enum {
 HelixTradingState HelixOrderBookState(HelixOrderBookRef);
 
 const char *HelixOrderBookSymbol(HelixOrderBookRef);
+
+uint64_t HelixOrderBookTimestamp(HelixOrderBookRef);
+
+uint64_t HelixOrderBookBidPrice(HelixOrderBookRef, size_t);
+
+uint64_t HelixOrderBookBidSize(HelixOrderBookRef, size_t);
+
+uint64_t HelixOrderBookAskPrice(HelixOrderBookRef, size_t);
+
+uint64_t HelixOrderBookAskSize(HelixOrderBookRef, size_t);
 
 /**
  * Lookup a market data protocol.

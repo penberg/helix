@@ -66,6 +66,31 @@ const char *HelixOrderBookSymbol(HelixOrderBookRef ob)
 	return unwrap(ob)->symbol().c_str();
 }
 
+uint64_t HelixOrderBookTimestamp(HelixOrderBookRef ob)
+{
+	return unwrap(ob)->timestamp();
+}
+
+uint64_t HelixOrderBookBidPrice(HelixOrderBookRef ob, size_t level)
+{
+	return unwrap(ob)->bid_price(level);
+}
+
+uint64_t HelixOrderBookBidSize(HelixOrderBookRef ob, size_t level)
+{
+	return unwrap(ob)->bid_size(level);
+}
+
+uint64_t HelixOrderBookAskPrice(HelixOrderBookRef ob, size_t level)
+{
+	return unwrap(ob)->ask_price(level);
+}
+
+uint64_t HelixOrderBookAskSize(HelixOrderBookRef ob, size_t level)
+{
+	return unwrap(ob)->ask_size(level);
+}
+
 HelixTradingState HelixOrderBookState(HelixOrderBookRef ob)
 {
 	switch (unwrap(ob)->state()) {

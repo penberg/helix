@@ -23,23 +23,21 @@ static uv_buf_t alloc_packet(uv_handle_t* handle, size_t suggested_size)
 
 static void print_top(HelixOrderBookRef ob)
 {
-#if 0
-    uint64_t timestamp_in_sec = ob.timestamp() / 1000;
+    uint64_t timestamp = HelixOrderBookTimestamp(ob);
+    uint64_t timestamp_in_sec = timestamp / 1000;
     uint64_t hours   = timestamp_in_sec / 60 / 60;
     uint64_t minutes = (timestamp_in_sec - (hours * 60 * 60)) / 60;
     uint64_t seconds = (timestamp_in_sec - (hours * 60 * 60) - (minutes * 60));
-#endif
 
     if (HelixOrderBookState(ob) == HELIX_TRADING_STATE_TRADING) {
-        printf("%s |\n",
-            HelixOrderBookSymbol(ob)
+        printf("%s | %02lu:%02lu:%02lu %lu | %6lu  %.3f  %.3f  %-6lu |\n",
+            HelixOrderBookSymbol(ob),
+            hours, minutes, seconds, timestamp,
+            HelixOrderBookBidSize(ob, 0),
+            (double)HelixOrderBookBidPrice(ob, 0)/10000.0,
+            (double)HelixOrderBookAskPrice(ob, 0)/10000.0,
+            HelixOrderBookAskSize(ob, 0)
             );
-#if 0
-        printf("%s | %02lu:%02lu:%02lu %lu | ORDER BOOK | %6lu  %.3f  %.3f  %-6lu |\n",
-            ob.symbol().c_str(), hours, minutes, seconds, ob.timestamp(),
-            ob.bid_size(0), (double)ob.bid_price(0)/10000.0,
-            (double)ob.ask_price(0)/10000.0, ob.ask_size(0));
-#endif
     }
 }
 
