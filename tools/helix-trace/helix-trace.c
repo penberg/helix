@@ -21,27 +21,27 @@ static uv_buf_t alloc_packet(uv_handle_t* handle, size_t suggested_size)
 	return uv_buf_init(rx_buffer, sizeof(rx_buffer));
 }
 
-static void print_top(HelixOrderBookRef ob)
+static void print_top(helix_order_book_t ob)
 {
-    uint64_t timestamp = HelixOrderBookTimestamp(ob);
+    uint64_t timestamp = helix_order_book_timestamp(ob);
     uint64_t timestamp_in_sec = timestamp / 1000;
     uint64_t hours   = timestamp_in_sec / 60 / 60;
     uint64_t minutes = (timestamp_in_sec - (hours * 60 * 60)) / 60;
     uint64_t seconds = (timestamp_in_sec - (hours * 60 * 60) - (minutes * 60));
 
-    if (HelixOrderBookState(ob) == HELIX_TRADING_STATE_TRADING) {
+    if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
         printf("%s | %02lu:%02lu:%02lu %lu | %6lu  %.3f  %.3f  %-6lu |\n",
-            HelixOrderBookSymbol(ob),
+            helix_order_book_symbol(ob),
             hours, minutes, seconds, timestamp,
-            HelixOrderBookBidSize(ob, 0),
-            (double)HelixOrderBookBidPrice(ob, 0)/10000.0,
-            (double)HelixOrderBookAskPrice(ob, 0)/10000.0,
-            HelixOrderBookAskSize(ob, 0)
+            helix_order_book_bid_size(ob, 0),
+            (double)helix_order_book_bid_price(ob, 0)/10000.0,
+            (double)helix_order_book_ask_price(ob, 0)/10000.0,
+            helix_order_book_ask_size(ob, 0)
             );
     }
 }
 
-static void process_event(HelixOrderBookRef ob)
+static void process_event(helix_order_book_t ob)
 {
 	print_top(ob);
 }
@@ -49,7 +49,7 @@ static void process_event(HelixOrderBookRef ob)
 static void recv_packet(uv_udp_t* handle, ssize_t nread, uv_buf_t buf, struct sockaddr* addr, unsigned flags)
 {
 	if (nread > 0) {
-		HelixSessionProcessPacket(handle->data, buf.base, nread);
+		helix_session_process_packet(handle->data, buf.base, nread);
 	}
 }
 
@@ -119,9 +119,9 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 
 int main(int argc, char *argv[])
 {
-	HelixSessionRef session;
+	helix_session_t session;
 	struct sockaddr_in addr;
-	HelixProtocolRef proto;
+	helix_protocol_t proto;
 	struct config cfg = {};
 	uv_udp_t socket;
 	int err;
@@ -150,13 +150,13 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	proto = HelixProtocolLookup(cfg.multicast_proto);
+	proto = helix_protocol_lookup(cfg.multicast_proto);
 	if (!proto) {
 		fprintf(stderr, "error: protocol '%s' is not supported\n", cfg.multicast_proto);
 		exit(1);
 	}
 
-	session = HelixSessionCreate(proto, cfg.symbol, process_event);
+	session = helix_session_create(proto, cfg.symbol, process_event);
 	if (!proto) {
 		fprintf(stderr, "error: unable to create new session\n");
 		exit(1);
