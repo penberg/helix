@@ -11,7 +11,8 @@ data.
 
 ### Core
 
-* [x] C API bindings
+* [x] C++ API
+* [x] C binding
 * [x] Order book view
 * [x] Data normalization
 * [x] Data filtering
