@@ -1,4 +1,4 @@
-#include "helix-c/Helix.h"
+#include "helix-c/helix.h"
 
 #include "helix/nasdaq/nordic_itch.h"
 
