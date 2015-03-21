@@ -99,4 +99,5 @@ HelixTradingState HelixOrderBookState(HelixOrderBookRef ob)
 	case helix::core::trading_state::trading: return HELIX_TRADING_STATE_TRADING;
 	case helix::core::trading_state::auction: return HELIX_TRADING_STATE_AUCTION;
 	}
+        assert(0);
 }
