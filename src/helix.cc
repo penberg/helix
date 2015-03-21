@@ -1,6 +1,6 @@
 #include "helix-c/helix.h"
 
-#include "helix/nasdaq/nordic_itch.h"
+#include "helix/nasdaq/nordic_itch.hh"
 
 #include <cassert>
 #include <cstring>
