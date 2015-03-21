@@ -2,6 +2,21 @@ cmake_minimum_required(VERSION 2.8)
 
 project(helix)
 
+set(VERSION_MAJOR   0   CACHE STRING "Project major version number.")
+set(VERSION_MINOR   1   CACHE STRING "Project minor version number.")
+set(VERSION_PATCH   0   CACHE STRING "Project patch version number.")
+mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH)
+
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+  add_custom_target(doc
+  ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  COMMENT "Generate API reference with Doxygen" VERBATIM
+  )
+endif(DOXYGEN_FOUND)
+
 set(CMAKE_CFLAGS "-Iinclude -Wall -O3 -g -std=c11")
 set(CMAKE_CXX_FLAGS "-Iinclude -Wall -O3 -g -std=c++14")
 

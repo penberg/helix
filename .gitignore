@@ -9,6 +9,12 @@
 #
 /CMakeCache.txt
 /CMakeFiles
+/Doxyfile
 /Makefile
 /cmake_install.cmake
 /install_manifest.txt
+
+#
+# Doxygen-generated:
+#
+/html
