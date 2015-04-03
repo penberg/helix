@@ -24,29 +24,29 @@ static uv_buf_t alloc_packet(uv_handle_t* handle, size_t suggested_size)
 
 static void print_top(helix_order_book_t ob)
 {
-    uint64_t timestamp = helix_order_book_timestamp(ob);
-    uint64_t timestamp_in_sec = timestamp / 1000;
-    uint64_t hours   = timestamp_in_sec / 60 / 60;
-    uint64_t minutes = (timestamp_in_sec - (hours * 60 * 60)) / 60;
-    uint64_t seconds = (timestamp_in_sec - (hours * 60 * 60) - (minutes * 60));
+	uint64_t timestamp = helix_order_book_timestamp(ob);
+	uint64_t timestamp_in_sec = timestamp / 1000;
+	uint64_t hours   = timestamp_in_sec / 60 / 60;
+	uint64_t minutes = (timestamp_in_sec - (hours * 60 * 60)) / 60;
+	uint64_t seconds = (timestamp_in_sec - (hours * 60 * 60) - (minutes * 60));
 
-    if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
-        char buffer[1024];
+	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
+		char buffer[1024];
 
-        snprintf(buffer, sizeof(buffer), "%16s | %02lu:%02lu:%02lu %8lu | %6lu  %.3f  %.3f  %-6lu |\n",
-            helix_order_book_symbol(ob),
-            hours, minutes, seconds, timestamp,
-            helix_order_book_bid_size(ob, 0),
-            (double)helix_order_book_bid_price(ob, 0)/10000.0,
-            (double)helix_order_book_ask_price(ob, 0)/10000.0,
-            helix_order_book_ask_size(ob, 0)
-            );
+		snprintf(buffer, sizeof(buffer), "%16s | %02lu:%02lu:%02lu %8lu | %6lu  %.3f  %.3f  %-6lu |\n",
+			helix_order_book_symbol(ob),
+			hours, minutes, seconds, timestamp,
+			helix_order_book_bid_size(ob, 0),
+			(double)helix_order_book_bid_price(ob, 0)/10000.0,
+			(double)helix_order_book_ask_price(ob, 0)/10000.0,
+			helix_order_book_ask_size(ob, 0)
+			);
 
-        clear();
-        move(0, 0);
-        printw(buffer);
-        refresh();
-    }
+		clear();
+		move(0, 0);
+		printw(buffer);
+		refresh();
+	}
 }
 
 static void process_event(helix_order_book_t ob)
