@@ -17,7 +17,7 @@ if(DOXYGEN_FOUND)
   )
 endif(DOXYGEN_FOUND)
 
-set(CMAKE_CFLAGS "-Iinclude -Wall -O3 -g -std=c11")
+set(CMAKE_C_FLAGS "-Iinclude -Wall -O3 -g -std=gnu11")
 set(CMAKE_CXX_FLAGS "-Iinclude -Wall -O3 -g -std=c++14")
 
 set(libSrcs ${libSrcs}
