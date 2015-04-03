@@ -29,13 +29,14 @@ static void print_top(helix_order_book_t ob)
 	uint64_t hours   = timestamp_in_sec / 60 / 60;
 	uint64_t minutes = (timestamp_in_sec - (hours * 60 * 60)) / 60;
 	uint64_t seconds = (timestamp_in_sec - (hours * 60 * 60) - (minutes * 60));
+	uint64_t msecs   = timestamp - (timestamp_in_sec * 1000);
 
 	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
 		clear();
 		move(0, 0);
-		printw("%16s %02lu:%02lu:%02lu (%8lu)\n",
+		printw("%16s    %02lu:%02lu:%02lu.%03lu\n",
 			helix_order_book_symbol(ob),
-			hours, minutes, seconds, timestamp
+			hours, minutes, seconds, msecs
 			);
 		for (unsigned i = 0; i < 5; i++) {
 			move(i+1, 0);
