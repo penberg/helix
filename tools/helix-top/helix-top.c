@@ -31,20 +31,21 @@ static void print_top(helix_order_book_t ob)
 	uint64_t seconds = (timestamp_in_sec - (hours * 60 * 60) - (minutes * 60));
 
 	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
-		char buffer[1024];
-
-		snprintf(buffer, sizeof(buffer), "%16s | %02lu:%02lu:%02lu %8lu | %6lu  %.3f  %.3f  %-6lu |\n",
-			helix_order_book_symbol(ob),
-			hours, minutes, seconds, timestamp,
-			helix_order_book_bid_size(ob, 0),
-			(double)helix_order_book_bid_price(ob, 0)/10000.0,
-			(double)helix_order_book_ask_price(ob, 0)/10000.0,
-			helix_order_book_ask_size(ob, 0)
-			);
-
 		clear();
 		move(0, 0);
-		printw(buffer);
+		printw("%16s %02lu:%02lu:%02lu (%8lu)\n",
+			helix_order_book_symbol(ob),
+			hours, minutes, seconds, timestamp
+			);
+		for (unsigned i = 0; i < 5; i++) {
+			move(i+1, 0);
+			printw("| %6lu  %.3f  %.3f  %-6lu |\n",
+				helix_order_book_bid_size(ob, i),
+				(double)helix_order_book_bid_price(ob, i)/10000.0,
+				(double)helix_order_book_ask_price(ob, i)/10000.0,
+				helix_order_book_ask_size(ob, i)
+				);
+		}
 		refresh();
 	}
 }
