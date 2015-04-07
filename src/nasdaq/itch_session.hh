@@ -44,8 +44,10 @@ private:
     uint64_t time_sec;
     //! Milliseconds since @time_sec.
     uint64_t time_msec;
-    //! Callback function for processing events.
-    core::callback _process;
+    //! Callback function for processing order book events.
+    core::ob_callback _process_ob;
+    //! Callback function for processing trade events.
+    core::trade_callback _process_trade;
     //! A map of order books by order book ID.
     std::unordered_map<uint64_t, helix::core::order_book> order_book_id_map;
     //! A map of order books by order ID.
@@ -53,8 +55,9 @@ private:
     //! A set of symbols that we are interested in.
     std::set<std::string> _symbols;
 public:
-    itch_session(const std::vector<std::string>& symbols, core::callback process)
-        : _process{process}
+    itch_session(const std::vector<std::string>& symbols, core::ob_callback process_ob, core::trade_callback process_trade)
+        : _process_ob{process_ob}
+        , _process_trade{process_trade}
     {
         for (auto sym : symbols) {
             auto padding = itch_symbol_len - sym.size();

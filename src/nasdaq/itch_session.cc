@@ -91,7 +91,7 @@ void itch_session::parse(const char* buf, size_t len)
 
             order_id_map.insert({order_id, ob});
             ob.set_timestamp(timestamp());
-            _process(ob);
+            _process_ob(ob);
         }
         break;
     }
@@ -113,7 +113,7 @@ void itch_session::parse(const char* buf, size_t len)
 
             order_id_map.insert({order_id, ob});
             ob.set_timestamp(timestamp());
-            _process(ob);
+            _process_ob(ob);
         }
         break;
     }
@@ -125,9 +125,10 @@ void itch_session::parse(const char* buf, size_t len)
         auto it = order_id_map.find(order_id);
         if (it != order_id_map.end()) {
             auto& ob = it->second;
-            ob.execute(order_id, quantity);
+            uint64_t price = ob.execute(order_id, quantity);
             ob.set_timestamp(timestamp());
-            _process(ob);
+            _process_ob(ob);
+            _process_trade(trade{ob.symbol(), timestamp(), price});
         }
         break;
     }
@@ -135,13 +136,15 @@ void itch_session::parse(const char* buf, size_t len)
         auto m = reinterpret_cast<const itch_order_executed_with_price*>(buf);
         uint64_t order_id = itch_uatoi(m->OrderReferenceNumber, sizeof(m->OrderReferenceNumber));
         uint64_t quantity = itch_uatoi(m->ExecutedQuantity, sizeof(m->ExecutedQuantity));
+        uint64_t price = itch_uatoi(m->TradePrice, sizeof(m->TradePrice));
 
         auto it = order_id_map.find(order_id);
         if (it != order_id_map.end()) {
             auto& ob = it->second;
             ob.execute(order_id, quantity);
             ob.set_timestamp(timestamp());
-            _process(ob);
+            _process_ob(ob);
+            _process_trade(trade{ob.symbol(), timestamp(), price});
         }
         break;
     }
@@ -155,7 +158,7 @@ void itch_session::parse(const char* buf, size_t len)
             auto& ob = it->second;
             ob.cancel(order_id, quantity);
             ob.set_timestamp(timestamp());
-            _process(ob);
+            _process_ob(ob);
         }
         break;
     }
@@ -168,7 +171,7 @@ void itch_session::parse(const char* buf, size_t len)
             auto& ob = it->second;
             ob.remove(order_id);
             ob.set_timestamp(timestamp());
-            _process(ob);
+            _process_ob(ob);
         }
         break;
     }
@@ -182,7 +185,7 @@ void itch_session::parse(const char* buf, size_t len)
             auto& ob = it->second;
             ob.execute(order_id, quantity);
             ob.set_timestamp(timestamp());
-            _process(ob);
+            _process_ob(ob);
         }
         break;
     }

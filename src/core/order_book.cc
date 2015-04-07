@@ -57,18 +57,20 @@ void order_book::cancel(uint64_t order_id, uint64_t quantity)
     }
 }
 
-void order_book::execute(uint64_t order_id, uint64_t quantity)
+uint64_t order_book::execute(uint64_t order_id, uint64_t quantity)
 {
     auto it = _orders.find(order_id);
     if (it == _orders.end()) {
         throw invalid_argument(string("invalid order id: ") + to_string(order_id));
     }
     auto& order = it->second;
+    uint64_t price = order.price;
     order.quantity -= quantity;
     order.level->size -= quantity;
     if (!order.quantity) {
         remove(it);
     }
+    return price;
 }
 
 void order_book::remove(uint64_t order_id)

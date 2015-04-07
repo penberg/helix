@@ -41,9 +41,14 @@ static void print_top(helix_order_book_t ob)
 	}
 }
 
-static void process_event(helix_order_book_t ob)
+static void process_ob_event(helix_order_book_t ob)
 {
 	print_top(ob);
+}
+
+static void process_trade_event(helix_trade_t trade)
+{
+	printf("%s | %.3f |\n", helix_trade_symbol(trade), helix_trade_price(trade)/10000.0);
 }
 
 static void recv_packet(uv_udp_t* handle, ssize_t nread, uv_buf_t buf, struct sockaddr* addr, unsigned flags)
@@ -156,7 +161,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	session = helix_session_create(proto, cfg.symbol, process_event);
+	session = helix_session_create(proto, cfg.symbol, process_ob_event, process_trade_event);
 	if (!proto) {
 		fprintf(stderr, "error: unable to create new session\n");
 		exit(1);

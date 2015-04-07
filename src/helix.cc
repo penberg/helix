@@ -19,6 +19,16 @@ inline helix::core::order_book* unwrap(helix_order_book_t ob)
 	return reinterpret_cast<helix::core::order_book*>(ob);
 }
 
+inline helix_trade_t wrap(helix::core::trade* ob)
+{
+	return reinterpret_cast<helix_trade_t>(ob);
+}
+
+inline helix::core::trade* unwrap(helix_trade_t ob)
+{
+	return reinterpret_cast<helix::core::trade*>(ob);
+}
+
 inline helix_protocol_t wrap(helix::core::protocol* proto)
 {
 	return reinterpret_cast<helix_protocol_t>(proto);
@@ -47,12 +57,14 @@ helix_protocol_t helix_protocol_lookup(const char *name)
 	return NULL;
 }
 
-helix_session_t helix_session_create(helix_protocol_t proto, const char *symbol, helix_callback_t callback)
+helix_session_t helix_session_create(helix_protocol_t proto, const char *symbol, helix_order_book_callback_t ob_callback, helix_trade_callback_t trade_callback)
 {
 	vector<string> symbols;
 	symbols.emplace_back(string{symbol});
-	return wrap(unwrap(proto)->new_session(symbols, [callback](const helix::core::order_book& ob) {
-            callback(wrap(const_cast<helix::core::order_book*>(&ob)));
+	return wrap(unwrap(proto)->new_session(symbols, [ob_callback](const helix::core::order_book& ob) {
+            ob_callback(wrap(const_cast<helix::core::order_book*>(&ob)));
+        }, [trade_callback](const helix::core::trade& trade) {
+            trade_callback(wrap(const_cast<helix::core::trade*>(&trade)));
         }));
 }
 
@@ -100,4 +112,19 @@ helix_trading_state_t helix_order_book_state(helix_order_book_t ob)
 	case helix::core::trading_state::auction: return HELIX_TRADING_STATE_AUCTION;
 	}
         assert(0);
+}
+
+const char *helix_trade_symbol(helix_trade_t trade)
+{
+	return unwrap(trade)->symbol.c_str();
+}
+
+uint64_t helix_trade_timestamp(helix_trade_t trade)
+{
+	return unwrap(trade)->timestamp;
+}
+
+uint64_t helix_trade_price(helix_trade_t trade)
+{
+	return unwrap(trade)->price;
 }

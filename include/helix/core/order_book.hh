@@ -105,7 +105,7 @@ public:
 
     void add(order&& order);
     void cancel(uint64_t order_id, uint64_t quantity);
-    void execute(uint64_t order_id, uint64_t quantity);
+    uint64_t execute(uint64_t order_id, uint64_t quantity);
     void remove(uint64_t order_id);
 
     uint64_t bid_price(size_t level) const;

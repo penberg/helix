@@ -49,10 +49,22 @@ typedef struct helix_opaque_subscription *helix_subscription_t;
 typedef struct helix_opaque_order_book *helix_order_book_t;
 
 /*!
- * @typedef  helix_callback_t
- * @abstract Type of a order book update callback.
+ * @typedef  helix_trade_t
+ * @abstract Type of a trade.
  */
-typedef void (*helix_callback_t)(helix_order_book_t);
+typedef struct helix_opaque_trade *helix_trade_t;
+
+/*!
+ * @typedef  helix_order_book_callback_t
+ * @abstract Type of an order book update callback.
+ */
+typedef void (*helix_order_book_callback_t)(helix_order_book_t);
+
+/*!
+ * @typedef  helix_trade_callback_t
+ * @abstract Type of a trade callback.
+ */
+typedef void (*helix_trade_callback_t)(helix_trade_t);
 
 /*!
  * @enum     helix_trading_state_t
@@ -106,6 +118,21 @@ uint64_t helix_order_book_ask_price(helix_order_book_t, size_t);
 uint64_t helix_order_book_ask_size(helix_order_book_t, size_t);
 
 /*!
+ * @abstract Returns the trade symbol.
+ */
+const char *helix_trade_symbol(helix_trade_t);
+
+/*!
+ * @abstract Returns the trade timestamp.
+ */
+uint64_t helix_trade_timestamp(helix_trade_t);
+
+/*!
+ * @abstract Returns the price of a trade.
+ */
+uint64_t helix_trade_price(helix_trade_t);
+
+/*!
  * @abstract Lookup a market data protocol.
  */
 helix_protocol_t helix_protocol_lookup(const char *name);
@@ -113,7 +140,7 @@ helix_protocol_t helix_protocol_lookup(const char *name);
 /*!
  * Create a new session.
  */
-helix_session_t helix_session_create(helix_protocol_t, const char *symbol, helix_callback_t);
+helix_session_t helix_session_create(helix_protocol_t, const char *symbol, helix_order_book_callback_t, helix_trade_callback_t);
 
 /*!
  * @abstract Process a packet for a session.

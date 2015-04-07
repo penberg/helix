@@ -16,7 +16,21 @@ namespace core {
 
 class order_book;
 
-using callback = std::function<void(const order_book&)>;
+struct trade {
+    std::string symbol;
+    uint64_t    timestamp;
+    uint64_t    price;
+
+    trade(const std::string& symbol_, uint64_t timestamp_, uint64_t price_)
+        : symbol{symbol_}
+        , timestamp{timestamp_}
+        , price{price_}
+    { }
+};
+
+using ob_callback = std::function<void(const order_book&)>;
+
+using trade_callback = std::function<void(const trade&)>;
 
 // FIXME: consolidate these
 
@@ -37,9 +51,6 @@ struct connection {
 struct error {
 };
 
-struct trade {
-};
-
 class session {
 public:
     virtual void process_packet(const char *buf, size_t size) = 0;
@@ -47,7 +58,7 @@ public:
 
 class protocol {
 public:
-    virtual session* new_session(const std::vector<std::string>&, callback) = 0;
+    virtual session* new_session(const std::vector<std::string>&, ob_callback, trade_callback) = 0;
 };
 
 }
