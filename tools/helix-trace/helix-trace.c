@@ -2,16 +2,21 @@
 #include <getopt.h>
 #include <libgen.h>
 #include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 #include <stdio.h>
 #include <uv.h>
 
 static const char *program;
+
+FILE* output;
 
 struct config {
 	const char *symbol;
 	const char *multicast_proto;
 	const char *multicast_addr;
 	int multicast_port;
+	const char *output;
 };
 
 static uv_buf_t alloc_packet(uv_handle_t* handle, size_t suggested_size)
@@ -30,7 +35,7 @@ static void print_top(helix_order_book_t ob)
 	uint64_t seconds = (timestamp_in_sec - (hours * 60 * 60) - (minutes * 60));
 
 	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
-		printf("%s | %02lu:%02lu:%02lu %lu | %6lu  %.3f  %.3f  %-6lu |\n",
+		fprintf(output, "%s | %02lu:%02lu:%02lu %lu | %6lu  %.3f  %.3f  %-6lu |\n",
 			helix_order_book_symbol(ob),
 			hours, minutes, seconds, timestamp,
 			helix_order_book_bid_size(ob, 0),
@@ -48,7 +53,7 @@ static void process_ob_event(helix_order_book_t ob)
 
 static void process_trade_event(helix_trade_t trade)
 {
-	printf("%s | %.3f |\n", helix_trade_symbol(trade), helix_trade_price(trade)/10000.0);
+	fprintf(output, "%s | %.3f |\n", helix_trade_symbol(trade), helix_trade_price(trade)/10000.0);
 }
 
 static void recv_packet(uv_udp_t* handle, ssize_t nread, uv_buf_t buf, struct sockaddr* addr, unsigned flags)
@@ -97,7 +102,7 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 		int opt_idx = 0;
 		int c;
 
-		c = getopt_long(argc, argv, "s:c:a:p:h", trace_options, &opt_idx);
+		c = getopt_long(argc, argv, "s:c:a:o:p:h", trace_options, &opt_idx);
 		if (c == -1)
 			break;
 
@@ -110,6 +115,9 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 			break;
 		case 'a':
 			cfg->multicast_addr = optarg;
+			break;
+		case 'o':
+			cfg->output = optarg;
 			break;
 		case 'p':
 			cfg->multicast_port = strtol(optarg, NULL, 10);
@@ -153,6 +161,16 @@ int main(int argc, char *argv[])
 	if (!cfg.multicast_port) {
 		fprintf(stderr, "error: multicast port is not specified. Use the '-p' option to specify it.\n");
 		exit(1);
+	}
+
+	if (cfg.output) {
+		output = fopen(cfg.output, "w");
+		if (!output) {
+			fprintf(stderr, "error: %s: %s\n", cfg.output, strerror(errno));
+			exit(1);
+		}
+	} else {
+		output = stdout;
 	}
 
 	proto = helix_protocol_lookup(cfg.multicast_proto);
