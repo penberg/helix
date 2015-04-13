@@ -186,15 +186,13 @@ void itch_session::parse(const char* buf, size_t len)
     }
     case 'P': {
         auto m = reinterpret_cast<const itch_trade*>(buf);
-        uint64_t order_id = itch_uatoi(m->OrderReferenceNumber, sizeof(m->OrderReferenceNumber));
-        uint64_t quantity = itch_uatoi(m->Quantity, sizeof(m->Quantity));
+        auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
+        uint64_t trade_price = itch_uatoi(m->TradePrice, sizeof(m->TradePrice));
 
-        auto it = order_id_map.find(order_id);
-        if (it != order_id_map.end()) {
+        auto it = order_book_id_map.find(order_book_id);
+        if (it != order_book_id_map.end()) {
             auto& ob = it->second;
-            ob.execute(order_id, quantity);
-            ob.set_timestamp(timestamp());
-            _process_ob(ob);
+            _process_trade(trade{ob.symbol(), timestamp(), trade_price, trade_sign::non_displayable});
         }
         break;
     }

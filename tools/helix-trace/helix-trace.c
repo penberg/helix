@@ -63,6 +63,7 @@ const char trade_sign(helix_trade_sign_t sign)
     case HELIX_TRADE_SIGN_BUYER_INITIATED:    return 'B';
     case HELIX_TRADE_SIGN_SELLER_INITIATED:   return 'S';
     case HELIX_TRADE_SIGN_CROSSING:           return 'C';
+    case HELIX_TRADE_SIGN_NON_DISPLAYABLE:    return 'N';
     default:
         return '?';
     }

@@ -135,6 +135,7 @@ helix_trade_sign_t helix_trade_sign(helix_trade_t trade)
 	case helix::core::trade_sign::buyer_initiated:    return HELIX_TRADE_SIGN_BUYER_INITIATED;
 	case helix::core::trade_sign::seller_initiated:   return HELIX_TRADE_SIGN_SELLER_INITIATED;
 	case helix::core::trade_sign::crossing:           return HELIX_TRADE_SIGN_CROSSING;
+	case helix::core::trade_sign::non_displayable:    return HELIX_TRADE_SIGN_NON_DISPLAYABLE;
 	}
         assert(0);
 }
