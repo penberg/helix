@@ -198,6 +198,18 @@ void itch_session::parse(const char* buf, size_t len)
         }
         break;
     }
+    case 'Q': {
+        auto m = reinterpret_cast<const itch_cross_trade*>(buf);
+        auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
+        uint64_t cross_price = itch_uatoi(m->CrossPrice, sizeof(m->CrossPrice));
+
+        auto it = order_book_id_map.find(order_book_id);
+        if (it != order_book_id_map.end()) {
+            auto& ob = it->second;
+            _process_trade(trade{ob.symbol(), timestamp(), cross_price, trade_sign::crossing});
+        }
+        break;
+    }
     default:
         break;
     }

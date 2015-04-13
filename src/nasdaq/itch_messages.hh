@@ -103,6 +103,16 @@ struct itch_trade {
     char CounterpartyParticipantID[4];
 };
 
+struct itch_cross_trade {
+    char MsgType;
+    char Quantity[9];
+    char OrderBook[6];
+    char CrossPrice[10];
+    char MatchNumber[9];
+    char CrossType;
+    char NumberOfTrades[10];
+};
+
 static inline uint64_t itch_uatoi(const char *p, size_t len)
 {
     uint64_t ret = 0;
