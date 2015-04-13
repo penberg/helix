@@ -92,8 +92,6 @@ typedef enum {
     HELIX_TRADE_SIGN_SELLER_INITIATED,
     /*! Trade was crossing. */
     HELIX_TRADE_SIGN_CROSSING,
-    /*! Trade was exchange-initiated. */
-    HELIX_TRADE_SIGN_EXCHANGE_INITIATED,
 } helix_trade_sign_t;
 
 /*!

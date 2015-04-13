@@ -20,7 +20,6 @@ enum class trade_sign {
     buyer_initiated,
     seller_initiated,
     crossing,
-    exchange_initiated,
 };
 
 struct trade {
