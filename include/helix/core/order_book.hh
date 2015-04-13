@@ -6,6 +6,7 @@
 
 #include <unordered_map>
 #include <cstdint>
+#include <utility>
 #include <memory>
 #include <list>
 #include <map>
@@ -105,7 +106,7 @@ public:
 
     void add(order&& order);
     void cancel(uint64_t order_id, uint64_t quantity);
-    uint64_t execute(uint64_t order_id, uint64_t quantity);
+    std::pair<uint64_t, side> execute(uint64_t order_id, uint64_t quantity);
     void remove(uint64_t order_id);
 
     uint64_t bid_price(size_t level) const;

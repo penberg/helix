@@ -16,15 +16,24 @@ namespace core {
 
 class order_book;
 
+enum class trade_sign {
+    buyer_initiated,
+    seller_initiated,
+    crossing,
+    exchange_initiated,
+};
+
 struct trade {
     std::string symbol;
     uint64_t    timestamp;
     uint64_t    price;
+    trade_sign  sign;
 
-    trade(const std::string& symbol_, uint64_t timestamp_, uint64_t price_)
+    trade(const std::string& symbol_, uint64_t timestamp_, uint64_t price_, trade_sign sign_)
         : symbol{symbol_}
         , timestamp{timestamp_}
         , price{price_}
+        , sign{sign_}
     { }
 };
 

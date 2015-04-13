@@ -57,7 +57,7 @@ void order_book::cancel(uint64_t order_id, uint64_t quantity)
     }
 }
 
-uint64_t order_book::execute(uint64_t order_id, uint64_t quantity)
+std::pair<uint64_t, side> order_book::execute(uint64_t order_id, uint64_t quantity)
 {
     auto it = _orders.find(order_id);
     if (it == _orders.end()) {
@@ -65,12 +65,13 @@ uint64_t order_book::execute(uint64_t order_id, uint64_t quantity)
     }
     auto& order = it->second;
     uint64_t price = order.price;
+    side s = order._side;
     order.quantity -= quantity;
     order.level->size -= quantity;
     if (!order.quantity) {
         remove(it);
     }
-    return price;
+    return std::make_pair(price, s);
 }
 
 void order_book::remove(uint64_t order_id)

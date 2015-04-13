@@ -57,9 +57,21 @@ static void fmt_pretty_ob(helix_order_book_t ob)
 	}
 }
 
+const char trade_sign(helix_trade_sign_t sign)
+{
+    switch (sign) {
+    case HELIX_TRADE_SIGN_BUYER_INITIATED:    return 'B';
+    case HELIX_TRADE_SIGN_SELLER_INITIATED:   return 'S';
+    case HELIX_TRADE_SIGN_CROSSING:           return 'C';
+    case HELIX_TRADE_SIGN_EXCHANGE_INITIATED: return 'E';
+    default:
+        return '?';
+    }
+}
+
 static void fmt_pretty_trade(helix_trade_t trade)
 {
-	fprintf(output, "%s | %.3f |\n", helix_trade_symbol(trade), helix_trade_price(trade)/10000.0);
+	fprintf(output, "%s | %.3f | %c | \n", helix_trade_symbol(trade), helix_trade_price(trade)/10000.0, trade_sign(helix_trade_sign(trade)));
 }
 
 struct trace_fmt_ops fmt_pretty_ops = {
@@ -70,13 +82,13 @@ struct trace_fmt_ops fmt_pretty_ops = {
 
 static void fmt_csv_header(void)
 {
-	fprintf(output, "Symbol,Timestamp,BidPrice,BidSize,AskPrice,AskSize,LastPrice\n");
+	fprintf(output, "Symbol,Timestamp,BidPrice,BidSize,AskPrice,AskSize,LastPrice,LastSign\n");
 }
 
 static void fmt_csv_ob(helix_order_book_t ob)
 {
 	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
-		fprintf(output, "%s,%lu,%f,%lu,%f,%lu,\n",
+		fprintf(output, "%s,%lu,%f,%lu,%f,%lu,,\n",
 			helix_order_book_symbol(ob),
 			helix_order_book_timestamp(ob),
 			(double)helix_order_book_bid_price(ob, 0)/10000.0,
@@ -89,8 +101,8 @@ static void fmt_csv_ob(helix_order_book_t ob)
 
 static void fmt_csv_trade(helix_trade_t trade)
 {
-	fprintf(output, "%s,%lu,,,,,%f\n",
-		helix_trade_symbol(trade), helix_trade_timestamp(trade), helix_trade_price(trade)/10000.0);
+	fprintf(output, "%s,%lu,,,,,%f,%c\n",
+		helix_trade_symbol(trade), helix_trade_timestamp(trade), helix_trade_price(trade)/10000.0, trade_sign(helix_trade_sign(trade)));
 }
 
 struct trace_fmt_ops fmt_csv_ops = {

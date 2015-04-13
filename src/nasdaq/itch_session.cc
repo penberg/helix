@@ -27,6 +27,15 @@ static side itch_side(char c)
     }
 }
 
+trade_sign itch_trade_sign(side s)
+{
+    switch (s) {
+    case side::buy:  return trade_sign::seller_initiated;
+    case side::sell: return trade_sign::buyer_initiated;
+    default:         throw invalid_argument(string("invalid argument"));
+    }
+}
+
 void itch_session::parse(const char* buf, size_t len)
 {
     auto* msg = reinterpret_cast<const itch_message*>(buf);
@@ -125,10 +134,10 @@ void itch_session::parse(const char* buf, size_t len)
         auto it = order_id_map.find(order_id);
         if (it != order_id_map.end()) {
             auto& ob = it->second;
-            uint64_t price = ob.execute(order_id, quantity);
+            auto result = ob.execute(order_id, quantity);
             ob.set_timestamp(timestamp());
             _process_ob(ob);
-            _process_trade(trade{ob.symbol(), timestamp(), price});
+            _process_trade(trade{ob.symbol(), timestamp(), result.first, itch_trade_sign(result.second)});
         }
         break;
     }
@@ -141,10 +150,10 @@ void itch_session::parse(const char* buf, size_t len)
         auto it = order_id_map.find(order_id);
         if (it != order_id_map.end()) {
             auto& ob = it->second;
-            ob.execute(order_id, quantity);
+            auto result = ob.execute(order_id, quantity);
             ob.set_timestamp(timestamp());
             _process_ob(ob);
-            _process_trade(trade{ob.symbol(), timestamp(), price});
+            _process_trade(trade{ob.symbol(), timestamp(), price, itch_trade_sign(result.second)});
         }
         break;
     }

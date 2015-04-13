@@ -82,6 +82,21 @@ typedef enum {
 } helix_trading_state_t;
 
 /*!
+ * @enum     helix_trade_sign_t
+ * @abstract Trade sign.
+ */
+typedef enum {
+    /*! Trade was buyer-initiated. */
+    HELIX_TRADE_SIGN_BUYER_INITIATED,
+    /*! Trade was seller-initiated. */
+    HELIX_TRADE_SIGN_SELLER_INITIATED,
+    /*! Trade was crossing. */
+    HELIX_TRADE_SIGN_CROSSING,
+    /*! Trade was exchange-initiated. */
+    HELIX_TRADE_SIGN_EXCHANGE_INITIATED,
+} helix_trade_sign_t;
+
+/*!
  * @abstract Returns the order book trading state.
  * @param    ob  Order book.
  */
@@ -126,6 +141,11 @@ const char *helix_trade_symbol(helix_trade_t);
  * @abstract Returns the trade timestamp.
  */
 uint64_t helix_trade_timestamp(helix_trade_t);
+
+/*!
+ * @abstract Returns the trade sign.
+ */
+helix_trade_sign_t helix_trade_sign(helix_trade_t);
 
 /*!
  * @abstract Returns the price of a trade.
