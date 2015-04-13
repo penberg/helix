@@ -137,6 +137,7 @@ static void usage(void)
 		"    -c, --multicast-proto proto  UDP multicast protocol listen to.\n"
 		"    -a, --multicast-addr addr    UDP multicast address to listen to.\n"
 		"    -p, --multicast-port port    UDP multicast port to listen to.\n"
+		"    -o, --output filename        Output filename.\n"
 		"    -f, --format format          Output format (pretty, csv).\n"
 		"    -h, --help                   display this help and exit\n",
 		program);
@@ -148,6 +149,7 @@ static struct option trace_options[] = {
 	{"multicast-proto", required_argument, 0, 'c'},
 	{"multicast-addr",  required_argument, 0, 'a'},
 	{"multicast-port",  required_argument, 0, 'p'},
+	{"output",          required_argument, 0, 'o'},
 	{"format",          required_argument, 0, 'f'},
 	{"help",            no_argument,       0, 'h'},
 	{0, 0, 0, 0}
