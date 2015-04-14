@@ -160,7 +160,12 @@ helix_protocol_t helix_protocol_lookup(const char *name);
 /*!
  * Create a new session.
  */
-helix_session_t helix_session_create(helix_protocol_t, const char *symbol, helix_order_book_callback_t, helix_trade_callback_t);
+helix_session_t helix_session_create(helix_protocol_t, const char *symbol, helix_order_book_callback_t, helix_trade_callback_t, void *data);
+
+/*!
+ * @abstract Returns session opaque context data.
+ */
+void *helix_session_data(helix_session_t);
 
 /*!
  * @abstract Process a packet for a session.

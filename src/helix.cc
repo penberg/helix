@@ -57,7 +57,8 @@ helix_protocol_t helix_protocol_lookup(const char *name)
 	return NULL;
 }
 
-helix_session_t helix_session_create(helix_protocol_t proto, const char *symbol, helix_order_book_callback_t ob_callback, helix_trade_callback_t trade_callback)
+helix_session_t
+helix_session_create(helix_protocol_t proto, const char *symbol, helix_order_book_callback_t ob_callback, helix_trade_callback_t trade_callback, void *data)
 {
 	vector<string> symbols;
 	symbols.emplace_back(string{symbol});
@@ -65,7 +66,12 @@ helix_session_t helix_session_create(helix_protocol_t proto, const char *symbol,
             ob_callback(wrap(const_cast<helix::core::order_book*>(&ob)));
         }, [trade_callback](const helix::core::trade& trade) {
             trade_callback(wrap(const_cast<helix::core::trade*>(&trade)));
-        }));
+        }, data));
+}
+
+void *helix_session_data(helix_session_t session)
+{
+	return unwrap(session)->data();
 }
 
 void helix_session_process_packet(helix_session_t session, const char* buf, size_t len)

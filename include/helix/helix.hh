@@ -61,13 +61,25 @@ struct error {
 };
 
 class session {
+    void* _data;
 public:
+    session(void* data)
+        : _data{data}
+    { }
+
+    virtual ~session()
+    { }
+
+    void* data() const {
+        return _data;
+    }
+
     virtual void process_packet(const char *buf, size_t size) = 0;
 };
 
 class protocol {
 public:
-    virtual session* new_session(const std::vector<std::string>&, ob_callback, trade_callback) = 0;
+    virtual session* new_session(const std::vector<std::string>&, ob_callback, trade_callback, void*) = 0;
 };
 
 }
