@@ -83,6 +83,7 @@ struct trace_fmt_ops fmt_pretty_ops = {
 static void fmt_csv_header(void)
 {
 	fprintf(output, "Symbol,Timestamp,BidPrice,BidSize,AskPrice,AskSize,LastPrice,LastSign\n");
+	fflush(output);
 }
 
 static void fmt_csv_ob(helix_order_book_t ob)
@@ -96,6 +97,7 @@ static void fmt_csv_ob(helix_order_book_t ob)
 			(double)helix_order_book_ask_price(ob, 0)/10000.0,
 			helix_order_book_ask_size(ob, 0)
 			);
+		fflush(output);
 	}
 }
 
@@ -103,6 +105,7 @@ static void fmt_csv_trade(helix_trade_t trade)
 {
 	fprintf(output, "%s,%lu,,,,,%f,%c\n",
 		helix_trade_symbol(trade), helix_trade_timestamp(trade), helix_trade_price(trade)/10000.0, trade_sign(helix_trade_sign(trade)));
+	fflush(output);
 }
 
 struct trace_fmt_ops fmt_csv_ops = {
