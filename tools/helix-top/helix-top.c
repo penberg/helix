@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
 	}
 
 	session = helix_session_create(proto, cfg.symbol, process_ob_event, process_trade_event, NULL);
-	if (!proto) {
+	if (!session) {
 		fprintf(stderr, "error: unable to create new session\n");
 		exit(1);
 	}
