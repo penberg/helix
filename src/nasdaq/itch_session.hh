@@ -70,6 +70,19 @@ public:
 
     virtual void parse(const char* p, size_t size) override;
 private:
+    void process_msg(const itch_seconds* m);
+    void process_msg(const itch_milliseconds* m);
+    void process_msg(const itch_order_book_directory* m);
+    void process_msg(const itch_order_book_trading_action* m);
+    void process_msg(const itch_add_order* m);
+    void process_msg(const itch_add_order_mpid* m);
+    void process_msg(const itch_order_executed* m);
+    void process_msg(const itch_order_executed_with_price* m);
+    void process_msg(const itch_order_cancel* m);
+    void process_msg(const itch_order_delete* m);
+    void process_msg(const itch_trade* m);
+    void process_msg(const itch_cross_trade* m);
+
     //! Timestamp in milliseconds
     inline uint64_t timestamp() const {
         return time_sec * 1000 + time_msec;
