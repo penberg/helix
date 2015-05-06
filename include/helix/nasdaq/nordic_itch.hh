@@ -22,7 +22,7 @@ private:
 public:
     nordic_itch_session(const std::vector<std::string>& symbols, core::ob_callback process_ob, core::trade_callback process_trade, void *data);
 
-    virtual void process_packet(const char *buf, size_t size) override;
+    virtual void process_packet(const net::packet_view& packet) override;
 };
 
 class nordic_itch_protocol : public core::protocol {

@@ -12,6 +12,12 @@
 
 namespace helix {
 
+namespace net {
+
+class packet_view;
+
+}
+
 namespace core {
 
 class order_book;
@@ -74,7 +80,7 @@ public:
         return _data;
     }
 
-    virtual void process_packet(const char *buf, size_t size) = 0;
+    virtual void process_packet(const net::packet_view& packet) = 0;
 };
 
 class protocol {

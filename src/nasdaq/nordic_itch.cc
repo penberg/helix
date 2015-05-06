@@ -1,6 +1,7 @@
 #include "helix/nasdaq/nordic_itch.hh"
 
 #include "itch_session.hh"
+#include "helix/net.hh"
 #include "moldudp.hh"
 
 #include <memory>
@@ -18,9 +19,9 @@ nordic_itch_session::nordic_itch_session(const vector<string>& symbols, core::ob
 {
 }
 
-void nordic_itch_session::process_packet(const char* buf, size_t size)
+void nordic_itch_session::process_packet(const net::packet_view& packet)
 {
-    _session->parse(buf, size);
+    _session->parse(packet.buf(), packet.len());
 }
 
 nordic_itch_session*

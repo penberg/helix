@@ -1,6 +1,7 @@
 #include "helix-c/helix.h"
 
 #include "helix/nasdaq/nordic_itch.hh"
+#include "helix/net.hh"
 
 #include <cassert>
 #include <cstring>
@@ -76,7 +77,7 @@ void *helix_session_data(helix_session_t session)
 
 void helix_session_process_packet(helix_session_t session, const char* buf, size_t len)
 {
-	unwrap(session)->process_packet(buf, len);
+	unwrap(session)->process_packet(helix::net::packet_view{buf, len});
 }
 
 const char *helix_order_book_symbol(helix_order_book_t ob)
