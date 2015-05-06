@@ -22,8 +22,8 @@ struct config {
 
 struct trace_fmt_ops {
 	void (*fmt_header)(void);
-	void (*fmt_ob)(helix_order_book_t ob);
-	void (*fmt_trade)(helix_trade_t trade);
+	void (*fmt_ob)(helix_session_t session, helix_order_book_t ob);
+	void (*fmt_trade)(helix_session_t session, helix_trade_t trade);
 };
 
 static uv_buf_t alloc_packet(uv_handle_t* handle, size_t suggested_size)
@@ -37,7 +37,7 @@ static void fmt_pretty_header(void)
 {
 }
 
-static void fmt_pretty_ob(helix_order_book_t ob)
+static void fmt_pretty_ob(helix_session_t session, helix_order_book_t ob)
 {
 	uint64_t timestamp = helix_order_book_timestamp(ob);
 	uint64_t timestamp_in_sec = timestamp / 1000;
@@ -69,7 +69,7 @@ const char trade_sign(helix_trade_sign_t sign)
     }
 }
 
-static void fmt_pretty_trade(helix_trade_t trade)
+static void fmt_pretty_trade(helix_session_t session, helix_trade_t trade)
 {
 	fprintf(output, "%s | %.3f | %c | \n", helix_trade_symbol(trade), helix_trade_price(trade)/10000.0, trade_sign(helix_trade_sign(trade)));
 }
@@ -86,7 +86,7 @@ static void fmt_csv_header(void)
 	fflush(output);
 }
 
-static void fmt_csv_ob(helix_order_book_t ob)
+static void fmt_csv_ob(helix_session_t session, helix_order_book_t ob)
 {
 	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
 		fprintf(output, "%s,%lu,%f,%lu,%f,%lu,,\n",
@@ -101,7 +101,7 @@ static void fmt_csv_ob(helix_order_book_t ob)
 	}
 }
 
-static void fmt_csv_trade(helix_trade_t trade)
+static void fmt_csv_trade(helix_session_t session, helix_trade_t trade)
 {
 	fprintf(output, "%s,%lu,,,,,%f,%c\n",
 		helix_trade_symbol(trade), helix_trade_timestamp(trade), helix_trade_price(trade)/10000.0, trade_sign(helix_trade_sign(trade)));
@@ -116,14 +116,14 @@ struct trace_fmt_ops fmt_csv_ops = {
 
 struct trace_fmt_ops *fmt_ops;
 
-static void process_ob_event(helix_order_book_t ob)
+static void process_ob_event(helix_session_t session, helix_order_book_t ob)
 {
-	fmt_ops->fmt_ob(ob);
+	fmt_ops->fmt_ob(session, ob);
 }
 
-static void process_trade_event(helix_trade_t trade)
+static void process_trade_event(helix_session_t session, helix_trade_t trade)
 {
-	fmt_ops->fmt_trade(trade);
+	fmt_ops->fmt_trade(session, trade);
 }
 
 static void recv_packet(uv_udp_t* handle, ssize_t nread, uv_buf_t buf, struct sockaddr* addr, unsigned flags)

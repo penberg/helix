@@ -80,12 +80,16 @@ public:
         return _data;
     }
 
+    virtual void register_callback(core::ob_callback process_ob) = 0;
+
+    virtual void register_callback(core::trade_callback process_trade) = 0;
+
     virtual void process_packet(const net::packet_view& packet) = 0;
 };
 
 class protocol {
 public:
-    virtual session* new_session(const std::vector<std::string>&, ob_callback, trade_callback, void*) = 0;
+    virtual session* new_session(const std::vector<std::string>&, void*) = 0;
 };
 
 }

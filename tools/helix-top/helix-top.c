@@ -51,12 +51,12 @@ static void print_top(helix_order_book_t ob)
 	}
 }
 
-static void process_ob_event(helix_order_book_t ob)
+static void process_ob_event(helix_session_t session, helix_order_book_t ob)
 {
 	print_top(ob);
 }
 
-static void process_trade_event(helix_trade_t trade)
+static void process_trade_event(helix_session_t session, helix_trade_t trade)
 {
 }
 

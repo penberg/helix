@@ -55,9 +55,7 @@ private:
     //! A set of symbols that we are interested in.
     std::set<std::string> _symbols;
 public:
-    itch_session(const std::vector<std::string>& symbols, core::ob_callback process_ob, core::trade_callback process_trade)
-        : _process_ob{process_ob}
-        , _process_trade{process_trade}
+    itch_session(const std::vector<std::string>& symbols)
     {
         for (auto sym : symbols) {
             auto padding = ITCH_SYMBOL_LEN - sym.size();
@@ -67,7 +65,12 @@ public:
             _symbols.insert(sym);
         }
     }
-
+    void register_callback(core::ob_callback process_ob) {
+        _process_ob = process_ob;
+    }
+    void register_callback(core::trade_callback process_trade) {
+        _process_trade = process_trade;
+    }
     virtual void parse(const char* p, size_t size) override;
 private:
     void process_msg(const itch_seconds* m);

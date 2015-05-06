@@ -63,11 +63,14 @@ helix_session_create(helix_protocol_t proto, const char *symbol, helix_order_boo
 {
 	vector<string> symbols;
 	symbols.emplace_back(string{symbol});
-	return wrap(unwrap(proto)->new_session(symbols, [ob_callback](const helix::core::order_book& ob) {
-            ob_callback(wrap(const_cast<helix::core::order_book*>(&ob)));
-        }, [trade_callback](const helix::core::trade& trade) {
-            trade_callback(wrap(const_cast<helix::core::trade*>(&trade)));
-        }, data));
+        auto session = unwrap(proto)->new_session(symbols, data);
+        session->register_callback([session, ob_callback](const helix::core::order_book& ob) {
+            ob_callback(wrap(session), wrap(const_cast<helix::core::order_book*>(&ob)));
+        });
+        session->register_callback([session, trade_callback](const helix::core::trade& trade) {
+            trade_callback(wrap(session), wrap(const_cast<helix::core::trade*>(&trade)));
+        });
+        return wrap(session);
 }
 
 void *helix_session_data(helix_session_t session)

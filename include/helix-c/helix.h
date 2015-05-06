@@ -58,13 +58,13 @@ typedef struct helix_opaque_trade *helix_trade_t;
  * @typedef  helix_order_book_callback_t
  * @abstract Type of an order book update callback.
  */
-typedef void (*helix_order_book_callback_t)(helix_order_book_t);
+typedef void (*helix_order_book_callback_t)(helix_session_t, helix_order_book_t);
 
 /*!
  * @typedef  helix_trade_callback_t
  * @abstract Type of a trade callback.
  */
-typedef void (*helix_trade_callback_t)(helix_trade_t);
+typedef void (*helix_trade_callback_t)(helix_session_t, helix_trade_t);
 
 /*!
  * @enum     helix_trading_state_t
