@@ -1,10 +1,18 @@
-#ifndef ITCH_MESSAGES_HH
-#define ITCH_MESSAGES_HH
+/*
+ * NASDAQ Nordic ITCH protocol messages
+ */
 
-#include <cstddef>
-#include <cstdint>
+#ifndef HELIX_NASDAQ_NORDIC_ITCH_PROTO_H
+#define HELIX_NASDAQ_NORDIC_ITCH_PROTO_H
 
-static constexpr int itch_symbol_len = 16;
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <stddef.h>
+#include <stdint.h>
+
+#define ITCH_SYMBOL_LEN 16
 
 struct itch_message {
     char MsgType;
@@ -128,5 +136,9 @@ static inline uint64_t itch_uatoi(const char *p, size_t len)
     }
     return ret;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

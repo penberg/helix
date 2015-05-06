@@ -1,6 +1,6 @@
 #include "itch_session.hh"
 
-#include "helix/nasdaq/nordic_itch_messages.hh"
+#include "helix/nasdaq/nordic_itch_messages.h"
 #include "helix/core/order_book.hh"
 
 #include <unordered_map>
@@ -57,7 +57,7 @@ void itch_session::parse(const char* buf, size_t len)
         auto m = reinterpret_cast<const itch_order_book_directory*>(buf);
         auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
 
-        std::string sym{m->Symbol, itch_symbol_len};
+        std::string sym{m->Symbol, ITCH_SYMBOL_LEN};
         if (_symbols.count(sym) > 0) {
             order_book ob{sym, timestamp()};
             order_book_id_map.insert({order_book_id, std::move(ob)});

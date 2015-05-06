@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "helix/nasdaq/nordic_itch_messages.hh"
+#include "helix/nasdaq/nordic_itch_messages.h"
 #include "helix/core/order_book.hh"
 #include "helix/helix.hh"
 
@@ -60,7 +60,7 @@ public:
         , _process_trade{process_trade}
     {
         for (auto sym : symbols) {
-            auto padding = itch_symbol_len - sym.size();
+            auto padding = ITCH_SYMBOL_LEN - sym.size();
             if (padding > 0) {
                 sym.insert(sym.size(), padding, ' ');
             }
