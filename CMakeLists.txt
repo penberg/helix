@@ -28,7 +28,7 @@ set(libSrcs ${libSrcs}
     src/nasdaq/itch_session.cc
 )
 
-add_library(helix ${libSrcs})
+add_library(helix ${libSrcs} include/helix/nasdaq/moldudp_messages.h)
 target_include_directories(helix PUBLIC include)
 
 add_executable(helix-trace tools/helix-trace/helix-trace.c)

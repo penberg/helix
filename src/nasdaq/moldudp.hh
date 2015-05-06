@@ -21,6 +21,8 @@
 
 #include "message_parser.hh"
 
+#include "helix/nasdaq/moldudp_messages.h"
+
 #include <cstdlib>
 #include <cstdint>
 #include <memory>
@@ -28,16 +30,6 @@
 namespace helix {
 
 namespace nasdaq {
-
-struct moldudp_header {
-    char     Session[10];
-    uint32_t SequenceNumber;
-    uint16_t MessageCount;
-} __attribute__ ((packed));
-
-struct moldudp_message_block {
-    uint16_t MessageLength;
-} __attribute__ ((packed));
 
 class moldudp_session {
 private:
