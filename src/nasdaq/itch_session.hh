@@ -4,11 +4,11 @@
 
 #pragma once
 
+#include "helix/nasdaq/nordic_itch_messages.hh"
 #include "helix/core/order_book.hh"
 #include "helix/helix.hh"
 
 #include "message_parser.hh"
-#include "itch_messages.hh"
 
 #include <unordered_map>
 #include <vector>
