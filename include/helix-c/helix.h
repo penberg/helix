@@ -133,6 +133,11 @@ uint64_t helix_order_book_ask_price(helix_order_book_t, size_t);
 uint64_t helix_order_book_ask_size(helix_order_book_t, size_t);
 
 /*!
+ * @abstract Returns midprice for a price level in the order book.
+ */
+uint64_t helix_order_book_midprice(helix_order_book_t, size_t);
+
+/*!
  * @abstract Returns the trade symbol.
  */
 const char *helix_trade_symbol(helix_trade_t);

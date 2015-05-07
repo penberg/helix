@@ -181,6 +181,13 @@ uint64_t order_book::ask_size(size_t level) const
     return 0;
 }
 
+uint64_t order_book::midprice(size_t level) const
+{
+    auto bid = bid_price(level);
+    auto ask = ask_price(level);
+    return (bid + ask) / 2;
+}
+
 }
 
 }

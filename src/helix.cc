@@ -113,6 +113,11 @@ uint64_t helix_order_book_ask_size(helix_order_book_t ob, size_t level)
 	return unwrap(ob)->ask_size(level);
 }
 
+uint64_t helix_order_book_midprice(helix_order_book_t ob, size_t level)
+{
+	return unwrap(ob)->midprice(level);
+}
+
 helix_trading_state_t helix_order_book_state(helix_order_book_t ob)
 {
 	switch (unwrap(ob)->state()) {

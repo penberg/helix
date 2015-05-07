@@ -113,6 +113,7 @@ public:
     uint64_t bid_size (size_t level) const;
     uint64_t ask_price(size_t level) const;
     uint64_t ask_size (size_t level) const;
+    uint64_t midprice (size_t level) const;
 
 private:
     void remove(iterator& iter);
