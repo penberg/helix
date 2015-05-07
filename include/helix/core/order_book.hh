@@ -109,6 +109,9 @@ public:
     std::pair<uint64_t, side> execute(uint64_t order_id, uint64_t quantity);
     void remove(uint64_t order_id);
 
+    size_t bid_levels() const;
+    size_t ask_levels() const;
+
     uint64_t bid_price(size_t level) const;
     uint64_t bid_size (size_t level) const;
     uint64_t ask_price(size_t level) const;

@@ -129,6 +129,16 @@ price_level& order_book::lookup_or_create(T& levels, uint64_t price)
     return it->second;
 }
 
+size_t order_book::bid_levels() const
+{
+    return _bids.size();
+}
+
+size_t order_book::ask_levels() const
+{
+    return _asks.size();
+}
+
 uint64_t order_book::bid_price(size_t level) const
 {
     auto it = _bids.begin();

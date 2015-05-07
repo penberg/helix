@@ -93,6 +93,16 @@ uint64_t helix_order_book_timestamp(helix_order_book_t ob)
 	return unwrap(ob)->timestamp();
 }
 
+size_t helix_order_book_bid_levels(helix_order_book_t ob)
+{
+	return unwrap(ob)->bid_levels();
+}
+
+size_t helix_order_book_ask_levels(helix_order_book_t ob)
+{
+	return unwrap(ob)->ask_levels();
+}
+
 uint64_t helix_order_book_bid_price(helix_order_book_t ob, size_t level)
 {
 	return unwrap(ob)->bid_price(level);

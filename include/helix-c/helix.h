@@ -113,6 +113,16 @@ const char *helix_order_book_symbol(helix_order_book_t);
 uint64_t helix_order_book_timestamp(helix_order_book_t);
 
 /*!
+ * @abstract Returns the number of order book bid price levels.
+ */
+size_t helix_order_book_bid_levels(helix_order_book_t);
+
+/*!
+ * @abstract Returns the number of order book ask price levels.
+ */
+size_t helix_order_book_ask_levels(helix_order_book_t);
+
+/*!
  * @abstract Returns the order book bid price for a price level.
  */
 uint64_t helix_order_book_bid_price(helix_order_book_t, size_t);
