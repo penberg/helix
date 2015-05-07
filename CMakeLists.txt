@@ -31,6 +31,11 @@ set(libSrcs ${libSrcs}
 add_library(helix ${libSrcs} include/helix/nasdaq/moldudp_messages.h)
 target_include_directories(helix PUBLIC include)
 
+add_executable(helix-svm tools/helix-svm/helix-svm.cc)
+target_include_directories(helix-svm PUBLIC include)
+target_link_libraries(helix-svm LINK_PUBLIC helix)
+target_link_libraries(helix-svm PUBLIC uv)
+
 add_executable(helix-trace tools/helix-trace/helix-trace.c)
 target_include_directories(helix-trace PUBLIC include)
 target_link_libraries(helix-trace LINK_PUBLIC helix)
