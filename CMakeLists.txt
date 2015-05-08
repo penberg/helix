@@ -26,6 +26,7 @@ set(libSrcs ${libSrcs}
     src/nasdaq/nordic_itch.cc
     src/nasdaq/moldudp.cc
     src/nasdaq/itch_session.cc
+    src/nasdaq/soupfile.cc
 )
 
 add_library(helix ${libSrcs} include/helix/nasdaq/moldudp_messages.h)
