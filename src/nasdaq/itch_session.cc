@@ -36,30 +36,31 @@ trade_sign itch_trade_sign(side s)
     }
 }
 
-void itch_session::parse(const net::packet_view& packet)
+size_t itch_session::parse(const net::packet_view& packet)
 {
     auto* msg = packet.cast<itch_message>();
     switch (msg->MsgType) {
-    case 'T': process_msg<itch_seconds>(packet);                   break;
-    case 'M': process_msg<itch_milliseconds>(packet);              break;
-    case 'R': process_msg<itch_order_book_directory>(packet);      break;
-    case 'H': process_msg<itch_order_book_trading_action>(packet); break;
-    case 'A': process_msg<itch_add_order>(packet);                 break;
-    case 'F': process_msg<itch_add_order_mpid>(packet);            break;
-    case 'E': process_msg<itch_order_executed>(packet);            break;
-    case 'C': process_msg<itch_order_executed_with_price>(packet); break;
-    case 'X': process_msg<itch_order_cancel>(packet);              break;
-    case 'D': process_msg<itch_order_delete>(packet);              break;
-    case 'P': process_msg<itch_trade>(packet);                     break;
-    case 'Q': process_msg<itch_cross_trade>(packet);               break;
-    default: break;
+    case 'T': return process_msg<itch_seconds>(packet);
+    case 'M': return process_msg<itch_milliseconds>(packet);
+    case 'R': return process_msg<itch_order_book_directory>(packet);
+    case 'H': return process_msg<itch_order_book_trading_action>(packet);
+    case 'A': return process_msg<itch_add_order>(packet);
+    case 'F': return process_msg<itch_add_order_mpid>(packet);
+    case 'E': return process_msg<itch_order_executed>(packet);
+    case 'C': return process_msg<itch_order_executed_with_price>(packet);
+    case 'X': return process_msg<itch_order_cancel>(packet);
+    case 'D': return process_msg<itch_order_delete>(packet);
+    case 'P': return process_msg<itch_trade>(packet);
+    case 'Q': return process_msg<itch_cross_trade>(packet);
+    default:  return 0;
     }
 }
 
 template<typename T>
-void itch_session::process_msg(const net::packet_view& packet)
+size_t itch_session::process_msg(const net::packet_view& packet)
 {
     process_msg(packet.cast<T>());
+    return sizeof(T);
 }
 
 void itch_session::process_msg(const itch_seconds* m)

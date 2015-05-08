@@ -70,10 +70,10 @@ public:
     void register_callback(core::trade_callback process_trade) {
         _process_trade = process_trade;
     }
-    virtual void parse(const net::packet_view& packet) override;
+    virtual size_t parse(const net::packet_view& packet) override;
 private:
     template<typename T>
-    void process_msg(const net::packet_view& packet);
+    size_t process_msg(const net::packet_view& packet);
     void process_msg(const itch_seconds* m);
     void process_msg(const itch_milliseconds* m);
     void process_msg(const itch_order_book_directory* m);

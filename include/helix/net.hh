@@ -38,7 +38,7 @@ public:
     virtual ~message_parser()
     { }
 
-    virtual void parse(const packet_view&) = 0;
+    virtual size_t parse(const packet_view&) = 0;
 };
 
 }
