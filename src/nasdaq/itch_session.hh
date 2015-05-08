@@ -72,6 +72,8 @@ public:
     }
     virtual void parse(const net::packet_view& packet) override;
 private:
+    template<typename T>
+    void process_msg(const net::packet_view& packet);
     void process_msg(const itch_seconds* m);
     void process_msg(const itch_milliseconds* m);
     void process_msg(const itch_order_book_directory* m);

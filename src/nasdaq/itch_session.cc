@@ -38,23 +38,28 @@ trade_sign itch_trade_sign(side s)
 
 void itch_session::parse(const net::packet_view& packet)
 {
-    const char* buf = packet.buf();
-    auto* msg = reinterpret_cast<const itch_message*>(buf);
+    auto* msg = packet.cast<itch_message>();
     switch (msg->MsgType) {
-    case 'T': process_msg(reinterpret_cast<const itch_seconds*>(buf));                   break;
-    case 'M': process_msg(reinterpret_cast<const itch_milliseconds*>(buf));              break;
-    case 'R': process_msg(reinterpret_cast<const itch_order_book_directory*>(buf));      break;
-    case 'H': process_msg(reinterpret_cast<const itch_order_book_trading_action*>(buf)); break;
-    case 'A': process_msg(reinterpret_cast<const itch_add_order*>(buf));                 break;
-    case 'F': process_msg(reinterpret_cast<const itch_add_order_mpid*>(buf));            break;
-    case 'E': process_msg(reinterpret_cast<const itch_order_executed*>(buf));            break;
-    case 'C': process_msg(reinterpret_cast<const itch_order_executed_with_price*>(buf)); break;
-    case 'X': process_msg(reinterpret_cast<const itch_order_cancel*>(buf));              break;
-    case 'D': process_msg(reinterpret_cast<const itch_order_delete*>(buf));              break;
-    case 'P': process_msg(reinterpret_cast<const itch_trade*>(buf));                     break;
-    case 'Q': process_msg(reinterpret_cast<const itch_cross_trade*>(buf));               break;
+    case 'T': process_msg<itch_seconds>(packet);                   break;
+    case 'M': process_msg<itch_milliseconds>(packet);              break;
+    case 'R': process_msg<itch_order_book_directory>(packet);      break;
+    case 'H': process_msg<itch_order_book_trading_action>(packet); break;
+    case 'A': process_msg<itch_add_order>(packet);                 break;
+    case 'F': process_msg<itch_add_order_mpid>(packet);            break;
+    case 'E': process_msg<itch_order_executed>(packet);            break;
+    case 'C': process_msg<itch_order_executed_with_price>(packet); break;
+    case 'X': process_msg<itch_order_cancel>(packet);              break;
+    case 'D': process_msg<itch_order_delete>(packet);              break;
+    case 'P': process_msg<itch_trade>(packet);                     break;
+    case 'Q': process_msg<itch_cross_trade>(packet);               break;
     default: break;
     }
+}
+
+template<typename T>
+void itch_session::process_msg(const net::packet_view& packet)
+{
+    process_msg(packet.cast<T>());
 }
 
 void itch_session::process_msg(const itch_seconds* m)

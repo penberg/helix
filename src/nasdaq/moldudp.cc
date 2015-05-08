@@ -21,8 +21,7 @@ void moldudp_session::parse(const net::packet_view& packet)
 
     assert(packet.len() >= sizeof(moldudp_header));
 
-    auto* header = reinterpret_cast<const moldudp_header*>(p);
-
+    auto* header = packet.cast<moldudp_header>();
     if (header->SequenceNumber != _seq_num) {
         throw runtime_error(string("invalid sequence number: ") + to_string(header->SequenceNumber) + ", expected: " + to_string(_seq_num));
     }

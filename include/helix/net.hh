@@ -26,6 +26,11 @@ public:
     const char* end() const {
         return _buf + _len;
     }
+
+    template<typename T>
+    const T* cast() const {
+        return reinterpret_cast<const T*>(_buf);
+    }
 };
 
 class message_parser {
