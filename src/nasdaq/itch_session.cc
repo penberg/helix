@@ -36,8 +36,9 @@ trade_sign itch_trade_sign(side s)
     }
 }
 
-void itch_session::parse(const char* buf, size_t len)
+void itch_session::parse(const net::packet_view& packet)
 {
+    const char* buf = packet.buf();
     auto* msg = reinterpret_cast<const itch_message*>(buf);
     switch (msg->MsgType) {
     case 'T': process_msg(reinterpret_cast<const itch_seconds*>(buf));                   break;

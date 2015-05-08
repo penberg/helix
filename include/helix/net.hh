@@ -9,7 +9,6 @@ namespace net {
 class packet_view {
     const char* _buf;
     size_t _len;
-
 public:
     packet_view(const char* buf, size_t len)
         : _buf{buf}
@@ -23,6 +22,18 @@ public:
     size_t len() const {
         return _len;
     }
+
+    const char* end() const {
+        return _buf + _len;
+    }
+};
+
+class message_parser {
+public:
+    virtual ~message_parser()
+    { }
+
+    virtual void parse(const packet_view&) = 0;
 };
 
 }

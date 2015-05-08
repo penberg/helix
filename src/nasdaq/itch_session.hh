@@ -7,8 +7,7 @@
 #include "helix/nasdaq/nordic_itch_messages.h"
 #include "helix/core/order_book.hh"
 #include "helix/helix.hh"
-
-#include "message_parser.hh"
+#include "helix/net.hh"
 
 #include <unordered_map>
 #include <vector>
@@ -38,7 +37,7 @@ namespace nasdaq {
 //   Version 1.90.2
 //   April 7, 2014
 //
-class itch_session : public message_parser {
+class itch_session : public net::message_parser {
 private:
     //! Seconds since midnight in CET (Central European Time).
     uint64_t time_sec;
@@ -71,7 +70,7 @@ public:
     void register_callback(core::trade_callback process_trade) {
         _process_trade = process_trade;
     }
-    virtual void parse(const char* p, size_t size) override;
+    virtual void parse(const net::packet_view& packet) override;
 private:
     void process_msg(const itch_seconds* m);
     void process_msg(const itch_milliseconds* m);

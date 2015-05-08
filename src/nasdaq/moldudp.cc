@@ -8,18 +8,18 @@ namespace helix {
 
 namespace nasdaq {
 
-moldudp_session::moldudp_session(shared_ptr<message_parser> parser)
+moldudp_session::moldudp_session(shared_ptr<net::message_parser> parser)
     : _parser(parser)
     , _seq_num{1}
 {
 }
 
-void moldudp_session::parse(const char *buf, size_t len)
+void moldudp_session::parse(const net::packet_view& packet)
 {
-    auto* end = buf + len;
-    auto* p = buf;
+    auto* end = packet.end();
+    auto* p = packet.buf();
 
-    assert(len >= sizeof(moldudp_header));
+    assert(packet.len() >= sizeof(moldudp_header));
 
     auto* header = reinterpret_cast<const moldudp_header*>(p);
 
@@ -33,7 +33,7 @@ void moldudp_session::parse(const char *buf, size_t len)
 
         p += sizeof(moldudp_message_block);
 
-        _parser->parse(p, msg_block->MessageLength);
+        _parser->parse(net::packet_view{p, msg_block->MessageLength});
 
         p += msg_block->MessageLength;
 
