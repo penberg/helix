@@ -56,7 +56,7 @@ size_t itch_session::parse(const net::packet_view& packet)
     case 'Q': return process_msg<itch_cross_trade>(packet);
     case 'B': return process_msg<itch_broken_trade>(packet);
     case 'I': return process_msg<itch_noii>(packet);
-    default:  return 0;
+    default:  throw unknown_message_type("unknown type: " + msg->MsgType);
     }
 }
 

@@ -54,6 +54,13 @@ private:
     //! A set of symbols that we are interested in.
     std::set<std::string> _symbols;
 public:
+    class unknown_message_type : public std::logic_error {
+    public:
+        unknown_message_type(std::string cause)
+            : logic_error(cause)
+        { }
+    };
+public:
     itch_session(const std::vector<std::string>& symbols)
     {
         for (auto sym : symbols) {
