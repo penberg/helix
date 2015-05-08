@@ -20,9 +20,9 @@ nordic_itch_session::nordic_itch_session(const vector<string>& symbols, void *da
 {
 }
 
-void nordic_itch_session::process_packet(const net::packet_view& packet)
+size_t nordic_itch_session::process_packet(const net::packet_view& packet)
 {
-    _moldudp_session->parse(packet);
+    return _moldudp_session->parse(packet);
 }
 
 void nordic_itch_session::register_callback(core::ob_callback process_ob)

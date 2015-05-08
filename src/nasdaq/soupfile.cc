@@ -13,7 +13,7 @@ soupfile_session::soupfile_session(shared_ptr<net::message_parser> parser)
 {
 }
 
-void soupfile_session::parse(const net::packet_view& packet)
+size_t soupfile_session::parse(const net::packet_view& packet)
 {
     size_t nr = _parser->parse(packet);
     size_t remaining = packet.len() - nr;
@@ -25,6 +25,7 @@ void soupfile_session::parse(const net::packet_view& packet)
     if (*terminator++ != 0x0d || *terminator != 0x0a) {
         throw runtime_error("terminator mismatch");
     }
+    return nr + terminator_size;
 }
 
 }

@@ -26,7 +26,7 @@ class soupfile_session {
 public:
     soupfile_session(std::shared_ptr<net::message_parser> parser);
 
-    void parse(const net::packet_view& packet);
+    size_t parse(const net::packet_view& packet);
 };
 
 }

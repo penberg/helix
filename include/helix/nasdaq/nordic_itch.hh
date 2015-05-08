@@ -25,7 +25,7 @@ public:
     nordic_itch_session(const std::vector<std::string>& symbols, void *data);
     virtual void register_callback(core::ob_callback process_ob) override;
     virtual void register_callback(core::trade_callback process_trade) override;
-    virtual void process_packet(const net::packet_view& packet) override;
+    virtual size_t process_packet(const net::packet_view& packet) override;
 };
 
 class nordic_itch_protocol : public core::protocol {

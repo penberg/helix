@@ -84,7 +84,7 @@ public:
 
     virtual void register_callback(core::trade_callback process_trade) = 0;
 
-    virtual void process_packet(const net::packet_view& packet) = 0;
+    virtual size_t process_packet(const net::packet_view& packet) = 0;
 };
 
 class protocol {

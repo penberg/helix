@@ -78,9 +78,9 @@ void *helix_session_data(helix_session_t session)
 	return unwrap(session)->data();
 }
 
-void helix_session_process_packet(helix_session_t session, const char* buf, size_t len)
+size_t helix_session_process_packet(helix_session_t session, const char* buf, size_t len)
 {
-	unwrap(session)->process_packet(helix::net::packet_view{buf, len});
+	return unwrap(session)->process_packet(helix::net::packet_view{buf, len});
 }
 
 const char *helix_order_book_symbol(helix_order_book_t ob)

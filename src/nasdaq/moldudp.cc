@@ -16,9 +16,8 @@ moldudp_session::moldudp_session(shared_ptr<net::message_parser> parser)
 {
 }
 
-void moldudp_session::parse(const net::packet_view& packet)
+size_t moldudp_session::parse(const net::packet_view& packet)
 {
-    auto* end = packet.end();
     auto* p = packet.buf();
 
     assert(packet.len() >= sizeof(moldudp_header));
@@ -41,7 +40,7 @@ void moldudp_session::parse(const net::packet_view& packet)
         _seq_num++;
     }
 
-    assert(p == end);
+    return p - packet.buf();
 }
 
 }
