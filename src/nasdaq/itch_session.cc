@@ -42,6 +42,8 @@ size_t itch_session::parse(const net::packet_view& packet)
     switch (msg->MsgType) {
     case 'T': return process_msg<itch_seconds>(packet);
     case 'M': return process_msg<itch_milliseconds>(packet);
+    case 'O': return process_msg<itch_market_segment_state>(packet);
+    case 'S': return process_msg<itch_system_event>(packet);
     case 'R': return process_msg<itch_order_book_directory>(packet);
     case 'H': return process_msg<itch_order_book_trading_action>(packet);
     case 'A': return process_msg<itch_add_order>(packet);
@@ -52,6 +54,8 @@ size_t itch_session::parse(const net::packet_view& packet)
     case 'D': return process_msg<itch_order_delete>(packet);
     case 'P': return process_msg<itch_trade>(packet);
     case 'Q': return process_msg<itch_cross_trade>(packet);
+    case 'B': return process_msg<itch_broken_trade>(packet);
+    case 'I': return process_msg<itch_noii>(packet);
     default:  return 0;
     }
 }
@@ -73,6 +77,14 @@ void itch_session::process_msg(const itch_milliseconds* m)
 {
     auto millisecond = itch_uatoi(m->Millisecond, 3);
     time_msec = millisecond;
+}
+
+void itch_session::process_msg(const itch_market_segment_state* m)
+{
+}
+
+void itch_session::process_msg(const itch_system_event* m)
+{
 }
 
 void itch_session::process_msg(const itch_order_book_directory* m)
@@ -228,6 +240,14 @@ void itch_session::process_msg(const itch_cross_trade* m)
         auto& ob = it->second;
         _process_trade(trade{ob.symbol(), timestamp(), cross_price, trade_sign::crossing});
     }
+}
+
+void itch_session::process_msg(const itch_broken_trade* m)
+{
+}
+
+void itch_session::process_msg(const itch_noii* m)
+{
 }
 
 }

@@ -76,6 +76,8 @@ private:
     size_t process_msg(const net::packet_view& packet);
     void process_msg(const itch_seconds* m);
     void process_msg(const itch_milliseconds* m);
+    void process_msg(const itch_market_segment_state* m);
+    void process_msg(const itch_system_event* m);
     void process_msg(const itch_order_book_directory* m);
     void process_msg(const itch_order_book_trading_action* m);
     void process_msg(const itch_add_order* m);
@@ -86,6 +88,8 @@ private:
     void process_msg(const itch_order_delete* m);
     void process_msg(const itch_trade* m);
     void process_msg(const itch_cross_trade* m);
+    void process_msg(const itch_broken_trade* m);
+    void process_msg(const itch_noii* m);
 
     //! Timestamp in milliseconds
     inline uint64_t timestamp() const {

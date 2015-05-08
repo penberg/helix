@@ -23,6 +23,17 @@ struct itch_seconds {
     char Second[5];
 };
 
+struct itch_market_segment_state {
+    char MsgType;
+    char MarketSegmentID[3];
+    char EventCode;
+};
+
+struct itch_system_event {
+    char MsgType;
+    char EventCode;
+};
+
 struct itch_milliseconds {
     char MsgType;
     char Millisecond[3];
@@ -119,6 +130,25 @@ struct itch_cross_trade {
     char MatchNumber[9];
     char CrossType;
     char NumberOfTrades[10];
+};
+
+struct itch_broken_trade {
+    char MsgType;
+    char MatchNumber[9];
+};
+
+struct itch_noii {
+    char MsgType;
+    char PairedQuantity[9];
+    char ImbalanceQuantity[9];
+    char ImbalanceDirection;
+    char OrderBook[6];
+    char EquilibriumPrice[10];
+    char CrossType;
+    char BestBidPrice[10];
+    char BestBidQuantity[9];
+    char BestAskPrice[10];
+    char BestAskQuantity[9];
 };
 
 static inline uint64_t itch_uatoi(const char *p, size_t len)
