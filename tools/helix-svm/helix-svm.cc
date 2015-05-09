@@ -77,7 +77,7 @@ public:
 			return;
 		}
 		uint64_t midprice = helix_order_book_midprice(ob, 0);
-		auto curr_features = std::move(extract(ob));
+		auto&& curr_features = extract(ob);
 		if (lookback.empty()) {
 			lookback.emplace_back(make_tuple(midprice, curr_features));
 			return;
