@@ -101,6 +101,10 @@ public:
 private:
 	features extract(helix_order_book_t ob) {
 		features result{};
+		double sum_bid_price = 0.0;
+		double sum_ask_price = 0.0;
+		double sum_bid_size = 0.0;
+		double sum_ask_size = 0.0;
 		for (size_t i = 0; i < nr_levels; i++) {
 			auto bid_price = helix_order_book_bid_price(ob, i) / 10000.0;
 			auto ask_price = helix_order_book_ask_price(ob, i) / 10000.0;
@@ -115,7 +119,17 @@ private:
 			// Bid-ask spread and mid-prices:
 			result.add(ask_price - bid_price);
 			result.add(midprice);
+			// Mean prices and differences:
+			sum_bid_price += bid_price;
+			sum_ask_price += ask_price;
+			sum_bid_size += bid_size;
+			sum_ask_size += ask_size;
 		}
+		// Mean prices and differences:
+		result.add(sum_bid_price / nr_levels);
+		result.add(sum_ask_price / nr_levels);
+		result.add(sum_bid_size / nr_levels);
+		result.add(sum_ask_size / nr_levels);
 		for (size_t i = 1; i < nr_levels; i++) {
 			// Price differences:
 			auto bid0 = helix_order_book_midprice(ob, i-1) / 10000.0;
