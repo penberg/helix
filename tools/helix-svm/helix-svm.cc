@@ -73,7 +73,7 @@ class svm_session {
 
 public:
 	void process_ob_event(helix_order_book_t ob) {
-		if (helix_order_book_ask_levels(ob) < 5 && helix_order_book_bid_levels(ob) < 5) {
+		if (helix_order_book_ask_levels(ob) < nr_levels && helix_order_book_bid_levels(ob) < nr_levels) {
 			return;
 		}
 		uint64_t midprice = helix_order_book_midprice(ob, 0);
