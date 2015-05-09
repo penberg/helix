@@ -39,7 +39,7 @@ struct config {
 };
 
 class svm_session {
-	static constexpr size_t nr_levels = 5;
+	static constexpr size_t nr_levels = 10;
 
 	struct features {
 		std::vector<double> values;
