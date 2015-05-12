@@ -101,7 +101,6 @@ void itch_session::process_msg(const itch_order_book_directory* m)
 void itch_session::process_msg(const itch_order_book_trading_action* m)
 {
     auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
-
     auto it = order_book_id_map.find(order_book_id);
     if (it != order_book_id_map.end()) {
         auto& ob = it->second;
@@ -119,7 +118,6 @@ void itch_session::process_msg(const itch_order_book_trading_action* m)
 void itch_session::process_msg(const itch_add_order* m)
 {
     auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
-
     auto it = order_book_id_map.find(order_book_id);
     if (it != order_book_id_map.end()) {
         auto& ob = it->second;
@@ -141,7 +139,6 @@ void itch_session::process_msg(const itch_add_order* m)
 void itch_session::process_msg(const itch_add_order_mpid* m)
 {
     auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
-
     auto it = order_book_id_map.find(order_book_id);
     if (it != order_book_id_map.end()) {
         auto& ob = it->second;
@@ -163,10 +160,9 @@ void itch_session::process_msg(const itch_add_order_mpid* m)
 void itch_session::process_msg(const itch_order_executed* m)
 {
    uint64_t order_id = itch_uatoi(m->OrderReferenceNumber, sizeof(m->OrderReferenceNumber));
-   uint64_t quantity = itch_uatoi(m->ExecutedQuantity, sizeof(m->ExecutedQuantity));
-
    auto it = order_id_map.find(order_id);
    if (it != order_id_map.end()) {
+       uint64_t quantity = itch_uatoi(m->ExecutedQuantity, sizeof(m->ExecutedQuantity));
        auto& ob = it->second;
        auto result = ob.execute(order_id, quantity);
        ob.set_timestamp(timestamp());
@@ -178,11 +174,10 @@ void itch_session::process_msg(const itch_order_executed* m)
 void itch_session::process_msg(const itch_order_executed_with_price* m)
 {
     uint64_t order_id = itch_uatoi(m->OrderReferenceNumber, sizeof(m->OrderReferenceNumber));
-    uint64_t quantity = itch_uatoi(m->ExecutedQuantity, sizeof(m->ExecutedQuantity));
-    uint64_t price = itch_uatoi(m->TradePrice, sizeof(m->TradePrice));
-
     auto it = order_id_map.find(order_id);
     if (it != order_id_map.end()) {
+        uint64_t quantity = itch_uatoi(m->ExecutedQuantity, sizeof(m->ExecutedQuantity));
+        uint64_t price = itch_uatoi(m->TradePrice, sizeof(m->TradePrice));
         auto& ob = it->second;
         auto result = ob.execute(order_id, quantity);
         ob.set_timestamp(timestamp());
@@ -194,10 +189,9 @@ void itch_session::process_msg(const itch_order_executed_with_price* m)
 void itch_session::process_msg(const itch_order_cancel* m)
 {
     uint64_t order_id = itch_uatoi(m->OrderReferenceNumber, sizeof(m->OrderReferenceNumber));
-    uint64_t quantity = itch_uatoi(m->CanceledQuantity, sizeof(m->CanceledQuantity));
-
     auto it = order_id_map.find(order_id);
     if (it != order_id_map.end()) {
+        uint64_t quantity = itch_uatoi(m->CanceledQuantity, sizeof(m->CanceledQuantity));
         auto& ob = it->second;
         ob.cancel(order_id, quantity);
         ob.set_timestamp(timestamp());
@@ -208,7 +202,6 @@ void itch_session::process_msg(const itch_order_cancel* m)
 void itch_session::process_msg(const itch_order_delete* m)
 {
     uint64_t order_id = itch_uatoi(m->OrderReferenceNumber, sizeof(m->OrderReferenceNumber));
-
     auto it = order_id_map.find(order_id);
     if (it != order_id_map.end()) {
         auto& ob = it->second;
@@ -221,11 +214,10 @@ void itch_session::process_msg(const itch_order_delete* m)
 void itch_session::process_msg(const itch_trade* m)
 {
     auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
-    uint64_t trade_price = itch_uatoi(m->TradePrice, sizeof(m->TradePrice));
-    uint64_t quantity = itch_uatoi(m->Quantity, sizeof(m->Quantity));
-
     auto it = order_book_id_map.find(order_book_id);
     if (it != order_book_id_map.end()) {
+        uint64_t trade_price = itch_uatoi(m->TradePrice, sizeof(m->TradePrice));
+        uint64_t quantity = itch_uatoi(m->Quantity, sizeof(m->Quantity));
         auto& ob = it->second;
         _process_trade(trade{ob.symbol(), timestamp(), trade_price, quantity, trade_sign::non_displayable});
     }
@@ -234,11 +226,10 @@ void itch_session::process_msg(const itch_trade* m)
 void itch_session::process_msg(const itch_cross_trade* m)
 {
     auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
-    uint64_t cross_price = itch_uatoi(m->CrossPrice, sizeof(m->CrossPrice));
-    uint64_t quantity = itch_uatoi(m->Quantity, sizeof(m->Quantity));
-
     auto it = order_book_id_map.find(order_book_id);
     if (it != order_book_id_map.end()) {
+        uint64_t cross_price = itch_uatoi(m->CrossPrice, sizeof(m->CrossPrice));
+        uint64_t quantity = itch_uatoi(m->Quantity, sizeof(m->Quantity));
         auto& ob = it->second;
         _process_trade(trade{ob.symbol(), timestamp(), cross_price, quantity, trade_sign::crossing});
     }
