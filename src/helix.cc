@@ -154,6 +154,11 @@ uint64_t helix_trade_price(helix_trade_t trade)
 	return unwrap(trade)->price;
 }
 
+uint64_t helix_trade_size(helix_trade_t trade)
+{
+	return unwrap(trade)->size;
+}
+
 helix_trade_sign_t helix_trade_sign(helix_trade_t trade)
 {
 	switch (unwrap(trade)->sign) {

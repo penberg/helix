@@ -171,7 +171,7 @@ void itch_session::process_msg(const itch_order_executed* m)
        auto result = ob.execute(order_id, quantity);
        ob.set_timestamp(timestamp());
        _process_ob(ob);
-       _process_trade(trade{ob.symbol(), timestamp(), result.first, itch_trade_sign(result.second)});
+       _process_trade(trade{ob.symbol(), timestamp(), result.first, quantity, itch_trade_sign(result.second)});
    }
 }
 
@@ -187,7 +187,7 @@ void itch_session::process_msg(const itch_order_executed_with_price* m)
         auto result = ob.execute(order_id, quantity);
         ob.set_timestamp(timestamp());
         _process_ob(ob);
-        _process_trade(trade{ob.symbol(), timestamp(), price, itch_trade_sign(result.second)});
+        _process_trade(trade{ob.symbol(), timestamp(), price, quantity, itch_trade_sign(result.second)});
     }
 }
 
@@ -222,11 +222,12 @@ void itch_session::process_msg(const itch_trade* m)
 {
     auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
     uint64_t trade_price = itch_uatoi(m->TradePrice, sizeof(m->TradePrice));
+    uint64_t quantity = itch_uatoi(m->Quantity, sizeof(m->Quantity));
 
     auto it = order_book_id_map.find(order_book_id);
     if (it != order_book_id_map.end()) {
         auto& ob = it->second;
-        _process_trade(trade{ob.symbol(), timestamp(), trade_price, trade_sign::non_displayable});
+        _process_trade(trade{ob.symbol(), timestamp(), trade_price, quantity, trade_sign::non_displayable});
     }
 }
 
@@ -234,11 +235,12 @@ void itch_session::process_msg(const itch_cross_trade* m)
 {
     auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
     uint64_t cross_price = itch_uatoi(m->CrossPrice, sizeof(m->CrossPrice));
+    uint64_t quantity = itch_uatoi(m->Quantity, sizeof(m->Quantity));
 
     auto it = order_book_id_map.find(order_book_id);
     if (it != order_book_id_map.end()) {
         auto& ob = it->second;
-        _process_trade(trade{ob.symbol(), timestamp(), cross_price, trade_sign::crossing});
+        _process_trade(trade{ob.symbol(), timestamp(), cross_price, quantity, trade_sign::crossing});
     }
 }
 

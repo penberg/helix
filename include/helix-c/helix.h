@@ -168,6 +168,11 @@ helix_trade_sign_t helix_trade_sign(helix_trade_t);
 uint64_t helix_trade_price(helix_trade_t);
 
 /*!
+ * @abstract Returns the size of a trade.
+ */
+uint64_t helix_trade_size(helix_trade_t);
+
+/*!
  * @abstract Lookup a market data protocol.
  */
 helix_protocol_t helix_protocol_lookup(const char *name);

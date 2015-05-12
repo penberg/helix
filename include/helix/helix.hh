@@ -33,12 +33,15 @@ struct trade {
     std::string symbol;
     uint64_t    timestamp;
     uint64_t    price;
+    uint64_t    size;
     trade_sign  sign;
 
-    trade(const std::string& symbol_, uint64_t timestamp_, uint64_t price_, trade_sign sign_)
+    trade(const std::string& symbol_, uint64_t timestamp_,
+          uint64_t price_, uint64_t size_, trade_sign sign_)
         : symbol{symbol_}
         , timestamp{timestamp_}
         , price{price_}
+        , size{size_}
         , sign{sign_}
     { }
 };
