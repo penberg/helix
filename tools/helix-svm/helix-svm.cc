@@ -16,8 +16,10 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 #include <cerrno>
 #include <cstdio>
+#include <memory>
 #include <vector>
 #include <deque>
 #include <cmath>
@@ -27,8 +29,6 @@
 using namespace std;
 
 static const char *program;
-
-FILE* output;
 
 struct config {
 	const char *symbol;
@@ -71,7 +71,11 @@ class svm_session {
 	// Lookback buffer of (midprice, features) tuple before current time:
 	deque<tuple<uint64_t, features>> lookback;
 
+	ostream& _output;
 public:
+	svm_session(ostream& output)
+		: _output{output}
+	{ }
 	void process_ob_event(helix_order_book_t ob) {
 		if (helix_order_book_ask_levels(ob) < nr_levels && helix_order_book_bid_levels(ob) < nr_levels) {
 			return;
@@ -153,15 +157,13 @@ private:
 	}
 
 	void fmt(label_type label, const features& features) {
-		cout << int(label);
+		_output << int(label);
 		for (size_t i = 0; i < features.values.size(); i++) {
-			cout << " " << i+1 << ":" << features.values[i];
+			_output << " " << i+1 << ":" << features.values[i];
 		}
-		cout << endl;
+		_output << endl;
 	}
 };
-
-static struct svm_session svm_session;
 
 static uv_buf_t alloc_packet(uv_handle_t* handle, size_t suggested_size)
 {
@@ -261,11 +263,13 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 
 int main(int argc, char *argv[])
 {
+	unique_ptr<svm_session> svm;
 	helix_session_t session;
 	struct sockaddr_in addr;
 	helix_protocol_t proto;
 	struct config cfg = {};
 	uv_udp_t socket;
+	ostream* output;
 	int err;
 
 	program = basename(argv[0]);
@@ -292,15 +296,19 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
+	ofstream output_file;
 	if (cfg.output) {
-		output = fopen(cfg.output, "w");
-		if (!output) {
+		output_file.open(cfg.output, ios::out);
+		if (!output_file.is_open()) {
 			fprintf(stderr, "error: %s: %s\n", cfg.output, strerror(errno));
 			exit(1);
 		}
+		output = &output_file;
 	} else {
-		output = stdout;
+		output = &cout;
 	}
+
+	svm = make_unique<svm_session>(*output);
 
 	proto = helix_protocol_lookup(cfg.multicast_proto);
 	if (!proto) {
@@ -308,7 +316,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	session = helix_session_create(proto, cfg.symbol, process_ob_event, process_trade_event, &svm_session);
+	session = helix_session_create(proto, cfg.symbol, process_ob_event, process_trade_event, svm.get());
 	if (!session) {
 		fprintf(stderr, "error: unable to create new session\n");
 		exit(1);
