@@ -28,14 +28,14 @@ namespace helix {
 
 namespace nasdaq {
 
-class moldudp_session {
+class moldudp_session : public net::message_parser {
 private:
     std::shared_ptr<net::message_parser> _parser;
     uint32_t _seq_num;
 public:
     moldudp_session(std::shared_ptr<net::message_parser> parser);
 
-    size_t parse(const net::packet_view& packet);
+    virtual size_t parse(const net::packet_view& packet) override;
 };
 
 }

@@ -21,12 +21,12 @@ namespace helix {
 
 namespace nasdaq {
 
-class soupfile_session {
+class soupfile_session : public net::message_parser {
     std::shared_ptr<net::message_parser> _parser;
 public:
     soupfile_session(std::shared_ptr<net::message_parser> parser);
 
-    size_t parse(const net::packet_view& packet);
+    virtual size_t parse(const net::packet_view& packet) override;
 };
 
 }

@@ -11,6 +11,7 @@
  */
 
 #include <helix-c/helix.h>
+#include <sys/mman.h>
 #include <getopt.h>
 #include <libgen.h>
 #include <iostream>
@@ -35,6 +36,7 @@ struct config {
 	const char *multicast_proto;
 	const char *multicast_addr;
 	int multicast_port;
+	const char *input;
 	const char *output;
 };
 
@@ -211,6 +213,7 @@ static void usage(void)
 		"    -c, --multicast-proto proto  UDP multicast protocol listen to.\n"
 		"    -a, --multicast-addr addr    UDP multicast address to listen to.\n"
 		"    -p, --multicast-port port    UDP multicast port to listen to.\n"
+		"    -i, --input filename         Input filename.\n"
 		"    -o, --output filename        Output filename.\n"
 		"    -h, --help                   display this help and exit\n",
 		program);
@@ -222,6 +225,7 @@ static struct option svm_options[] = {
 	{"multicast-proto", required_argument, 0, 'c'},
 	{"multicast-addr",  required_argument, 0, 'a'},
 	{"multicast-port",  required_argument, 0, 'p'},
+	{"input",           required_argument, 0, 'i'},
 	{"output",          required_argument, 0, 'o'},
 	{"help",            no_argument,       0, 'h'},
 	{0, 0, 0, 0}
@@ -233,7 +237,7 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 		int opt_idx = 0;
 		int c;
 
-		c = getopt_long(argc, argv, "s:c:a:o:p:h", svm_options, &opt_idx);
+		c = getopt_long(argc, argv, "s:c:a:o:p:i:h", svm_options, &opt_idx);
 		if (c == -1)
 			break;
 
@@ -253,6 +257,9 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 		case 'p':
 			cfg->multicast_port = strtol(optarg, NULL, 10);
 			break;
+		case 'i':
+			cfg->input = optarg;
+			break;
 		case 'h':
 			usage();
 		default:
@@ -268,8 +275,11 @@ int main(int argc, char *argv[])
 	struct sockaddr_in addr;
 	helix_protocol_t proto;
 	struct config cfg = {};
+	struct stat input_st;
+	void *input_mmap;
 	uv_udp_t socket;
 	ostream* output;
+	int input_fd;
 	int err;
 
 	program = basename(argv[0]);
@@ -283,16 +293,6 @@ int main(int argc, char *argv[])
 
 	if (!cfg.multicast_proto) {
 		fprintf(stderr, "error: multicast protocol is not specified. Use the '-c' option to specify it.\n");
-		exit(1);
-	}
-
-	if (!cfg.multicast_addr) {
-		fprintf(stderr, "error: multicast address is not specified. Use the '-a' option to specify it.\n");
-		exit(1);
-	}
-
-	if (!cfg.multicast_port) {
-		fprintf(stderr, "error: multicast port is not specified. Use the '-p' option to specify it.\n");
 		exit(1);
 	}
 
@@ -322,28 +322,76 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	err = uv_udp_init(uv_default_loop(), &socket);
-	if (err) {
-		libuv_error("uv_udp_init");
+	if (cfg.input) {
+		const char* p;
+		size_t size;
+
+		input_fd = open(cfg.input, O_RDONLY);
+		if (input_fd < 0) {
+			fprintf(stderr, "error: %s: %s\n", cfg.input, strerror(errno));
+			exit(1);
+		}
+		if (fstat(input_fd, &input_st) < 0) {
+			fprintf(stderr, "error: %s: %s\n", cfg.input, strerror(errno));
+			exit(1);
+		}
+		input_mmap = mmap(NULL, input_st.st_size, PROT_READ, MAP_SHARED, input_fd, 0);
+		if (input_mmap == MAP_FAILED) {
+			fprintf(stderr, "error: %s: %s\n", cfg.input, strerror(errno));
+			exit(1);
+		}
+
+		p = reinterpret_cast<char*>(input_mmap);
+		size = input_st.st_size;
+		while (size > 0) {
+			size_t nr;
+
+			nr = helix_session_process_packet(session, p, size);
+			if (!nr)
+				break;
+
+			p += nr;
+			size -= nr;
+		}
+
+		if (munmap(input_mmap, input_st.st_size) < 0) {
+			fprintf(stderr, "error: %s: %s\n", cfg.input, strerror(errno));
+			exit(1);
+		}
+	} else {
+		if (!cfg.multicast_addr) {
+			fprintf(stderr, "error: multicast address is not specified. Use the '-a' option to specify it.\n");
+			exit(1);
+		}
+
+		if (!cfg.multicast_port) {
+			fprintf(stderr, "error: multicast port is not specified. Use the '-p' option to specify it.\n");
+			exit(1);
+		}
+
+		err = uv_udp_init(uv_default_loop(), &socket);
+		if (err) {
+			libuv_error("uv_udp_init");
+		}
+		socket.data = session;
+
+		addr = uv_ip4_addr("0.0.0.0", cfg.multicast_port);
+
+		err = uv_udp_bind(&socket, addr, 0);
+		if (err) {
+			libuv_error("uv_udp_bind");
+		}
+
+		err = uv_udp_set_membership(&socket, cfg.multicast_addr, NULL, UV_JOIN_GROUP);
+		if (err) {
+			libuv_error("uv_udp_set_membership");
+		}
+
+		err = uv_udp_recv_start(&socket, alloc_packet, recv_packet);
+		if (err) {
+			libuv_error("uv_udp_recv_start");
+		}
+
+		uv_run(uv_default_loop(), UV_RUN_DEFAULT);
 	}
-	socket.data = session;
-
-	addr = uv_ip4_addr("0.0.0.0", cfg.multicast_port);
-
-	err = uv_udp_bind(&socket, addr, 0);
-	if (err) {
-		libuv_error("uv_udp_bind");
-	}
-
-	err = uv_udp_set_membership(&socket, cfg.multicast_addr, NULL, UV_JOIN_GROUP);
-	if (err) {
-		libuv_error("uv_udp_set_membership");
-	}
-
-	err = uv_udp_recv_start(&socket, alloc_packet, recv_packet);
-	if (err) {
-		libuv_error("uv_udp_recv_start");
-	}
-
-	uv_run(uv_default_loop(), UV_RUN_DEFAULT);
 }
