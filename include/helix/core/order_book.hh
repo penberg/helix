@@ -4,6 +4,12 @@
 
 #pragma once
 
+/// \defgroup order-book Order book management
+///
+/// Order book management provides support for reconstructing and
+/// querying per-asset order book state such as top and depth of book bid
+/// and ask price and size.
+
 #include <unordered_map>
 #include <cstdint>
 #include <utility>
@@ -15,20 +21,33 @@ namespace helix {
 
 namespace core {
 
+/// \addtogroup order-book
+/// @{
+
+/// \brief Order side.
 enum class side {
+    /// Buy order
     buy,
+    /// Sell order
     sell,
 };
 
+/// \brief Trading state.
 enum class trading_state {
+    /// Trading state is unknown.
     unknown,
+    /// Trading is halted.
     halted,
+    /// Trading is ongoing.
     trading,
+    /// Auction period.
     auction,
 };
 
 struct price_level;
 
+/// \brief Order is a request to buy or sell quantity of asset at a
+/// specified price.
 struct order {
     order(uint64_t id_, uint64_t price_, uint64_t quantity_, side side_)
         : level(nullptr)
@@ -49,7 +68,7 @@ struct order {
     side         _side;
 };
 
-// A price level is a time-prioritized list of orders with the same price.
+/// \brief Price level is a time-prioritized list of orders with the same price.
 struct price_level {
     price_level(uint64_t price_)
         : price(price_)
@@ -65,6 +84,9 @@ struct price_level {
     // Order IDs sorted by timestamp (ascending order):
     std::list<uint64_t> orders;
 };
+
+/// \brief Order book is a price-time prioritized list of buy and sell
+/// orders.
 
 class order_book {
 private:
@@ -127,6 +149,8 @@ private:
     template<typename T>
     price_level& lookup_or_create(T& levels, uint64_t price);
 };
+
+/// @}
 
 }
 

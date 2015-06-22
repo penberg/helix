@@ -4,6 +4,14 @@
 
 #pragma once
 
+/// \mainpage
+///
+/// Helix is an ultra-low latency C++ feed handler.
+///
+/// The documentation is organized into following sections:
+///
+///   - \ref order-book Order book reconstruction and management.
+
 #include "helix/core/order_book.hh"
 
 #include <cstddef>
