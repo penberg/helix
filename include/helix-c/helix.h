@@ -13,6 +13,12 @@ extern "C" {
 #endif
 
 /*!
+ * @typedef helix_timestamp_t
+ * @abstract Type of a timestamp.
+ */
+typedef uint64_t helix_timestamp_t;
+
+/*!
  * @typedef  helix_protocol_t
  * @abstract Type of a protocol descriptor.
  */

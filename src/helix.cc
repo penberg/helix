@@ -88,7 +88,7 @@ const char *helix_order_book_symbol(helix_order_book_t ob)
     return unwrap(ob)->symbol().c_str();
 }
 
-uint64_t helix_order_book_timestamp(helix_order_book_t ob)
+helix_timestamp_t helix_order_book_timestamp(helix_order_book_t ob)
 {
     return unwrap(ob)->timestamp();
 }
