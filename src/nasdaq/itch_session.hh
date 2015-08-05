@@ -5,7 +5,7 @@
 #pragma once
 
 #include "helix/nasdaq/nordic_itch_messages.h"
-#include "helix/core/order_book.hh"
+#include "helix/order_book.hh"
 #include "helix/helix.hh"
 #include "helix/net.hh"
 

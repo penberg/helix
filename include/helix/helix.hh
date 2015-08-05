@@ -12,7 +12,7 @@
 ///
 ///   - \ref order-book Order book reconstruction and management.
 
-#include "helix/core/order_book.hh"
+#include "helix/order_book.hh"
 
 #include <cstddef>
 #include <vector>

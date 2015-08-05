@@ -1,7 +1,7 @@
 #include "itch_session.hh"
 
 #include "helix/nasdaq/nordic_itch_messages.h"
-#include "helix/core/order_book.hh"
+#include "helix/order_book.hh"
 
 #include <unordered_map>
 #include <stdexcept>

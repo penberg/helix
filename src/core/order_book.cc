@@ -1,4 +1,4 @@
-#include "helix/core/order_book.hh"
+#include "helix/order_book.hh"
 
 #include <stdexcept>
 #include <limits>
