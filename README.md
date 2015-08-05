@@ -1,11 +1,8 @@
 # Helix
 
-Helix is an ultra low latency feed handler written in C++ that
-normalizes market data updates for use in trading applications. Helix
-supports connecting to multiple market data feeds from different trading
-venues using their native protocols. Helix core does not include
-networking functionality and expects applications to provide raw packet
-data.
+Helix is an ultra low-latency market data feed handler written in C++. It provides an API to trading applications that normalizes market data updates from multiple feeds.
+
+Helix core does not include networking functionality and expects applications to provide raw packet data.
 
 ## Features
 
@@ -22,6 +19,6 @@ data.
 
 ### Protocols
 
-* [x] MoldUDP
-* [x] NASDAQ OMX Nordic Equity Total-View ITCH
-* [ ] BATS Chi-X Europe Multicast PITCH
+* NASDAQ OMX Nordic
+  * [x] MoldUDP
+  * [x] Equity Total-View ITCH
