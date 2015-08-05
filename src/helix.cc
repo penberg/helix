@@ -103,7 +103,7 @@ size_t helix_order_book_ask_levels(helix_order_book_t ob)
     return unwrap(ob)->ask_levels();
 }
 
-uint64_t helix_order_book_bid_price(helix_order_book_t ob, size_t level)
+helix_price_t helix_order_book_bid_price(helix_order_book_t ob, size_t level)
 {
     return unwrap(ob)->bid_price(level);
 }
@@ -113,7 +113,7 @@ uint64_t helix_order_book_bid_size(helix_order_book_t ob, size_t level)
     return unwrap(ob)->bid_size(level);
 }
 
-uint64_t helix_order_book_ask_price(helix_order_book_t ob, size_t level)
+helix_price_t helix_order_book_ask_price(helix_order_book_t ob, size_t level)
 {
     return unwrap(ob)->ask_price(level);
 }
@@ -123,7 +123,7 @@ uint64_t helix_order_book_ask_size(helix_order_book_t ob, size_t level)
     return unwrap(ob)->ask_size(level);
 }
 
-uint64_t helix_order_book_midprice(helix_order_book_t ob, size_t level)
+helix_price_t helix_order_book_midprice(helix_order_book_t ob, size_t level)
 {
     return unwrap(ob)->midprice(level);
 }
@@ -149,7 +149,7 @@ uint64_t helix_trade_timestamp(helix_trade_t trade)
     return unwrap(trade)->timestamp;
 }
 
-uint64_t helix_trade_price(helix_trade_t trade)
+helix_price_t helix_trade_price(helix_trade_t trade)
 {
     return unwrap(trade)->price;
 }

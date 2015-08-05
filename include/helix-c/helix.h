@@ -19,6 +19,12 @@ extern "C" {
 typedef uint64_t helix_timestamp_t;
 
 /*!
+ * @typedef helix_price_t
+ * @abstract Type of a price.
+ */
+typedef uint64_t helix_price_t;
+
+/*!
  * @typedef  helix_protocol_t
  * @abstract Type of a protocol descriptor.
  */
@@ -131,7 +137,7 @@ size_t helix_order_book_ask_levels(helix_order_book_t);
 /*!
  * @abstract Returns the order book bid price for a price level.
  */
-uint64_t helix_order_book_bid_price(helix_order_book_t, size_t);
+helix_price_t helix_order_book_bid_price(helix_order_book_t, size_t);
 
 /*!
  * @abstract Returns the order book bid size for a price level.
@@ -141,7 +147,7 @@ uint64_t helix_order_book_bid_size(helix_order_book_t, size_t);
 /*!
  * @abstract Returns the order book ask price for a price level.
  */
-uint64_t helix_order_book_ask_price(helix_order_book_t, size_t);
+helix_price_t helix_order_book_ask_price(helix_order_book_t, size_t);
 
 /*!
  * @abstract Returns the order book ask size for a price level.
@@ -151,7 +157,7 @@ uint64_t helix_order_book_ask_size(helix_order_book_t, size_t);
 /*!
  * @abstract Returns midprice for a price level in the order book.
  */
-uint64_t helix_order_book_midprice(helix_order_book_t, size_t);
+helix_price_t helix_order_book_midprice(helix_order_book_t, size_t);
 
 /*!
  * @abstract Returns the trade symbol.
@@ -171,7 +177,7 @@ helix_trade_sign_t helix_trade_sign(helix_trade_t);
 /*!
  * @abstract Returns the price of a trade.
  */
-uint64_t helix_trade_price(helix_trade_t);
+helix_price_t helix_trade_price(helix_trade_t);
 
 /*!
  * @abstract Returns the size of a trade.
