@@ -58,25 +58,6 @@ using ob_callback = std::function<void(const order_book&)>;
 
 using trade_callback = std::function<void(const trade&)>;
 
-// FIXME: consolidate these
-
-struct venue {
-};
-
-struct symbol {
-};
-
-struct subscription {
-    virtual void unsubsribe();
-};
-
-struct connection {
-    virtual subscription* subscribe();
-};
-
-struct error {
-};
-
 class session {
     void* _data;
 public:
