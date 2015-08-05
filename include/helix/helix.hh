@@ -28,8 +28,6 @@ class packet_view;
 
 namespace core {
 
-class order_book;
-
 enum class trade_sign {
     buyer_initiated,
     seller_initiated,
