@@ -1,7 +1,3 @@
-/*
- * Copyright (C) 2015 Bitbot
- */
-
 #pragma once
 
 /// \defgroup order-book Order book management

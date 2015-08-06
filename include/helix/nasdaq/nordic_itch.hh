@@ -1,7 +1,3 @@
-/*
- * Copyright (C) 2015 Bitbot
- */
-
 #pragma once
 
 #include "helix/helix.hh"

@@ -1,8 +1,6 @@
 /*
  * SoupFILE support
  *
- * Copyright (C) 2015 Bitbot
- *
  * This implementation is based on the following specification provided
  * by NASDAQ:
  *

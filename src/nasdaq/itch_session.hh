@@ -1,7 +1,3 @@
-/*
- * Copyright (C) 2015 Bitbot LCC
- */
-
 #pragma once
 
 #include "helix/nasdaq/nordic_itch_messages.h"

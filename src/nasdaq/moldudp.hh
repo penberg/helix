@@ -1,8 +1,6 @@
 /*
  * MoldUDP protocol support
  *
- * Copyright (C) 2015 Bitbot
- *
  * The implementation is based on the following specifications provided
  * by NASDAQ OMX:
  *

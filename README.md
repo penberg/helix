@@ -22,3 +22,9 @@ Helix core does not include networking functionality and expects applications to
 * NASDAQ OMX Nordic
   * [x] MoldUDP
   * [x] Equity Total-View ITCH
+
+## License
+
+Copyright © 2015 Pekka Enberg
+
+Helix is distributed under the 2-clause BSD license. See [LICENSE](https://github.com/penberg/helix/blob/master/LICENSE) for the full license text.
