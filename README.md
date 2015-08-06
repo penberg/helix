@@ -20,8 +20,9 @@ Helix core does not include networking functionality and expects applications to
 ### Protocols
 
 * NASDAQ OMX Nordic
-  * [x] MoldUDP
   * [x] Equity Total-View ITCH
+  * [x] MoldUDP
+  * [x] SoupFILE
 
 ## License
 
