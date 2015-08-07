@@ -377,7 +377,7 @@ int main(int argc, char *argv[])
 
 		addr = uv_ip4_addr("0.0.0.0", cfg.multicast_port);
 
-		err = uv_udp_bind(&socket, addr, 0);
+		err = uv_udp_bind(&socket, addr, UV_UDP_REUSEADDR);
 		if (err) {
 			libuv_error("uv_udp_bind");
 		}
