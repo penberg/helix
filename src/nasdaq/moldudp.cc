@@ -3,6 +3,7 @@
 #include "helix/nasdaq/moldudp_messages.h"
 #include <cassert>
 #include <cstdlib>
+#include <string>
 
 using namespace std;
 
