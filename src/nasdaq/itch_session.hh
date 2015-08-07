@@ -17,7 +17,7 @@ namespace nasdaq {
 // NASDAQ OXM Nordic ITCH feed.
 //
 // This is a feed handler for Nordic ITCH. The handler assumes that transport
-// protocol framing such as SoapTCP or MoldUDP has already been parsed and
+// protocol framing such as SoupTCP or MoldUDP has already been parsed and
 // works directly on ITCH messages.
 //
 // The feed handler reconstructs a full depth order book from a ITCH message
