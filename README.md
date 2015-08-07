@@ -4,6 +4,14 @@ Helix is an ultra low-latency market data feed handler written in C++. It provid
 
 Helix core does not include networking functionality and expects applications to provide raw packet data.
 
+## Building
+
+Helix requires libuv 1.0 or later. If you build it from sources, you need to tell pkg-config where to find the configuration files:
+
+```
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
+```
+
 ## Features
 
 ### Core

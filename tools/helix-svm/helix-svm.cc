@@ -167,11 +167,12 @@ private:
 	}
 };
 
-static uv_buf_t alloc_packet(uv_handle_t* handle, size_t suggested_size)
+static void alloc_packet(uv_handle_t* handle, size_t size, uv_buf_t* buf)
 {
 	static char rx_buffer[65536];
 
-	return uv_buf_init(rx_buffer, sizeof(rx_buffer));
+	buf->base = rx_buffer;
+	buf->len = sizeof(rx_buffer);
 }
 
 struct svm_fmt_ops *fmt_ops;
@@ -187,19 +188,15 @@ static void process_trade_event(helix_session_t session, helix_trade_t trade)
 {
 }
 
-static void recv_packet(uv_udp_t* handle, ssize_t nread, uv_buf_t buf, struct sockaddr* addr, unsigned flags)
+static void recv_packet(uv_udp_t* handle, ssize_t nread, const uv_buf_t* buf, const struct sockaddr* addr, unsigned flags)
 {
 	if (nread > 0) {
-		helix_session_process_packet(reinterpret_cast<helix_session_t>(handle->data), buf.base, nread);
+		helix_session_process_packet(reinterpret_cast<helix_session_t>(handle->data), buf->base, nread);
 	}
 }
 
-static void libuv_error(const char *s)
+static void libuv_error(const char *s, int err)
 {
-	uv_err_t err;
-
-	err = uv_last_error(uv_default_loop());
-
 	fprintf(stderr, "error: %s: %s (%s)\n", s, uv_strerror(err), uv_err_name(err));
 	exit(1);
 }
@@ -371,25 +368,28 @@ int main(int argc, char *argv[])
 
 		err = uv_udp_init(uv_default_loop(), &socket);
 		if (err) {
-			libuv_error("uv_udp_init");
+			libuv_error("uv_udp_init", err);
 		}
 		socket.data = session;
 
-		addr = uv_ip4_addr("0.0.0.0", cfg.multicast_port);
-
-		err = uv_udp_bind(&socket, addr, UV_UDP_REUSEADDR);
+		err = uv_ip4_addr("0.0.0.0", cfg.multicast_port, &addr);
 		if (err) {
-			libuv_error("uv_udp_bind");
+			libuv_error("uv_ip4_addr", err);
+		}
+
+		err = uv_udp_bind(&socket, (const struct sockaddr *)&addr, UV_UDP_REUSEADDR);
+		if (err) {
+			libuv_error("uv_udp_bind", err);
 		}
 
 		err = uv_udp_set_membership(&socket, cfg.multicast_addr, NULL, UV_JOIN_GROUP);
 		if (err) {
-			libuv_error("uv_udp_set_membership");
+			libuv_error("uv_udp_set_membership", err);
 		}
 
 		err = uv_udp_recv_start(&socket, alloc_packet, recv_packet);
 		if (err) {
-			libuv_error("uv_udp_recv_start");
+			libuv_error("uv_udp_recv_start", err);
 		}
 
 		uv_run(uv_default_loop(), UV_RUN_DEFAULT);
