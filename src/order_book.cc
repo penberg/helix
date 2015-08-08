@@ -129,6 +129,16 @@ price_level& order_book::lookup_or_create(T& levels, uint64_t price)
     return it->second;
 }
 
+side order_book::lookup_side(uint64_t order_id) const
+{
+    auto it = _orders.find(order_id);
+    if (it == _orders.end()) {
+        throw invalid_argument(string("invalid order id: ") + to_string(order_id));
+    }
+    return it->second._side;
+}
+
+
 size_t order_book::bid_levels() const
 {
     return _bids.size();

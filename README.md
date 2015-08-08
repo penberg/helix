@@ -29,9 +29,11 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
 
 ### Protocols
 
-* NASDAQ OMX Nordic
-  * [x] Equity Total-View ITCH
+* NASDAQ
+  * [x] NASDAQ TotalView-ITCH 5.0
+  * [x] Nordic Equity TotalView-ITCH 1.90.2
   * [x] MoldUDP
+  * [x] BinaryFILE
   * [x] SoupFILE
 
 ## License

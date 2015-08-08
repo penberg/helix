@@ -1,6 +1,7 @@
 #include "helix-c/helix.h"
 
 #include "helix/nasdaq/nordic_itch.hh"
+#include "helix/nasdaq/itch50.hh"
 #include "helix/net.hh"
 
 #include <cassert>
@@ -54,6 +55,9 @@ helix_protocol_t helix_protocol_lookup(const char *name)
 {
     if (!strcmp(name, "nasdaq-nordic-moldudp-itch") || !strcmp(name, "nasdaq-nordic-soupfile-itch")) {
         return wrap(new helix::nasdaq::nordic_itch_protocol{name});
+    }
+    if (!strcmp(name, "nasdaq-binaryfile-itch50")) {
+        return wrap(new helix::nasdaq::itch50_protocol{name});
     }
     return NULL;
 }
