@@ -131,7 +131,7 @@ public:
     void cancel(uint64_t order_id, uint64_t quantity);
     std::pair<uint64_t, side_type> execute(uint64_t order_id, uint64_t quantity);
     void remove(uint64_t order_id);
-    side_type lookup_side(uint64_t order_id) const;
+    side_type side(uint64_t order_id) const;
 
     size_t bid_levels() const;
     size_t ask_levels() const;

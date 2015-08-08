@@ -222,7 +222,7 @@ void itch50_session_impl::process_msg(const itch50_order_replace* m)
     if (it != order_book_id_map.end()) {
         auto& ob = it->second;
 
-        auto side = ob.lookup_side(m->OriginalOrderReferenceNumber);
+        auto side = ob.side(m->OriginalOrderReferenceNumber);
 
         ob.remove(m->OriginalOrderReferenceNumber);
 
