@@ -127,7 +127,7 @@ void itch_session::process_msg(const itch_add_order* m)
         uint64_t quantity = itch_uatoi(m->Quantity, sizeof(m->Quantity));;
         auto     side     = itch_side(m->BuySellIndicator);
 
-        order o{order_id, price, quantity, side};
+        order o{order_id, price, quantity, side, timestamp()};
         ob.add(std::move(o));
 
         order_id_map.insert({order_id, ob});
@@ -148,7 +148,7 @@ void itch_session::process_msg(const itch_add_order_mpid* m)
         uint64_t quantity = itch_uatoi(m->Quantity, sizeof(m->Quantity));;
         auto     side     = itch_side(m->BuySellIndicator);
 
-        order o{order_id, price, quantity, side};
+        order o{order_id, price, quantity, side, timestamp()};
         ob.add(std::move(o));
 
         order_id_map.insert({order_id, ob});

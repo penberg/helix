@@ -137,10 +137,10 @@ void itch50_session_impl::process_msg(const itch50_add_order* m)
         uint64_t price    = be32toh(m->Price);
         uint64_t quantity = be32toh(m->Shares);
         auto     side     = itch50_side(m->BuySellIndicator);
-
-        order o{order_id, price, quantity, side};
+        uint64_t timestamp = itch50_timestamp(m->Timestamp);
+        order o{order_id, price, quantity, side, timestamp};
         ob.add(std::move(o));
-        ob.set_timestamp(itch50_timestamp(m->Timestamp));
+        ob.set_timestamp(timestamp);
         _process_ob(ob);
     }
 }
@@ -155,10 +155,10 @@ void itch50_session_impl::process_msg(const itch50_add_order_mpid* m)
         uint64_t price    = be32toh(m->Price);
         uint64_t quantity = be32toh(m->Shares);
         auto     side     = itch50_side(m->BuySellIndicator);
-
-        order o{order_id, price, quantity, side};
+        uint64_t timestamp = itch50_timestamp(m->Timestamp);
+        order o{order_id, price, quantity, side, timestamp};
         ob.add(std::move(o));
-        ob.set_timestamp(itch50_timestamp(m->Timestamp));
+        ob.set_timestamp(timestamp);
         _process_ob(ob);
     }
 }
@@ -229,9 +229,10 @@ void itch50_session_impl::process_msg(const itch50_order_replace* m)
         uint64_t order_id = m->NewOrderReferenceNumber;
         uint64_t price    = be32toh(m->Price);
         uint64_t quantity = be32toh(m->Shares);
-        order o{order_id, price, quantity, side};
+        uint64_t timestamp = itch50_timestamp(m->Timestamp);
+        order o{order_id, price, quantity, side, timestamp};
         ob.add(std::move(o));
-        ob.set_timestamp(itch50_timestamp(m->Timestamp));
+        ob.set_timestamp(timestamp);
         _process_ob(ob);
     }
 }
