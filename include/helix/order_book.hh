@@ -49,24 +49,24 @@ struct price_level;
 
 /// \brief Order is a request to buy or sell quantity of asset at a
 /// specified price.
-struct order {
-    order(uint64_t id_, uint64_t price_, uint64_t quantity_, side_type side_)
-        : level(nullptr)
-        , id(id_)
-        , price(price_)
-        , quantity(quantity_)
-        , side(side_)
-    {}
-
-    order(const order&) = default;
-    order(order&&) = default;
-    order& operator=(const order&) = default;
-
+struct order final {
     price_level* level;
     uint64_t     id;
     uint64_t     price;
     uint64_t     quantity;
     side_type    side;
+
+    order(uint64_t id, uint64_t price, uint64_t quantity, side_type side)
+        : level{nullptr}
+        , id{id}
+        , price{price}
+        , quantity{quantity}
+        , side{side}
+    {}
+
+    order(const order&) = default;
+    order(order&&) = default;
+    order& operator=(const order&) = default;
 };
 
 /// \brief Price level is a time-prioritized list of orders with the same price.
