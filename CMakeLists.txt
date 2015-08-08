@@ -39,14 +39,10 @@ set(libSrcs ${libSrcs}
 add_library(helix ${libSrcs} include/helix/nasdaq/moldudp_messages.h)
 
 add_executable(helix-svm tools/helix-svm/helix-svm.cc)
-target_link_libraries(helix-svm LINK_PUBLIC helix)
-target_link_libraries(helix-svm PUBLIC uv)
+target_link_libraries(helix-svm helix ${LIBUV_LIBRARIES})
 
 add_executable(helix-trace tools/helix-trace/helix-trace.c)
-target_link_libraries(helix-trace LINK_PUBLIC helix)
-target_link_libraries(helix-trace PUBLIC uv)
+target_link_libraries(helix-trace helix ${LIBUV_LIBRARIES})
 
 add_executable(helix-top tools/helix-top/helix-top.c)
-target_link_libraries(helix-top LINK_PUBLIC helix)
-target_link_libraries(helix-top PUBLIC uv)
-target_link_libraries(helix-top PUBLIC ncurses)
+target_link_libraries(helix-top helix ncurses ${LIBUV_LIBRARIES})
