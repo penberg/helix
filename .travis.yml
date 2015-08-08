@@ -9,7 +9,7 @@ env:
 before_script:
   # install libuv
   - curl -L http://dist.libuv.org/dist/v${LIBUV_VERSION}/libuv-v${LIBUV_VERSION}.tar.gz | tar xzf -
-  - (cd libuv-${LIBUV_VERSION} && ./autogen.sh && ./configure --prefix=/usr && make && sudo make install)
+  - (cd libuv-v${LIBUV_VERSION} && ./autogen.sh && ./configure --prefix=/usr && make && sudo make install)
   # generate makefile
   - cmake .
 
