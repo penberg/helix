@@ -93,6 +93,18 @@ void itch50_session_impl::process_msg(const itch50_stock_directory* m)
 
 void itch50_session_impl::process_msg(const itch50_stock_trading_action* m)
 {
+    auto it = order_book_id_map.find(m->StockLocate);
+    if (it != order_book_id_map.end()) {
+        auto& ob = it->second;
+
+        switch (m->TradingState) {
+        case 'H': ob.set_state(trading_state::halted); break;
+        case 'P': ob.set_state(trading_state::paused); break;
+        case 'Q': ob.set_state(trading_state::quotation_only); break;
+        case 'T': ob.set_state(trading_state::trading); break;
+        default:  throw invalid_argument(string("invalid trading state: ") + to_string(m->TradingState));
+        }
+    }
 }
 
 void itch50_session_impl::process_msg(const itch50_reg_sho_restriction* m)

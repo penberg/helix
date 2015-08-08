@@ -134,11 +134,14 @@ helix_price_t helix_order_book_midprice(helix_order_book_t ob, size_t level)
 
 helix_trading_state_t helix_order_book_state(helix_order_book_t ob)
 {
+    using namespace helix::core;
     switch (unwrap(ob)->state()) {
-    case helix::core::trading_state::unknown: return HELIX_TRADING_STATE_UNKNOWN;
-    case helix::core::trading_state::halted:  return HELIX_TRADING_STATE_HALTED;
-    case helix::core::trading_state::trading: return HELIX_TRADING_STATE_TRADING;
-    case helix::core::trading_state::auction: return HELIX_TRADING_STATE_AUCTION;
+    case trading_state::unknown:        return HELIX_TRADING_STATE_UNKNOWN;
+    case trading_state::halted:         return HELIX_TRADING_STATE_HALTED;
+    case trading_state::paused:         return HELIX_TRADING_STATE_PAUSED;
+    case trading_state::quotation_only: return HELIX_TRADING_STATE_QUOTATION_ONLY;
+    case trading_state::trading:        return HELIX_TRADING_STATE_TRADING;
+    case trading_state::auction:        return HELIX_TRADING_STATE_AUCTION;
     }
     assert(0);
 }

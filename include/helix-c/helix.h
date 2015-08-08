@@ -87,6 +87,10 @@ typedef enum {
     HELIX_TRADING_STATE_UNKNOWN,
     /*! Order book instrument trading is halted. */
     HELIX_TRADING_STATE_HALTED,
+    /*! Order book instrument trading is paused. */
+    HELIX_TRADING_STATE_PAUSED,
+    /*! Order book instrument is in quotation only period. */
+    HELIX_TRADING_STATE_QUOTATION_ONLY,
     /*! Order book instrument is trading at the exchange. */
     HELIX_TRADING_STATE_TRADING,
     /*! Order book instrument is traded in intraday auction. */

@@ -35,6 +35,10 @@ enum class trading_state {
     unknown,
     /// Trading is halted.
     halted,
+    /// Trading is paused.
+    paused,
+    /// Quotation only period.
+    quotation_only,
     /// Trading is ongoing.
     trading,
     /// Auction period.
