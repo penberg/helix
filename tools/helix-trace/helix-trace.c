@@ -366,4 +366,7 @@ int main(int argc, char *argv[])
 
 		uv_run(uv_default_loop(), UV_RUN_DEFAULT);
 	}
+
+	if (cfg.output && output)
+		fclose(output);
 }
