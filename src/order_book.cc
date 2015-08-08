@@ -23,14 +23,14 @@ order_book::~order_book()
 void order_book::add(order&& order)
 {
     switch (order._side) {
-    case side::buy: {
+    case side_type::buy: {
         auto&& level = lookup_or_create(_bids, order.price);
         order.level = &level;
         level.orders.emplace_back(order.id);
         level.size += order.quantity;
         break;
     }
-    case side::sell: {
+    case side_type::sell: {
         auto&& level = lookup_or_create(_asks, order.price);
         order.level = &level;
         level.orders.emplace_back(order.id);
@@ -57,7 +57,7 @@ void order_book::cancel(uint64_t order_id, uint64_t quantity)
     }
 }
 
-std::pair<uint64_t, side> order_book::execute(uint64_t order_id, uint64_t quantity)
+std::pair<uint64_t, side_type> order_book::execute(uint64_t order_id, uint64_t quantity)
 {
     auto it = _orders.find(order_id);
     if (it == _orders.end()) {
@@ -65,7 +65,7 @@ std::pair<uint64_t, side> order_book::execute(uint64_t order_id, uint64_t quanti
     }
     auto& order = it->second;
     uint64_t price = order.price;
-    side s = order._side;
+    side_type s = order._side;
     order.quantity -= quantity;
     order.level->size -= quantity;
     if (!order.quantity) {
@@ -87,11 +87,11 @@ void order_book::remove(iterator& iter)
 {
     auto&& order = iter->second;
     switch (order._side) {
-    case side::buy: {
+    case side_type::buy: {
         remove(order, _bids);
         break;
     }
-    case side::sell: {
+    case side_type::sell: {
         remove(order, _asks);
         break;
     }
@@ -129,7 +129,7 @@ price_level& order_book::lookup_or_create(T& levels, uint64_t price)
     return it->second;
 }
 
-side order_book::lookup_side(uint64_t order_id) const
+side_type order_book::lookup_side(uint64_t order_id) const
 {
     auto it = _orders.find(order_id);
     if (it == _orders.end()) {

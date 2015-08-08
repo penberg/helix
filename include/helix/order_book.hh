@@ -22,7 +22,7 @@ namespace core {
 /// @{
 
 /// \brief Order side.
-enum class side {
+enum class side_type {
     /// Buy order
     buy,
     /// Sell order
@@ -50,7 +50,7 @@ struct price_level;
 /// \brief Order is a request to buy or sell quantity of asset at a
 /// specified price.
 struct order {
-    order(uint64_t id_, uint64_t price_, uint64_t quantity_, side side_)
+    order(uint64_t id_, uint64_t price_, uint64_t quantity_, side_type side_)
         : level(nullptr)
         , id(id_)
         , price(price_)
@@ -66,7 +66,7 @@ struct order {
     uint64_t     id;
     uint64_t     price;
     uint64_t     quantity;
-    side         _side;
+    side_type    _side;
 };
 
 /// \brief Price level is a time-prioritized list of orders with the same price.
@@ -129,9 +129,9 @@ public:
 
     void add(order&& order);
     void cancel(uint64_t order_id, uint64_t quantity);
-    std::pair<uint64_t, side> execute(uint64_t order_id, uint64_t quantity);
+    std::pair<uint64_t, side_type> execute(uint64_t order_id, uint64_t quantity);
     void remove(uint64_t order_id);
-    side lookup_side(uint64_t order_id) const;
+    side_type lookup_side(uint64_t order_id) const;
 
     size_t bid_levels() const;
     size_t ask_levels() const;

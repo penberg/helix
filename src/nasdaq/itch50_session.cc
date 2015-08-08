@@ -20,21 +20,21 @@ namespace helix {
 
 namespace nasdaq {
 
-static side itch50_side(char c)
+static side_type itch50_side(char c)
 {
     switch (c) {
-    case 'B': return side::buy;
-    case 'S': return side::sell;
+    case 'B': return side_type::buy;
+    case 'S': return side_type::sell;
     default:  throw invalid_argument(string("invalid argument: ") + to_string(c));
     }
 }
 
-trade_sign itch50_trade_sign(side s)
+trade_sign itch50_trade_sign(side_type s)
 {
     switch (s) {
-    case side::buy:  return trade_sign::seller_initiated;
-    case side::sell: return trade_sign::buyer_initiated;
-    default:         throw invalid_argument(string("invalid argument"));
+    case side_type::buy:  return trade_sign::seller_initiated;
+    case side_type::sell: return trade_sign::buyer_initiated;
+    default:              throw invalid_argument(string("invalid argument"));
     }
 }
 
