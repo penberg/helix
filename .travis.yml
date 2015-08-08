@@ -6,6 +6,12 @@ compiler:
 env:
   - LIBUV_VERSION=1.0.2
 
+before_install:
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update -qq
+  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.9; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
+
 before_script:
   # install libuv
   - curl -L http://dist.libuv.org/dist/v${LIBUV_VERSION}/libuv-v${LIBUV_VERSION}.tar.gz | tar xzf -
