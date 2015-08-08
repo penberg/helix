@@ -22,6 +22,8 @@ find_package(PkgConfig)
 pkg_check_modules(LIBUV REQUIRED libuv)
 include_directories(${LIBUV_INCLUDE_DIRS})
 
+include_directories("include")
+
 set(CMAKE_C_FLAGS "-Iinclude -Wall -O3 -g -std=gnu11")
 set(CMAKE_CXX_FLAGS "-Iinclude -Wall -O3 -g -std=c++14")
 
@@ -35,20 +37,16 @@ set(libSrcs ${libSrcs}
 )
 
 add_library(helix ${libSrcs} include/helix/nasdaq/moldudp_messages.h)
-target_include_directories(helix PUBLIC include)
 
 add_executable(helix-svm tools/helix-svm/helix-svm.cc)
-target_include_directories(helix-svm PUBLIC include)
 target_link_libraries(helix-svm LINK_PUBLIC helix)
 target_link_libraries(helix-svm PUBLIC uv)
 
 add_executable(helix-trace tools/helix-trace/helix-trace.c)
-target_include_directories(helix-trace PUBLIC include)
 target_link_libraries(helix-trace LINK_PUBLIC helix)
 target_link_libraries(helix-trace PUBLIC uv)
 
 add_executable(helix-top tools/helix-top/helix-top.c)
-target_include_directories(helix-top PUBLIC include)
 target_link_libraries(helix-top LINK_PUBLIC helix)
 target_link_libraries(helix-top PUBLIC uv)
 target_link_libraries(helix-top PUBLIC ncurses)
