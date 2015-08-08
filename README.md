@@ -1,5 +1,7 @@
 # Helix
 
+[![Build Status](https://travis-ci.org/penberg/helix.svg?branch=master)](https://travis-ci.org/penberg/helix)
+
 Helix is an ultra low-latency market data feed handler written in C++. It provides an API to trading applications that normalizes market data updates from multiple feeds.
 
 Helix core does not include networking functionality and expects applications to provide raw packet data.
