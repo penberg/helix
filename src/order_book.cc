@@ -22,7 +22,7 @@ order_book::~order_book()
 
 void order_book::add(order&& order)
 {
-    switch (order._side) {
+    switch (order.side) {
     case side_type::buy: {
         auto&& level = lookup_or_create(_bids, order.price);
         order.level = &level;
@@ -38,7 +38,7 @@ void order_book::add(order&& order)
         break;
     }
     default:
-        throw invalid_argument(string("invalid side: ") + static_cast<char>(order._side));
+        throw invalid_argument(string("invalid side: ") + static_cast<char>(order.side));
     }
     _orders.insert({order.id, std::move(order)});
 }
@@ -65,7 +65,7 @@ std::pair<uint64_t, side_type> order_book::execute(uint64_t order_id, uint64_t q
     }
     auto& order = it->second;
     uint64_t price = order.price;
-    side_type s = order._side;
+    side_type s = order.side;
     order.quantity -= quantity;
     order.level->size -= quantity;
     if (!order.quantity) {
@@ -86,7 +86,7 @@ void order_book::remove(uint64_t order_id)
 void order_book::remove(iterator& iter)
 {
     auto&& order = iter->second;
-    switch (order._side) {
+    switch (order.side) {
     case side_type::buy: {
         remove(order, _bids);
         break;
@@ -96,7 +96,7 @@ void order_book::remove(iterator& iter)
         break;
     }
     default:
-        throw invalid_argument(string("invalid side: ") + static_cast<char>(order._side));
+        throw invalid_argument(string("invalid side: ") + static_cast<char>(order.side));
     }
     _orders.erase(iter);
 }
@@ -135,7 +135,7 @@ side_type order_book::lookup_side(uint64_t order_id) const
     if (it == _orders.end()) {
         throw invalid_argument(string("invalid order id: ") + to_string(order_id));
     }
-    return it->second._side;
+    return it->second.side;
 }
 
 

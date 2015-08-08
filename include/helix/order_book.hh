@@ -55,7 +55,7 @@ struct order {
         , id(id_)
         , price(price_)
         , quantity(quantity_)
-        , _side(side_)
+        , side(side_)
     {}
 
     order(const order&) = default;
@@ -66,7 +66,7 @@ struct order {
     uint64_t     id;
     uint64_t     price;
     uint64_t     quantity;
-    side_type    _side;
+    side_type    side;
 };
 
 /// \brief Price level is a time-prioritized list of orders with the same price.
