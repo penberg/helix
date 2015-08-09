@@ -1,5 +1,6 @@
 #include <helix-c/helix.h>
 #include <sys/mman.h>
+#include <stdbool.h>
 #include <getopt.h>
 #include <libgen.h>
 #include <stdlib.h>
@@ -11,6 +12,7 @@
 static const char *program;
 
 FILE* output;
+bool flush;
 
 struct config {
 	const char *symbol;
@@ -62,14 +64,14 @@ static void fmt_pretty_ob(helix_session_t session, helix_order_book_t ob)
 
 const char trade_sign(helix_trade_sign_t sign)
 {
-    switch (sign) {
-    case HELIX_TRADE_SIGN_BUYER_INITIATED:    return 'B';
-    case HELIX_TRADE_SIGN_SELLER_INITIATED:   return 'S';
-    case HELIX_TRADE_SIGN_CROSSING:           return 'C';
-    case HELIX_TRADE_SIGN_NON_DISPLAYABLE:    return 'N';
-    default:
-        return '?';
-    }
+	switch (sign) {
+	case HELIX_TRADE_SIGN_BUYER_INITIATED:	  return 'B';
+	case HELIX_TRADE_SIGN_SELLER_INITIATED:	  return 'S';
+	case HELIX_TRADE_SIGN_CROSSING:			  return 'C';
+	case HELIX_TRADE_SIGN_NON_DISPLAYABLE:	  return 'N';
+	default:
+		return '?';
+	}
 }
 
 static void fmt_pretty_trade(helix_session_t session, helix_trade_t trade)
@@ -86,21 +88,30 @@ struct trace_fmt_ops fmt_pretty_ops = {
 static void fmt_csv_header(void)
 {
 	fprintf(output, "Symbol,Timestamp,BidPrice,BidSize,AskPrice,AskSize,LastPrice,LastSign\n");
-	fflush(output);
+	if (flush) fflush(output);
 }
 
 static void fmt_csv_ob(helix_session_t session, helix_order_book_t ob)
 {
+	double bid_price;
+	double ask_price;
+
 	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
+		bid_price = (double)helix_order_book_bid_price(ob, 0)/10000.0;
+		ask_price = (double)helix_order_book_ask_price(ob, 0)/10000.0;
+		if (bid_price >= ask_price) {
+			fprintf(stderr, "order book crossed, bid: %f / ask: %f\n", bid_price, ask_price);
+		}
+
 		fprintf(output, "%s,%lu,%f,%lu,%f,%lu,,\n",
 			helix_order_book_symbol(ob),
 			helix_order_book_timestamp(ob),
-			(double)helix_order_book_bid_price(ob, 0)/10000.0,
+			bid_price,
 			helix_order_book_bid_size(ob, 0),
-			(double)helix_order_book_ask_price(ob, 0)/10000.0,
+			ask_price,
 			helix_order_book_ask_size(ob, 0)
 			);
-		fflush(output);
+		if (flush) fflush(output);
 	}
 }
 
@@ -108,7 +119,7 @@ static void fmt_csv_trade(helix_session_t session, helix_trade_t trade)
 {
 	fprintf(output, "%s,%lu,,,,,%f,%c\n",
 		helix_trade_symbol(trade), helix_trade_timestamp(trade), helix_trade_price(trade)/10000.0, trade_sign(helix_trade_sign(trade)));
-	fflush(output);
+	if (flush) fflush(output);
 }
 
 struct trace_fmt_ops fmt_csv_ops = {
@@ -148,7 +159,11 @@ static void usage(void)
 		"usage: %s [options]\n"
 		"  options:\n"
 		"    -s, --symbol symbol          Ticker symbol to listen to.\n"
-		"    -c, --multicast-proto proto  UDP multicast protocol listen to.\n"
+		"    -c, --multicast-proto proto  UDP multicast protocol listen to\n"
+		"          or read from. Supported values:\n"
+		"              nasdaq-nordic-moldudp-itch\n"
+		"              nasdaq-nordic-soupfile-itch\n"
+		"              nasdaq-binaryfile-itch50\n"
 		"    -a, --multicast-addr addr    UDP multicast address to listen to.\n"
 		"    -p, --multicast-port port    UDP multicast port to listen to.\n"
 		"    -i, --input filename         Input filename.\n"
@@ -250,12 +265,14 @@ int main(int argc, char *argv[])
 
 	if (cfg.output) {
 		output = fopen(cfg.output, "w");
+		flush = false;
 		if (!output) {
 			fprintf(stderr, "error: %s: %s\n", cfg.output, strerror(errno));
 			exit(1);
 		}
 	} else {
 		output = stdout;
+		flush = true;
 	}
 
 	proto = helix_protocol_lookup(cfg.multicast_proto);
@@ -349,4 +366,7 @@ int main(int argc, char *argv[])
 
 		uv_run(uv_default_loop(), UV_RUN_DEFAULT);
 	}
+
+	if (cfg.output && output)
+		fclose(output);
 }
