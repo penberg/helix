@@ -1,5 +1,6 @@
 #include <helix-c/helix.h>
 #include <sys/mman.h>
+#include <inttypes.h>
 #include <stdbool.h>
 #include <getopt.h>
 #include <libgen.h>
@@ -7,12 +8,22 @@
 #include <string.h>
 #include <errno.h>
 #include <stdio.h>
+#include <math.h>
 #include <uv.h>
 
 static const char *program;
 
 FILE* output;
 bool flush;
+
+size_t max_price_levels	= 0;
+size_t max_order_count	= 0;
+uint64_t quotes			= 0;
+uint64_t trades			= 0;
+uint64_t volume_shs		= 0;
+double volume_ccy		= 0.0;
+double high				= -INFINITY;
+double low				= +INFINITY;
 
 struct config {
 	const char *symbol;
@@ -132,11 +143,28 @@ struct trace_fmt_ops *fmt_ops;
 
 static void process_ob_event(helix_session_t session, helix_order_book_t ob)
 {
+	size_t bid_levels = helix_order_book_bid_levels(ob);
+	size_t ask_levels = helix_order_book_ask_levels(ob);
+	size_t order_count = helix_order_book_order_count(ob);
+
+	max_price_levels = bid_levels > max_price_levels ? bid_levels : max_price_levels;
+	max_price_levels = ask_levels > max_price_levels ? ask_levels : max_price_levels;
+	max_order_count = order_count > max_order_count ? order_count : max_order_count;
+	quotes++;
+
 	fmt_ops->fmt_ob(session, ob);
 }
 
 static void process_trade_event(helix_session_t session, helix_trade_t trade)
 {
+	double trade_price = helix_trade_price(trade)/10000.0;
+	uint64_t trade_size = helix_trade_size(trade);
+	volume_shs += trade_size;
+	volume_ccy += (double)trade_size * trade_price;
+	high = trade_price > high ? trade_price : high;
+	low = trade_price < low ? trade_price : low;
+	trades++;
+
 	fmt_ops->fmt_trade(session, trade);
 }
 
@@ -369,4 +397,7 @@ int main(int argc, char *argv[])
 
 	if (cfg.output && output)
 		fclose(output);
+
+	fprintf(stderr, "quotes: %" PRId64  ", trades: %" PRId64 " , max levels: %zu, max orders: %zu\n", quotes, trades, max_price_levels, max_order_count);
+	fprintf(stderr, "volume (mio): %.4lf, notional (mio): %.4lf, VWAP: %.3lf, high: %.3lf, low: %.3lf\n", (double)volume_shs * 1e-6, volume_ccy * 1e-6, (volume_ccy / (double)volume_shs), high, low);
 }

@@ -149,6 +149,11 @@ size_t order_book::ask_levels() const
     return _asks.size();
 }
 
+size_t order_book::order_count() const
+{
+    return _orders.size();
+}
+
 uint64_t order_book::bid_price(size_t level) const
 {
     auto it = _bids.begin();

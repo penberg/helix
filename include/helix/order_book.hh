@@ -137,6 +137,7 @@ public:
 
     size_t bid_levels() const;
     size_t ask_levels() const;
+    size_t order_count() const;
 
     uint64_t bid_price(size_t level) const;
     uint64_t bid_size (size_t level) const;
