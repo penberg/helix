@@ -16,7 +16,7 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
 
 ## Usage
 
-To convert a NASDAQ TotaView-ITCH 5.0 file to CVS:
+To convert a NASDAQ TotaView-ITCH 5.0 file to CSV:
 
 ```
 ./helix-trace -i 07302015.NASDAQ_ITCH50 -s AAPL -c nasdaq-binaryfile-itch50 -f csv -o AAPL.csv
