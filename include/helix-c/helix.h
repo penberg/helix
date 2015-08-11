@@ -139,6 +139,11 @@ size_t helix_order_book_bid_levels(helix_order_book_t);
 size_t helix_order_book_ask_levels(helix_order_book_t);
 
 /*!
+ * @abstract Returns the number of orders in the book.
+ */
+size_t helix_order_book_order_count(helix_order_book_t);
+
+/*!
  * @abstract Returns the order book bid price for a price level.
  */
 helix_price_t helix_order_book_bid_price(helix_order_book_t, size_t);

@@ -107,6 +107,11 @@ size_t helix_order_book_ask_levels(helix_order_book_t ob)
     return unwrap(ob)->ask_levels();
 }
 
+size_t helix_order_book_order_count(helix_order_book_t ob)
+{
+    return unwrap(ob)->order_count();
+}
+
 helix_price_t helix_order_book_bid_price(helix_order_book_t ob, size_t level)
 {
     return unwrap(ob)->bid_price(level);
