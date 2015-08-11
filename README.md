@@ -14,6 +14,13 @@ Helix requires libuv 1.0 or later. If you build it from sources, you need to tel
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
 ```
 
+To build Helix:
+
+```
+cmake .
+make
+```
+
 ## Usage
 
 To convert a NASDAQ TotaView-ITCH 5.0 file to CSV:
