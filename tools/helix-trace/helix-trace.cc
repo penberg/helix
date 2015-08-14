@@ -11,6 +11,9 @@
 #include <math.h>
 #include <uv.h>
 
+#include <string>
+#include <vector>
+
 static const char *program;
 
 FILE* output;
@@ -26,7 +29,7 @@ double high				= -INFINITY;
 double low				= +INFINITY;
 
 struct config {
-	const char *symbol;
+	std::vector<std::string> symbols;
 	const char *multicast_proto;
 	const char *multicast_addr;
 	int multicast_port;
@@ -228,7 +231,7 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 
 		switch (c) {
 		case 's':
-			cfg->symbol = optarg;
+			cfg->symbols.emplace_back(optarg);
 			break;
 		case 'c':
 			cfg->multicast_proto = optarg;
@@ -272,8 +275,8 @@ int main(int argc, char *argv[])
 
 	parse_options(&cfg, argc, argv);
 
-	if (!cfg.symbol) {
-		fprintf(stderr, "error: symbol is not specified. Use the '-s' option to specify it.\n");
+	if (cfg.symbols.empty()) {
+		fprintf(stderr, "error: no symbols are specified. Use the '-s' option to specify them.\n");
 		exit(1);
 	}
 
@@ -315,7 +318,9 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	helix_session_subscribe(session, cfg.symbol);
+	for (auto&& symbol : cfg.symbols) {
+		helix_session_subscribe(session, symbol.c_str());
+	}
 
 	if (cfg.input) {
 		const char* p;
