@@ -44,7 +44,7 @@ add_library(helix ${libSrcs} include/helix/nasdaq/moldudp_messages.h)
 add_executable(helix-svm tools/helix-svm/helix-svm.cc)
 target_link_libraries(helix-svm helix ${LIBUV_LIBRARIES})
 
-add_executable(helix-trace tools/helix-trace/helix-trace.c)
+add_executable(helix-trace tools/helix-trace/helix-trace.cc)
 target_link_libraries(helix-trace helix ${LIBUV_LIBRARIES})
 
 add_executable(helix-top tools/helix-top/helix-top.c)

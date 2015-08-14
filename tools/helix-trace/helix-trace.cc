@@ -171,7 +171,7 @@ static void process_trade_event(helix_session_t session, helix_trade_t trade)
 static void recv_packet(uv_udp_t* handle, ssize_t nread, const uv_buf_t* buf, const struct sockaddr* addr, unsigned flags)
 {
 	if (nread > 0) {
-		helix_session_process_packet(handle->data, buf->base, nread);
+		helix_session_process_packet(reinterpret_cast<helix_session_t>(handle->data), buf->base, nread);
 	}
 }
 
@@ -338,7 +338,7 @@ int main(int argc, char *argv[])
 
 		fmt_ops->fmt_header();
 
-		p = input_mmap;
+		p = reinterpret_cast<char*>(input_mmap);
 		size = input_st.st_size;
 		while (size > 0) {
 			size_t nr;
