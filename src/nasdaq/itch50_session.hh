@@ -44,15 +44,15 @@ public:
         { }
     };
 public:
-    itch50_session_impl(const std::vector<std::string>& symbols)
+    itch50_session_impl()
     {
-        for (auto sym : symbols) {
-            auto padding = ITCH_SYMBOL_LEN - sym.size();
-            if (padding > 0) {
-                sym.insert(sym.size(), padding, ' ');
-            }
-            _symbols.insert(sym);
+    }
+    void subscribe(std::string sym) {
+        auto padding = ITCH_SYMBOL_LEN - sym.size();
+        if (padding > 0) {
+            sym.insert(sym.size(), padding, ' ');
         }
+        _symbols.insert(sym);
     }
     void register_callback(core::ob_callback process_ob) {
         _process_ob = process_ob;

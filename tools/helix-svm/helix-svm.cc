@@ -313,11 +313,13 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	session = helix_session_create(proto, cfg.symbol, process_ob_event, process_trade_event, svm.get());
+	session = helix_session_create(proto, process_ob_event, process_trade_event, svm.get());
 	if (!session) {
 		fprintf(stderr, "error: unable to create new session\n");
 		exit(1);
 	}
+
+	helix_session_subscribe(session, cfg.symbol);
 
 	if (cfg.input) {
 		const char* p;

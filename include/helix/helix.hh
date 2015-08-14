@@ -66,6 +66,8 @@ public:
         return _data;
     }
 
+    virtual void subscribe(const std::string& symbol) = 0;
+
     virtual void register_callback(core::ob_callback process_ob) = 0;
 
     virtual void register_callback(core::trade_callback process_trade) = 0;
@@ -75,7 +77,7 @@ public:
 
 class protocol {
 public:
-    virtual session* new_session(const std::vector<std::string>&, void*) = 0;
+    virtual session* new_session(void*) = 0;
 };
 
 }

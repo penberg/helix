@@ -23,6 +23,11 @@ nordic_itch_session::nordic_itch_session(shared_ptr<itch_session>&& itch_session
 {
 }
 
+void nordic_itch_session::subscribe(const std::string& symbol)
+{
+    _itch_session->subscribe(symbol);
+}
+
 size_t nordic_itch_session::process_packet(const net::packet_view& packet)
 {
     return _transport_session->parse(packet);
@@ -39,9 +44,9 @@ void nordic_itch_session::register_callback(core::trade_callback process_trade)
 }
 
 nordic_itch_session*
-nordic_itch_protocol::new_session(const vector<string>& symbols, void *data)
+nordic_itch_protocol::new_session(void *data)
 {
-    auto is = make_shared<itch_session>(symbols);
+    auto is = make_shared<itch_session>();
     shared_ptr<net::message_parser> ts;
     if (_name == "nasdaq-nordic-moldudp-itch") {
         ts = make_shared<moldudp_session>(is);

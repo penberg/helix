@@ -201,7 +201,7 @@ helix_protocol_t helix_protocol_lookup(const char *name);
 /*!
  * Create a new session.
  */
-helix_session_t helix_session_create(helix_protocol_t, const char *symbol, helix_order_book_callback_t, helix_trade_callback_t, void *data);
+helix_session_t helix_session_create(helix_protocol_t, helix_order_book_callback_t, helix_trade_callback_t, void *data);
 
 /*!
  * @abstract Returns session opaque context data.
@@ -218,7 +218,7 @@ size_t helix_session_process_packet(helix_session_t, const char* buf, size_t len
 /*!
  * @abstract Subscribe to listening to market data updates for a symbol.
  */
-helix_subscription_t helix_session_subscribe(helix_session_t, helix_venue_t, helix_symbol_t);
+void helix_session_subscribe(helix_session_t, const char *symbol);
 
 /*!
  * @abstract Unsubscribe a subscription from session.
