@@ -1,5 +1,6 @@
 #include <helix-c/helix.h>
 #include <sys/mman.h>
+#define __STDC_FORMAT_MACROS 1
 #include <inttypes.h>
 #include <stdbool.h>
 #include <getopt.h>
