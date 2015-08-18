@@ -1,7 +1,7 @@
 #include "helix-c/helix.h"
 
-#include "helix/nasdaq/nordic_itch.hh"
-#include "helix/nasdaq/itch50.hh"
+#include "helix/nasdaq/nordic_itch_session.hh"
+#include "helix/nasdaq/itch50_session.hh"
 #include "helix/net.hh"
 
 #include <cassert>
