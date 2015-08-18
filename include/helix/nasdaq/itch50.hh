@@ -11,14 +11,14 @@ namespace helix {
 
 namespace nasdaq {
 
-class itch50_session_impl;
+class itch50_handler;
 
 class itch50_session : public core::session {
 private:
-    std::shared_ptr<itch50_session_impl> _itch_session;
+    std::shared_ptr<itch50_handler> _handler;
     std::shared_ptr<net::message_parser> _transport_session;
 public:
-    itch50_session(std::shared_ptr<itch50_session_impl>&&, std::shared_ptr<net::message_parser>&&, void *data);
+    itch50_session(std::shared_ptr<itch50_handler>&&, std::shared_ptr<net::message_parser>&&, void *data);
     virtual void subscribe(const std::string& symbol) override;
     virtual void register_callback(core::ob_callback process_ob) override;
     virtual void register_callback(core::trade_callback process_trade) override;

@@ -26,7 +26,7 @@ namespace nasdaq {
 //   Version 5.0
 //   03/06/2015
 //
-class itch50_session_impl : public net::message_parser {
+class itch50_handler : public net::message_parser {
 private:
     //! Callback function for processing order book events.
     core::ob_callback _process_ob;
@@ -44,7 +44,7 @@ public:
         { }
     };
 public:
-    itch50_session_impl()
+    itch50_handler()
     {
     }
     void subscribe(std::string sym) {

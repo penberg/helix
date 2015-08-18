@@ -1,4 +1,4 @@
-#include "itch50_session.hh"
+#include "itch50_handler.hh"
 
 #include "helix/order_book.hh"
 
@@ -43,7 +43,7 @@ static uint64_t itch50_timestamp(uint64_t raw_timestamp)
     return be64toh(raw_timestamp << 16);
 }
 
-size_t itch50_session_impl::parse(const net::packet_view& packet)
+size_t itch50_handler::parse(const net::packet_view& packet)
 {
     auto* msg = packet.cast<itch50_message>();
     switch (msg->MessageType) {
@@ -72,17 +72,17 @@ size_t itch50_session_impl::parse(const net::packet_view& packet)
 }
 
 template<typename T>
-size_t itch50_session_impl::process_msg(const net::packet_view& packet)
+size_t itch50_handler::process_msg(const net::packet_view& packet)
 {
     process_msg(packet.cast<T>());
     return sizeof(T);
 }
 
-void itch50_session_impl::process_msg(const itch50_system_event* m)
+void itch50_handler::process_msg(const itch50_system_event* m)
 {
 }
 
-void itch50_session_impl::process_msg(const itch50_stock_directory* m)
+void itch50_handler::process_msg(const itch50_stock_directory* m)
 {
     std::string sym{m->Stock, ITCH_SYMBOL_LEN};
     if (_symbols.count(sym) > 0) {
@@ -91,7 +91,7 @@ void itch50_session_impl::process_msg(const itch50_stock_directory* m)
     }
 }
 
-void itch50_session_impl::process_msg(const itch50_stock_trading_action* m)
+void itch50_handler::process_msg(const itch50_stock_trading_action* m)
 {
     auto it = order_book_id_map.find(m->StockLocate);
     if (it != order_book_id_map.end()) {
@@ -107,45 +107,27 @@ void itch50_session_impl::process_msg(const itch50_stock_trading_action* m)
     }
 }
 
-void itch50_session_impl::process_msg(const itch50_reg_sho_restriction* m)
+void itch50_handler::process_msg(const itch50_reg_sho_restriction* m)
 {
 }
 
-void itch50_session_impl::process_msg(const itch50_market_participant_position* m)
+void itch50_handler::process_msg(const itch50_market_participant_position* m)
 {
 }
 
-void itch50_session_impl::process_msg(const itch50_mwcb_decline_level* m)
+void itch50_handler::process_msg(const itch50_mwcb_decline_level* m)
 {
 }
 
-void itch50_session_impl::process_msg(const itch50_mwcb_breach* m)
+void itch50_handler::process_msg(const itch50_mwcb_breach* m)
 {
 }
 
-void itch50_session_impl::process_msg(const itch50_ipo_quoting_period_update* m)
+void itch50_handler::process_msg(const itch50_ipo_quoting_period_update* m)
 {
 }
 
-void itch50_session_impl::process_msg(const itch50_add_order* m)
-{
-    auto it = order_book_id_map.find(m->StockLocate);
-    if (it != order_book_id_map.end()) {
-        auto& ob = it->second;
-
-        uint64_t order_id = m->OrderReferenceNumber;
-        uint64_t price    = be32toh(m->Price);
-        uint64_t quantity = be32toh(m->Shares);
-        auto     side     = itch50_side(m->BuySellIndicator);
-        uint64_t timestamp = itch50_timestamp(m->Timestamp);
-        order o{order_id, price, quantity, side, timestamp};
-        ob.add(std::move(o));
-        ob.set_timestamp(timestamp);
-        _process_ob(ob);
-    }
-}
-
-void itch50_session_impl::process_msg(const itch50_add_order_mpid* m)
+void itch50_handler::process_msg(const itch50_add_order* m)
 {
     auto it = order_book_id_map.find(m->StockLocate);
     if (it != order_book_id_map.end()) {
@@ -163,7 +145,25 @@ void itch50_session_impl::process_msg(const itch50_add_order_mpid* m)
     }
 }
 
-void itch50_session_impl::process_msg(const itch50_order_executed* m)
+void itch50_handler::process_msg(const itch50_add_order_mpid* m)
+{
+    auto it = order_book_id_map.find(m->StockLocate);
+    if (it != order_book_id_map.end()) {
+        auto& ob = it->second;
+
+        uint64_t order_id = m->OrderReferenceNumber;
+        uint64_t price    = be32toh(m->Price);
+        uint64_t quantity = be32toh(m->Shares);
+        auto     side     = itch50_side(m->BuySellIndicator);
+        uint64_t timestamp = itch50_timestamp(m->Timestamp);
+        order o{order_id, price, quantity, side, timestamp};
+        ob.add(std::move(o));
+        ob.set_timestamp(timestamp);
+        _process_ob(ob);
+    }
+}
+
+void itch50_handler::process_msg(const itch50_order_executed* m)
 {
     auto it = order_book_id_map.find(m->StockLocate);
     if (it != order_book_id_map.end()) {
@@ -177,7 +177,7 @@ void itch50_session_impl::process_msg(const itch50_order_executed* m)
     }
 }
 
-void itch50_session_impl::process_msg(const itch50_order_executed_with_price* m)
+void itch50_handler::process_msg(const itch50_order_executed_with_price* m)
 {
     auto it = order_book_id_map.find(m->StockLocate);
     if (it != order_book_id_map.end()) {
@@ -192,7 +192,7 @@ void itch50_session_impl::process_msg(const itch50_order_executed_with_price* m)
     }
 }
 
-void itch50_session_impl::process_msg(const itch50_order_cancel* m)
+void itch50_handler::process_msg(const itch50_order_cancel* m)
 {
     auto it = order_book_id_map.find(m->StockLocate);
     if (it != order_book_id_map.end()) {
@@ -204,7 +204,7 @@ void itch50_session_impl::process_msg(const itch50_order_cancel* m)
 
 }
 
-void itch50_session_impl::process_msg(const itch50_order_delete* m)
+void itch50_handler::process_msg(const itch50_order_delete* m)
 {
     auto it = order_book_id_map.find(m->StockLocate);
     if (it != order_book_id_map.end()) {
@@ -216,7 +216,7 @@ void itch50_session_impl::process_msg(const itch50_order_delete* m)
 
 }
 
-void itch50_session_impl::process_msg(const itch50_order_replace* m)
+void itch50_handler::process_msg(const itch50_order_replace* m)
 {
     auto it = order_book_id_map.find(m->StockLocate);
     if (it != order_book_id_map.end()) {
@@ -237,7 +237,7 @@ void itch50_session_impl::process_msg(const itch50_order_replace* m)
     }
 }
 
-void itch50_session_impl::process_msg(const itch50_trade* m)
+void itch50_handler::process_msg(const itch50_trade* m)
 {
     auto it = order_book_id_map.find(m->StockLocate);
     if (it != order_book_id_map.end()) {
@@ -248,7 +248,7 @@ void itch50_session_impl::process_msg(const itch50_trade* m)
     }
 }
 
-void itch50_session_impl::process_msg(const itch50_cross_trade* m)
+void itch50_handler::process_msg(const itch50_cross_trade* m)
 {
     auto it = order_book_id_map.find(m->StockLocate);
     if (it != order_book_id_map.end()) {
@@ -259,15 +259,15 @@ void itch50_session_impl::process_msg(const itch50_cross_trade* m)
     }
 }
 
-void itch50_session_impl::process_msg(const itch50_broken_trade* m)
+void itch50_handler::process_msg(const itch50_broken_trade* m)
 {
 }
 
-void itch50_session_impl::process_msg(const itch50_noii* m)
+void itch50_handler::process_msg(const itch50_noii* m)
 {
 }
 
-void itch50_session_impl::process_msg(const itch50_rpii* m)
+void itch50_handler::process_msg(const itch50_rpii* m)
 {
 }
 
