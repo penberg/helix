@@ -33,7 +33,7 @@ namespace nasdaq {
 //   Version 1.90.2
 //   April 7, 2014
 //
-class itch_session : public net::message_parser {
+class nordic_itch_handler : public net::message_parser {
 private:
     //! Seconds since midnight in CET (Central European Time).
     uint64_t time_sec;
@@ -57,7 +57,7 @@ public:
         { }
     };
 public:
-    itch_session()
+    nordic_itch_handler()
     {
     }
     void subscribe(std::string sym) {

@@ -1,4 +1,4 @@
-#include "itch_session.hh"
+#include "nordic_itch_handler.hh"
 
 #include "helix/nasdaq/nordic_itch_messages.h"
 #include "helix/order_book.hh"
@@ -36,7 +36,7 @@ trade_sign itch_trade_sign(side_type s)
     }
 }
 
-size_t itch_session::parse(const net::packet_view& packet)
+size_t nordic_itch_handler::parse(const net::packet_view& packet)
 {
     auto* msg = packet.cast<itch_message>();
     switch (msg->MsgType) {
@@ -61,33 +61,33 @@ size_t itch_session::parse(const net::packet_view& packet)
 }
 
 template<typename T>
-size_t itch_session::process_msg(const net::packet_view& packet)
+size_t nordic_itch_handler::process_msg(const net::packet_view& packet)
 {
     process_msg(packet.cast<T>());
     return sizeof(T);
 }
 
-void itch_session::process_msg(const itch_seconds* m)
+void nordic_itch_handler::process_msg(const itch_seconds* m)
 {
     auto second = itch_uatoi(m->Second, 5);
     time_sec = second;
 }
 
-void itch_session::process_msg(const itch_milliseconds* m)
+void nordic_itch_handler::process_msg(const itch_milliseconds* m)
 {
     auto millisecond = itch_uatoi(m->Millisecond, 3);
     time_msec = millisecond;
 }
 
-void itch_session::process_msg(const itch_market_segment_state* m)
+void nordic_itch_handler::process_msg(const itch_market_segment_state* m)
 {
 }
 
-void itch_session::process_msg(const itch_system_event* m)
+void nordic_itch_handler::process_msg(const itch_system_event* m)
 {
 }
 
-void itch_session::process_msg(const itch_order_book_directory* m)
+void nordic_itch_handler::process_msg(const itch_order_book_directory* m)
 {
     auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
 
@@ -98,7 +98,7 @@ void itch_session::process_msg(const itch_order_book_directory* m)
     }
 }
 
-void itch_session::process_msg(const itch_order_book_trading_action* m)
+void nordic_itch_handler::process_msg(const itch_order_book_trading_action* m)
 {
     auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
     auto it = order_book_id_map.find(order_book_id);
@@ -115,7 +115,7 @@ void itch_session::process_msg(const itch_order_book_trading_action* m)
     }
 }
 
-void itch_session::process_msg(const itch_add_order* m)
+void nordic_itch_handler::process_msg(const itch_add_order* m)
 {
     auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
     auto it = order_book_id_map.find(order_book_id);
@@ -136,7 +136,7 @@ void itch_session::process_msg(const itch_add_order* m)
     }
 }
 
-void itch_session::process_msg(const itch_add_order_mpid* m)
+void nordic_itch_handler::process_msg(const itch_add_order_mpid* m)
 {
     auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
     auto it = order_book_id_map.find(order_book_id);
@@ -157,7 +157,7 @@ void itch_session::process_msg(const itch_add_order_mpid* m)
     }
 }
 
-void itch_session::process_msg(const itch_order_executed* m)
+void nordic_itch_handler::process_msg(const itch_order_executed* m)
 {
    uint64_t order_id = itch_uatoi(m->OrderReferenceNumber, sizeof(m->OrderReferenceNumber));
    auto it = order_id_map.find(order_id);
@@ -171,7 +171,7 @@ void itch_session::process_msg(const itch_order_executed* m)
    }
 }
 
-void itch_session::process_msg(const itch_order_executed_with_price* m)
+void nordic_itch_handler::process_msg(const itch_order_executed_with_price* m)
 {
     uint64_t order_id = itch_uatoi(m->OrderReferenceNumber, sizeof(m->OrderReferenceNumber));
     auto it = order_id_map.find(order_id);
@@ -186,7 +186,7 @@ void itch_session::process_msg(const itch_order_executed_with_price* m)
     }
 }
 
-void itch_session::process_msg(const itch_order_cancel* m)
+void nordic_itch_handler::process_msg(const itch_order_cancel* m)
 {
     uint64_t order_id = itch_uatoi(m->OrderReferenceNumber, sizeof(m->OrderReferenceNumber));
     auto it = order_id_map.find(order_id);
@@ -199,7 +199,7 @@ void itch_session::process_msg(const itch_order_cancel* m)
     }
 }
 
-void itch_session::process_msg(const itch_order_delete* m)
+void nordic_itch_handler::process_msg(const itch_order_delete* m)
 {
     uint64_t order_id = itch_uatoi(m->OrderReferenceNumber, sizeof(m->OrderReferenceNumber));
     auto it = order_id_map.find(order_id);
@@ -211,7 +211,7 @@ void itch_session::process_msg(const itch_order_delete* m)
     }
 }
 
-void itch_session::process_msg(const itch_trade* m)
+void nordic_itch_handler::process_msg(const itch_trade* m)
 {
     auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
     auto it = order_book_id_map.find(order_book_id);
@@ -223,7 +223,7 @@ void itch_session::process_msg(const itch_trade* m)
     }
 }
 
-void itch_session::process_msg(const itch_cross_trade* m)
+void nordic_itch_handler::process_msg(const itch_cross_trade* m)
 {
     auto order_book_id = itch_uatoi(m->OrderBook, sizeof(m->OrderBook));
     auto it = order_book_id_map.find(order_book_id);
@@ -235,11 +235,11 @@ void itch_session::process_msg(const itch_cross_trade* m)
     }
 }
 
-void itch_session::process_msg(const itch_broken_trade* m)
+void nordic_itch_handler::process_msg(const itch_broken_trade* m)
 {
 }
 
-void itch_session::process_msg(const itch_noii* m)
+void nordic_itch_handler::process_msg(const itch_noii* m)
 {
 }
 

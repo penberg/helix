@@ -33,7 +33,7 @@ set(libSrcs ${libSrcs}
     src/nasdaq/binaryfile.cc
     src/nasdaq/itch50.cc
     src/nasdaq/itch50_session.cc
-    src/nasdaq/itch_session.cc
+    src/nasdaq/nordic_itch_handler.cc
     src/nasdaq/moldudp.cc
     src/nasdaq/nordic_itch.cc
     src/nasdaq/soupfile.cc
