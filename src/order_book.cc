@@ -38,7 +38,7 @@ void order_book::add(order&& order)
     default:
         throw invalid_argument(string("invalid side: ") + static_cast<char>(order.side));
     }
-    _orders.insert({order.id, std::move(order)});
+    _orders.emplace(order.id, std::move(order));
 }
 
 void order_book::cancel(uint64_t order_id, uint64_t quantity)
@@ -121,7 +121,7 @@ price_level& order_book::lookup_or_create(T& levels, uint64_t price)
         return it->second;
     }
     price_level level{price};
-    levels.insert({price, level});
+    levels.emplace(price, level);
     it = levels.find(price);
     return it->second;
 }
