@@ -86,7 +86,7 @@ void itch50_handler::process_msg(const itch50_stock_directory* m)
 {
     std::string sym{m->Stock, ITCH_SYMBOL_LEN};
     if (_symbols.count(sym) > 0) {
-        order_book ob{sym, itch50_timestamp(m->Timestamp)};
+        order_book ob{sym, itch50_timestamp(m->Timestamp), _symbol_max_orders.at(sym)};
         order_book_id_map.insert({m->StockLocate, std::move(ob)});
     }
 }

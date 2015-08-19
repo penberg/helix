@@ -75,9 +75,9 @@ helix_session_create(helix_protocol_t proto, helix_order_book_callback_t ob_call
     return wrap(session);
 }
 
-void helix_session_subscribe(helix_session_t session, const char *symbol)
+void helix_session_subscribe(helix_session_t session, const char *symbol, size_t max_orders)
 {
-    unwrap(session)->subscribe(symbol);
+    unwrap(session)->subscribe(symbol, max_orders);
 }
 
 void *helix_session_data(helix_session_t session)

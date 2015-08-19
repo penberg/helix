@@ -33,6 +33,7 @@ static const char *program;
 
 struct config {
 	const char *symbol;
+	size_t max_orders;
 	const char *multicast_proto;
 	const char *multicast_addr;
 	int multicast_port;
@@ -207,6 +208,7 @@ static void usage(void)
 		"usage: %s [options]\n"
 		"  options:\n"
 		"    -s, --symbol symbol          Ticker symbol to listen to.\n"
+		"    -m, --max-orders number      Maximum number of orders per symbol (for pre-allocation).\n"
 		"    -c, --multicast-proto proto  UDP multicast protocol listen to.\n"
 		"    -a, --multicast-addr addr    UDP multicast address to listen to.\n"
 		"    -p, --multicast-port port    UDP multicast port to listen to.\n"
@@ -219,6 +221,7 @@ static void usage(void)
 
 static struct option svm_options[] = {
 	{"symbol",          required_argument, 0, 's'},
+	{"max-orders",      required_argument, 0, 'm'},
 	{"multicast-proto", required_argument, 0, 'c'},
 	{"multicast-addr",  required_argument, 0, 'a'},
 	{"multicast-port",  required_argument, 0, 'p'},
@@ -234,13 +237,16 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 		int opt_idx = 0;
 		int c;
 
-		c = getopt_long(argc, argv, "s:c:a:o:p:i:h", svm_options, &opt_idx);
+		c = getopt_long(argc, argv, "s:m:c:a:o:p:i:h", svm_options, &opt_idx);
 		if (c == -1)
 			break;
 
 		switch (c) {
 		case 's':
 			cfg->symbol = optarg;
+			break;
+		case 'm':
+			cfg->max_orders = strtol(optarg, NULL, 10);
 			break;
 		case 'c':
 			cfg->multicast_proto = optarg;
@@ -319,7 +325,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	helix_session_subscribe(session, cfg.symbol);
+	helix_session_subscribe(session, cfg.symbol, cfg.max_orders);
 
 	if (cfg.input) {
 		const char* p;

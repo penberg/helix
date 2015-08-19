@@ -218,7 +218,7 @@ size_t helix_session_process_packet(helix_session_t, const char* buf, size_t len
 /*!
  * @abstract Subscribe to listening to market data updates for a symbol.
  */
-void helix_session_subscribe(helix_session_t, const char *symbol);
+void helix_session_subscribe(helix_session_t, const char *symbol, size_t max_orders);
 
 /*!
  * @abstract Unsubscribe a subscription from session.

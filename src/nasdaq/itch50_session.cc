@@ -22,9 +22,9 @@ itch50_session::itch50_session(shared_ptr<itch50_handler>&&handler,
 {
 }
 
-void itch50_session::subscribe(const std::string& symbol)
+void itch50_session::subscribe(const std::string& symbol, size_t max_orders)
 {
-    _handler->subscribe(symbol);
+    _handler->subscribe(symbol, max_orders);
 }
 
 size_t itch50_session::process_packet(const net::packet_view& packet)

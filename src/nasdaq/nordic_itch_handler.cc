@@ -93,7 +93,7 @@ void nordic_itch_handler::process_msg(const itch_order_book_directory* m)
 
     std::string sym{m->Symbol, ITCH_SYMBOL_LEN};
     if (_symbols.count(sym) > 0) {
-        order_book ob{sym, timestamp()};
+        order_book ob{sym, timestamp(), _symbol_max_orders.at(sym)};
         order_book_id_map.insert({order_book_id, std::move(ob)});
     }
 }

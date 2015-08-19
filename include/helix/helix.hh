@@ -66,7 +66,7 @@ public:
         return _data;
     }
 
-    virtual void subscribe(const std::string& symbol) = 0;
+    virtual void subscribe(const std::string& symbol, size_t max_orders) = 0;
 
     virtual void register_callback(core::ob_callback process_ob) = 0;
 

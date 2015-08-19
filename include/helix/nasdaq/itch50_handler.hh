@@ -36,6 +36,8 @@ private:
     std::unordered_map<uint64_t, helix::core::order_book> order_book_id_map;
     //! A set of symbols that we are interested in.
     std::set<std::string> _symbols;
+    //! A map of pre-allocation size by symbol.
+    std::unordered_map<std::string, size_t> _symbol_max_orders;
 public:
     class unknown_message_type : public std::logic_error {
     public:
@@ -45,14 +47,19 @@ public:
     };
 public:
     itch50_handler()
-    {
-    }
-    void subscribe(std::string sym) {
+    { }
+    void subscribe(std::string sym, size_t max_orders) {
         auto padding = ITCH_SYMBOL_LEN - sym.size();
         if (padding > 0) {
             sym.insert(sym.size(), padding, ' ');
         }
         _symbols.insert(sym);
+        _symbol_max_orders.emplace(sym, max_orders);
+        size_t max_all_orders = 0;
+        for (auto&& kv : _symbol_max_orders) {
+            max_all_orders += kv.second;
+        }
+        order_book_id_map.reserve(max_all_orders);
     }
     void register_callback(core::ob_callback process_ob) {
         _process_ob = process_ob;

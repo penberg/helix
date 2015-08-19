@@ -23,9 +23,9 @@ nordic_itch_session::nordic_itch_session(shared_ptr<nordic_itch_handler>&&handle
 {
 }
 
-void nordic_itch_session::subscribe(const std::string& symbol)
+void nordic_itch_session::subscribe(const std::string& symbol, size_t max_orders)
 {
-    _handler->subscribe(symbol);
+    _handler->subscribe(symbol, max_orders);
 }
 
 size_t nordic_itch_session::process_packet(const net::packet_view& packet)
