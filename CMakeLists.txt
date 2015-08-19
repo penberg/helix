@@ -49,3 +49,6 @@ target_link_libraries(helix-trace helix ${LIBUV_LIBRARIES})
 
 add_executable(helix-top tools/helix-top/helix-top.c)
 target_link_libraries(helix-top helix ncurses ${LIBUV_LIBRARIES})
+
+add_executable(tests/order_book_perf_test tests/order_book_perf_test.cc)
+target_link_libraries(tests/order_book_perf_test helix)
