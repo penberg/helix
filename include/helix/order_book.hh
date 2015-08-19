@@ -99,7 +99,7 @@ private:
 public:
     using iterator = std::unordered_map<uint64_t, order>::iterator;
 
-    order_book(const std::string& symbol, uint64_t timestamp);
+    order_book(const std::string& symbol, uint64_t timestamp, size_t max_orders = 0);
     ~order_book();
 
     order_book(const order_book&) = default;

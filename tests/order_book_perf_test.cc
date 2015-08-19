@@ -43,7 +43,7 @@ int main()
 {
     unsigned long count = 20000000;
 
-    order_book ob{"AXP", 0};
+    order_book ob{"AXP", 0, count};
     auto add_duration = test_add(ob, count);
     auto cancel_duration = test_cancel(ob, count);
     auto remove_duration = test_remove(ob, count);

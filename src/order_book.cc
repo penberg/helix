@@ -9,11 +9,12 @@ namespace helix {
 
 namespace core {
 
-order_book::order_book(const std::string& symbol, uint64_t timestamp)
+order_book::order_book(const std::string& symbol, uint64_t timestamp, size_t max_orders)
     : _symbol{symbol}
     , _timestamp{timestamp}
     , _state{trading_state::unknown}
 {
+    _orders.reserve(max_orders);
 }
 
 order_book::~order_book()
