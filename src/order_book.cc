@@ -26,14 +26,12 @@ void order_book::add(order&& order)
     case side_type::buy: {
         auto&& level = lookup_or_create(_bids, order.price);
         order.level = &level;
-        level.orders.emplace_back(order.id);
         level.size += order.quantity;
         break;
     }
     case side_type::sell: {
         auto&& level = lookup_or_create(_asks, order.price);
         order.level = &level;
-        level.orders.emplace_back(order.id);
         level.size += order.quantity;
         break;
     }
@@ -109,9 +107,8 @@ void order_book::remove(order& o, T& levels)
         throw invalid_argument(string("invalid price: ") + to_string(o.price));
     }
     auto&& level = it->second;
-    level.orders.remove(o.id);
     o.level->size -= o.quantity;
-    if (level.orders.empty()) {
+    if (level.size == 0) {
         levels.erase(it);
     }
 }

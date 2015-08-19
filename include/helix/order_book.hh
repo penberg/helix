@@ -83,9 +83,6 @@ struct price_level {
 
     uint64_t price;
     uint64_t size;
-
-    // Order IDs sorted by timestamp (ascending order):
-    std::list<uint64_t> orders;
 };
 
 /// \brief Order book is a price-time prioritized list of buy and sell
