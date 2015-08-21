@@ -11,7 +11,7 @@ static const char *program;
 struct config {
 	const char *symbol;
 	size_t max_orders;
-	const char *multicast_proto;
+	const char *proto;
 	const char *multicast_addr;
 	int multicast_port;
 };
@@ -82,7 +82,7 @@ static void usage(void)
 		"  options:\n"
 		"    -s, --symbol symbol          Ticker symbol to listen to.\n"
 		"    -m, --max-orders number      Maximum number of orders per symbol (for pre-allocation).\n"
-		"    -c, --multicast-proto proto  UDP multicast protocol listen to.\n"
+		"    -P, --proto proto            Market data protocol listen to.\n"
 		"    -a, --multicast-addr addr    UDP multicast address to listen to.\n"
 		"    -p, --multicast-port port    UDP multicast port to listen to.\n"
 		"    -h, --help                   display this help and exit\n",
@@ -93,7 +93,7 @@ static void usage(void)
 static struct option trace_options[] = {
 	{"symbol",          required_argument, 0, 's'},
 	{"max-orders",      required_argument, 0, 'm'},
-	{"multicast-proto", required_argument, 0, 'c'},
+	{"proto",           required_argument, 0, 'P'},
 	{"multicast-addr",  required_argument, 0, 'a'},
 	{"multicast-port",  required_argument, 0, 'p'},
 	{"help",            no_argument,       0, 'h'},
@@ -118,7 +118,7 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 			cfg->max_orders = strtol(optarg, NULL, 10);
 			break;
 		case 'c':
-			cfg->multicast_proto = optarg;
+			cfg->proto = optarg;
 			break;
 		case 'a':
 			cfg->multicast_addr = optarg;
@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	if (!cfg.multicast_proto) {
+	if (!cfg.proto) {
 		fprintf(stderr, "error: multicast protocol is not specified. Use the '-c' option to specify it.\n");
 		exit(1);
 	}
@@ -167,9 +167,9 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	proto = helix_protocol_lookup(cfg.multicast_proto);
+	proto = helix_protocol_lookup(cfg.proto);
 	if (!proto) {
-		fprintf(stderr, "error: protocol '%s' is not supported\n", cfg.multicast_proto);
+		fprintf(stderr, "error: protocol '%s' is not supported\n", cfg.proto);
 		exit(1);
 	}
 
