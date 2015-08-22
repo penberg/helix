@@ -22,15 +22,15 @@ namespace core {
 /// @{
 
 /// \brief Order side.
-enum class side_type {
+enum class side_type : uint8_t {
     /// Buy order
-    buy,
+    buy = 1,
     /// Sell order
-    sell,
+    sell = 2,
 };
 
 /// \brief Trading state.
-enum class trading_state {
+enum class trading_state : uint8_t {
     /// Trading state is unknown.
     unknown,
     /// Trading is halted.
@@ -53,11 +53,11 @@ struct order final {
     price_level* level;
     uint64_t     id;
     uint64_t     price;
-    uint64_t     quantity;
+    uint32_t     quantity;
     side_type    side;
     uint64_t     timestamp;
 
-    order(uint64_t id, uint64_t price, uint64_t quantity, side_type side, uint64_t timestamp)
+    order(uint64_t id, uint64_t price, uint32_t quantity, side_type side, uint64_t timestamp)
         : level{nullptr}
         , id{id}
         , price{price}
