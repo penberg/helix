@@ -242,7 +242,7 @@ void itch50_handler::process_msg(const itch50_trade* m)
     auto it = order_book_id_map.find(m->StockLocate);
     if (it != order_book_id_map.end()) {
         uint64_t trade_price = be32toh(m->Price);
-        uint64_t quantity = be64toh(m->Shares);
+        uint64_t quantity = be32toh(m->Shares);
         auto& ob = it->second;
         _process_trade(trade{ob.symbol(), itch50_timestamp(m->Timestamp), trade_price, quantity, trade_sign::non_displayable});
     }
