@@ -6,6 +6,11 @@
 /// querying per-asset order book state such as top and depth of book bid
 /// and ask price and size.
 
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/hashed_index.hpp>
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/member.hpp>
+
 #include <unordered_map>
 #include <cstdint>
 #include <utility>
@@ -88,16 +93,21 @@ struct price_level {
 /// \brief Order book is a price-time prioritized list of buy and sell
 /// orders.
 
+using namespace boost::multi_index;
+
+typedef multi_index_container<order, indexed_by<
+    hashed_unique<member<order, uint64_t, &order::id>>>> order_set;
+
 class order_book {
 private:
     std::string _symbol;
     uint64_t _timestamp;
     trading_state _state;
-    std::unordered_map<uint64_t, order> _orders;
+    order_set _orders;
     std::map<uint64_t, price_level, std::greater<uint64_t>> _bids;
     std::map<uint64_t, price_level, std::less   <uint64_t>> _asks;
 public:
-    using iterator = std::unordered_map<uint64_t, order>::iterator;
+    using iterator = order_set::iterator;
 
     order_book(const std::string& symbol, uint64_t timestamp, size_t max_orders = 0);
     ~order_book();
@@ -146,7 +156,7 @@ private:
     void remove(iterator& iter);
 
     template<typename T>
-    void remove(order& o, T& levels);
+    void remove(const order& o, T& levels);
 
     template<typename T>
     price_level& lookup_or_create(T& levels, uint64_t price);

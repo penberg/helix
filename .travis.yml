@@ -4,18 +4,22 @@ compiler:
   - gcc
 
 env:
-  - LIBUV_VERSION=1.0.2
+  - LIBUV_VERSION=1.0.2 BOOST_VERSION=1.59.0
 
 before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get update -qq
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.9; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
+  - sudo apt-get install -y build-essential python-dev autotools-dev libicu-dev build-essential libbz2-dev
 
 before_script:
   # install libuv
   - curl -L http://dist.libuv.org/dist/v${LIBUV_VERSION}/libuv-v${LIBUV_VERSION}.tar.gz | tar xzf -
   - (cd libuv-v${LIBUV_VERSION} && ./autogen.sh && ./configure --prefix=/usr && make && sudo make install)
+  # install boost
+  - curl -L http://sourceforge.net/projects/boost/files/boost/${BOOST_VERSION}/boost_`echo ${BOOST_VERSION} | tr . _`.tar.bz2/download | tar xjf -
+  - (cd boost_`echo ${BOOST_VERSION} | tr . _` && ./bootstrap.sh --prefix=/usr && sudo ./b2 --with=all -j 2 install)
   # generate makefile
   - cmake .
 
