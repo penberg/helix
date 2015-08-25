@@ -221,17 +221,13 @@ void itch50_handler::process_msg(const itch50_order_replace* m)
     auto it = order_book_id_map.find(m->StockLocate);
     if (it != order_book_id_map.end()) {
         auto& ob = it->second;
-
         auto side = ob.side(m->OriginalOrderReferenceNumber);
-
-        ob.remove(m->OriginalOrderReferenceNumber);
-
         uint64_t order_id = m->NewOrderReferenceNumber;
         uint64_t price    = be32toh(m->Price);
         uint64_t quantity = be32toh(m->Shares);
         uint64_t timestamp = itch50_timestamp(m->Timestamp);
         order o{order_id, price, quantity, side, timestamp};
-        ob.add(std::move(o));
+        ob.replace(m->OriginalOrderReferenceNumber, std::move(o));
         ob.set_timestamp(timestamp);
         _process_ob(ob);
     }

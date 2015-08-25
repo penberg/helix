@@ -42,6 +42,12 @@ void order_book::add(order&& order)
     _orders.emplace(order.id, std::move(order));
 }
 
+void order_book::replace(uint64_t order_id, order&& order)
+{
+    remove(order_id);
+    add(std::move(order));
+}
+
 void order_book::cancel(uint64_t order_id, uint64_t quantity)
 {
     auto it = _orders.find(order_id);
