@@ -1,5 +1,6 @@
 #include "helix/order_book.hh"
 
+#include <boost/version.hpp>
 #include <stdexcept>
 #include <limits>
 
@@ -14,7 +15,9 @@ order_book::order_book(const std::string& symbol, uint64_t timestamp, size_t max
     , _timestamp{timestamp}
     , _state{trading_state::unknown}
 {
+#if BOOST_VERSION >= 105600
     _orders.reserve(max_orders);
+#endif
 }
 
 order_book::~order_book()
