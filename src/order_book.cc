@@ -39,7 +39,7 @@ void order_book::add(order&& order)
     default:
         throw invalid_argument(string("invalid side: ") + static_cast<char>(order.side));
     }
-    _orders.emplace(order.id, std::move(order));
+    _orders.emplace(std::move(order));
 }
 
 void order_book::replace(uint64_t order_id, order&& order)
@@ -54,10 +54,11 @@ void order_book::cancel(uint64_t order_id, uint64_t quantity)
     if (it == _orders.end()) {
         throw invalid_argument(string("invalid order id: ") + to_string(order_id));
     }
-    auto&& order = it->second;
-    order.quantity -= quantity;
-    order.level->size -= quantity;
-    if (!order.quantity) {
+    _orders.modify(it, [quantity](order& order) {
+        order.quantity -= quantity;
+        order.level->size -= quantity;
+    });
+    if (!it->quantity) {
         remove(it);
     }
 }
@@ -68,15 +69,15 @@ std::pair<uint64_t, side_type> order_book::execute(uint64_t order_id, uint64_t q
     if (it == _orders.end()) {
         throw invalid_argument(string("invalid order id: ") + to_string(order_id));
     }
-    auto& order = it->second;
-    uint64_t price = order.price;
-    side_type s = order.side;
-    order.quantity -= quantity;
-    order.level->size -= quantity;
-    if (!order.quantity) {
+    auto ret = std::make_pair(it->price, it->side);
+    _orders.modify(it, [quantity](order& order) {
+        order.quantity -= quantity;
+        order.level->size -= quantity;
+    });
+    if (!it->quantity) {
         remove(it);
     }
-    return std::make_pair(price, s);
+    return ret;
 }
 
 void order_book::remove(uint64_t order_id)
@@ -90,7 +91,7 @@ void order_book::remove(uint64_t order_id)
 
 void order_book::remove(iterator& iter)
 {
-    auto&& order = iter->second;
+    auto && order = *iter;
     switch (order.side) {
     case side_type::buy: {
         remove(order, _bids);
@@ -107,7 +108,7 @@ void order_book::remove(iterator& iter)
 }
 
 template<typename T>
-void order_book::remove(order& o, T& levels)
+void order_book::remove(const order& o, T& levels)
 {
     auto it = levels.find(o.price);
     if (it == levels.end()) {
@@ -139,7 +140,7 @@ side_type order_book::side(uint64_t order_id) const
     if (it == _orders.end()) {
         throw invalid_argument(string("invalid order id: ") + to_string(order_id));
     }
-    return it->second.side;
+    return it->side;
 }
 
 
