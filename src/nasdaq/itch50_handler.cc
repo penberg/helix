@@ -135,7 +135,7 @@ void itch50_handler::process_msg(const itch50_add_order* m)
 
         uint64_t order_id = m->OrderReferenceNumber;
         uint64_t price    = be32toh(m->Price);
-        uint64_t quantity = be32toh(m->Shares);
+        uint32_t quantity = be32toh(m->Shares);
         auto     side     = itch50_side(m->BuySellIndicator);
         uint64_t timestamp = itch50_timestamp(m->Timestamp);
         order o{order_id, price, quantity, side, timestamp};
@@ -153,7 +153,7 @@ void itch50_handler::process_msg(const itch50_add_order_mpid* m)
 
         uint64_t order_id = m->OrderReferenceNumber;
         uint64_t price    = be32toh(m->Price);
-        uint64_t quantity = be32toh(m->Shares);
+        uint32_t quantity = be32toh(m->Shares);
         auto     side     = itch50_side(m->BuySellIndicator);
         uint64_t timestamp = itch50_timestamp(m->Timestamp);
         order o{order_id, price, quantity, side, timestamp};
@@ -224,7 +224,7 @@ void itch50_handler::process_msg(const itch50_order_replace* m)
         auto side = ob.side(m->OriginalOrderReferenceNumber);
         uint64_t order_id = m->NewOrderReferenceNumber;
         uint64_t price    = be32toh(m->Price);
-        uint64_t quantity = be32toh(m->Shares);
+        uint32_t quantity = be32toh(m->Shares);
         uint64_t timestamp = itch50_timestamp(m->Timestamp);
         order o{order_id, price, quantity, side, timestamp};
         ob.replace(m->OriginalOrderReferenceNumber, std::move(o));
@@ -238,7 +238,7 @@ void itch50_handler::process_msg(const itch50_trade* m)
     auto it = order_book_id_map.find(m->StockLocate);
     if (it != order_book_id_map.end()) {
         uint64_t trade_price = be32toh(m->Price);
-        uint64_t quantity = be32toh(m->Shares);
+        uint32_t quantity = be32toh(m->Shares);
         auto& ob = it->second;
         _process_trade(trade{ob.symbol(), itch50_timestamp(m->Timestamp), trade_price, quantity, trade_sign::non_displayable});
     }
