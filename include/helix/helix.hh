@@ -62,7 +62,7 @@ public:
     virtual ~session()
     { }
 
-    void* data() const {
+    void* data() {
         return _data;
     }
 
