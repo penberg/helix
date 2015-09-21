@@ -55,7 +55,7 @@ using trade_callback = std::function<void(const trade&)>;
 class session {
     void* _data;
 public:
-    session(void* data)
+    explicit session(void* data)
         : _data{data}
     { }
 

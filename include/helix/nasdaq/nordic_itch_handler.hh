@@ -54,7 +54,7 @@ private:
 public:
     class unknown_message_type : public std::logic_error {
     public:
-        unknown_message_type(std::string cause)
+        explicit unknown_message_type(std::string cause)
             : logic_error(cause)
         { }
     };

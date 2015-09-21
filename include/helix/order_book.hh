@@ -78,7 +78,7 @@ struct order final {
 
 /// \brief Price level is a time-prioritized list of orders with the same price.
 struct price_level {
-    price_level(uint64_t price_)
+    explicit price_level(uint64_t price_)
         : price(price_)
         , size(0)
     { }

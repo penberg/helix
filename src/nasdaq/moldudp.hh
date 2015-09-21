@@ -31,7 +31,7 @@ private:
     std::shared_ptr<net::message_parser> _parser;
     uint32_t _seq_num;
 public:
-    moldudp_session(std::shared_ptr<net::message_parser> parser);
+    explicit moldudp_session(std::shared_ptr<net::message_parser> parser);
 
     virtual size_t parse(const net::packet_view& packet) override;
 };

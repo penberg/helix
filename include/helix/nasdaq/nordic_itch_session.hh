@@ -28,7 +28,7 @@ public:
 class nordic_itch_protocol : public core::protocol {
     std::string _name;
 public:
-    nordic_itch_protocol(const std::string& name)
+    explicit nordic_itch_protocol(const std::string& name)
         : _name{name}
     { }
     virtual nordic_itch_session* new_session(void *) override;
