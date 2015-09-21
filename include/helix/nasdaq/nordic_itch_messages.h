@@ -154,14 +154,14 @@ struct itch_noii {
 static inline uint64_t itch_uatoi(const char *p, size_t len)
 {
     uint64_t ret = 0;
-    auto end = p + len;
+    const char *end = p + len;
     while (p != end) {
         if (*p != ' ')
             break;
         p++;
     }
     while (p != end) {
-        auto ch = *p++;
+        char ch = *p++;
         ret = (ret * 10) + (ch - '0');
     }
     return ret;
