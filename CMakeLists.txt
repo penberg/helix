@@ -17,9 +17,11 @@ if(DOXYGEN_FOUND)
   )
 endif(DOXYGEN_FOUND)
 
+find_package(Boost REQUIRED)
+
 find_package(PkgConfig)
 
-pkg_check_modules(LIBUV REQUIRED libuv)
+pkg_check_modules(LIBUV REQUIRED libuv>=1.0 ncurses)
 include_directories(${LIBUV_INCLUDE_DIRS})
 
 include_directories("include")
