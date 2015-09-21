@@ -28,8 +28,8 @@ public:
 class nordic_itch_protocol : public core::protocol {
     std::string _name;
 public:
-    explicit nordic_itch_protocol(const std::string& name)
-        : _name{name}
+    explicit nordic_itch_protocol(std::string name)
+        : _name{std::move(name)}
     { }
     virtual nordic_itch_session* new_session(void *) override;
 };

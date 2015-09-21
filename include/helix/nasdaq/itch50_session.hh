@@ -28,8 +28,8 @@ public:
 class itch50_protocol : public core::protocol {
     std::string _name;
 public:
-    explicit itch50_protocol(const std::string& name)
-        : _name{name}
+    explicit itch50_protocol(std::string name)
+        : _name{std::move(name)}
     { }
     virtual itch50_session* new_session(void *) override;
 };
