@@ -70,10 +70,6 @@ struct order final {
         , side{side}
         , timestamp{timestamp}
     {}
-
-    order(const order&) = default;
-    order(order&&) = default;
-    order& operator=(const order&) = default;
 };
 
 /// \brief Price level is a time-prioritized list of orders with the same price.
@@ -82,9 +78,6 @@ struct price_level {
         : price(price_)
         , size(0)
     { }
-
-    price_level(const price_level&) = default;
-    price_level& operator=(const price_level&) = default;
 
     uint64_t price;
     uint64_t size;
@@ -110,11 +103,6 @@ public:
     using iterator = order_set::iterator;
 
     order_book(std::string symbol, uint64_t timestamp, size_t max_orders = 0);
-    ~order_book();
-
-    order_book(const order_book&) = default;
-    order_book(order_book&&) = default;
-    order_book& operator=(const order_book&) = default;
 
     const std::string& symbol() const {
         return _symbol;

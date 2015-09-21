@@ -20,10 +20,6 @@ order_book::order_book(std::string symbol, uint64_t timestamp, size_t max_orders
 #endif
 }
 
-order_book::~order_book()
-{
-}
-
 void order_book::add(order&& order)
 {
     switch (order.side) {
