@@ -21,7 +21,7 @@ struct itch50_system_event {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     char     EventCode;
 } __attribute__ ((packed));
 
@@ -29,7 +29,7 @@ struct itch50_stock_directory {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     char     Stock[8];
     char     MarketCategory;
     char     FinancialStatusIndicator;
@@ -50,7 +50,7 @@ struct itch50_stock_trading_action {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     char     Stock[8];
     char     TradingState;
     char     Reserved;
@@ -61,7 +61,7 @@ struct itch50_reg_sho_restriction {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     char     Stock[8];
     char     RegSHOAction;
 } __attribute__ ((packed));
@@ -70,7 +70,7 @@ struct itch50_market_participant_position {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     char     MPID[4];
     char     Stock[8];
     char     PrimaryMarketMaker;
@@ -82,7 +82,7 @@ struct itch50_mwcb_decline_level {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     uint64_t Level1;
     uint64_t Level2;
     uint64_t Level3;
@@ -92,7 +92,7 @@ struct itch50_mwcb_breach {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     char     BeachedLevel;
 } __attribute__ ((packed));
 
@@ -100,7 +100,7 @@ struct itch50_ipo_quoting_period_update {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     char     Stock[8];
     uint32_t IPOQuotationReleaseTime;
     char     IPOQuotationReleaseQualifier;
@@ -111,7 +111,7 @@ struct itch50_add_order {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     uint64_t OrderReferenceNumber;
     char     BuySellIndicator;
     uint32_t Shares;
@@ -123,7 +123,7 @@ struct itch50_add_order_mpid {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     uint64_t OrderReferenceNumber;
     char     BuySellIndicator;
     uint32_t Shares;
@@ -136,7 +136,7 @@ struct itch50_order_executed {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     uint64_t OrderReferenceNumber;
     uint32_t ExecutedShares;
     uint64_t MatchNumber;
@@ -146,7 +146,7 @@ struct itch50_order_executed_with_price {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     uint64_t OrderReferenceNumber;
     uint32_t ExecutedShares;
     uint64_t MatchNumber;
@@ -158,7 +158,7 @@ struct itch50_order_cancel {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     uint64_t OrderReferenceNumber;
     uint32_t CanceledShares;
 } __attribute__ ((packed));
@@ -167,7 +167,7 @@ struct itch50_order_delete {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     uint64_t OrderReferenceNumber;
 } __attribute__ ((packed));
 
@@ -175,7 +175,7 @@ struct itch50_order_replace {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     uint64_t OriginalOrderReferenceNumber;
     uint64_t NewOrderReferenceNumber;
     uint32_t Shares;
@@ -186,7 +186,7 @@ struct itch50_trade {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     uint64_t OrderReferenceNumber;
     char     BuySellIndicator;
     uint32_t Shares;
@@ -199,7 +199,7 @@ struct itch50_cross_trade {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     uint64_t Shares;
     char     Stock[8];
     uint32_t CrossPrice;
@@ -211,7 +211,7 @@ struct itch50_broken_trade {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     uint64_t MatchNumber;
 } __attribute__ ((packed));
 
@@ -219,7 +219,7 @@ struct itch50_noii {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     uint64_t PairedShares;
     uint64_t ImbalanceShares;
     char     ImbalanceDirection;
@@ -235,7 +235,7 @@ struct itch50_rpii {
     char     MessageType;
     uint16_t StockLocate;
     uint16_t TrackingNumber;
-    unsigned long Timestamp:48;
+    uint64_t Timestamp:48;
     char     Stock[8];
     char     InterestFlag;
 } __attribute__ ((packed));

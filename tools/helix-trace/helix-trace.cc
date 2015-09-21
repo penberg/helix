@@ -67,7 +67,7 @@ static void fmt_pretty_ob(helix_session_t session, helix_order_book_t ob)
 	uint64_t seconds = (timestamp_in_sec - (hours * 60 * 60) - (minutes * 60));
 
 	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
-		fprintf(output, "%s | %02lu:%02lu:%02lu %lu | %6lu  %.3f  %.3f  %-6lu |\n",
+		fprintf(output, "%s | %02" PRIu64":%02" PRIu64":%02" PRIu64" %" PRIu64" | %6" PRIu64"  %.3f  %.3f  %-6" PRIu64" |\n",
 			helix_order_book_symbol(ob),
 			hours, minutes, seconds, timestamp,
 			helix_order_book_bid_size(ob, 0),
@@ -119,7 +119,7 @@ static void fmt_csv_ob(helix_session_t session, helix_order_book_t ob)
 			fprintf(stderr, "order book crossed, bid: %f / ask: %f\n", bid_price, ask_price);
 		}
 
-		fprintf(output, "%s,%lu,%f,%lu,%f,%lu,,\n",
+		fprintf(output, "%s,%" PRIu64",%f,%" PRIu64",%f,%" PRIu64",,\n",
 			helix_order_book_symbol(ob),
 			helix_order_book_timestamp(ob),
 			bid_price,
@@ -133,7 +133,7 @@ static void fmt_csv_ob(helix_session_t session, helix_order_book_t ob)
 
 static void fmt_csv_trade(helix_session_t session, helix_trade_t trade)
 {
-	fprintf(output, "%s,%lu,,,,,%f,%c\n",
+	fprintf(output, "%s,%" PRIu64",,,,,%f,%c\n",
 		helix_trade_symbol(trade), helix_trade_timestamp(trade), helix_trade_price(trade)/10000.0, trade_sign(helix_trade_sign(trade)));
 	if (flush) fflush(output);
 }
