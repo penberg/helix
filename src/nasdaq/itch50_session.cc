@@ -13,8 +13,8 @@ namespace helix {
 
 namespace nasdaq {
 
-itch50_session::itch50_session(shared_ptr<itch50_handler>&&handler,
-                             shared_ptr<net::message_parser>&& transport_session,
+itch50_session::itch50_session(shared_ptr<itch50_handler> handler,
+                             shared_ptr<net::message_parser> transport_session,
                              void *data)
     : session{data}
     , _handler{std::move(handler)}

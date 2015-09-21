@@ -124,8 +124,8 @@ public:
         return _state;
     }
 
-    void add(order&& order);
-    void replace(uint64_t order_id, order&& order);
+    void add(order order);
+    void replace(uint64_t order_id, order order);
     void cancel(uint64_t order_id, uint64_t quantity);
     std::pair<uint64_t, side_type> execute(uint64_t order_id, uint64_t quantity);
     void remove(uint64_t order_id);

@@ -14,8 +14,8 @@ namespace helix {
 
 namespace nasdaq {
 
-nordic_itch_session::nordic_itch_session(shared_ptr<nordic_itch_handler>&&handler,
-                                         shared_ptr<net::message_parser>&& transport_session,
+nordic_itch_session::nordic_itch_session(shared_ptr<nordic_itch_handler> handler,
+                                         shared_ptr<net::message_parser> transport_session,
                                          void *data)
     : session{data}
     , _handler{std::move(handler)}
