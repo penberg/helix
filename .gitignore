@@ -6,7 +6,7 @@
 /helix-svm
 /helix-top
 /helix-trace
-/tests/order_book_perf_test
+/order_book_perf_test
 
 #
 # CMake-generated:
