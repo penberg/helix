@@ -10,8 +10,8 @@ namespace helix {
 
 namespace core {
 
-order_book::order_book(const std::string& symbol, uint64_t timestamp, size_t max_orders)
-    : _symbol{symbol}
+order_book::order_book(std::string symbol, uint64_t timestamp, size_t max_orders)
+    : _symbol{std::move(symbol)}
     , _timestamp{timestamp}
     , _state{trading_state::unknown}
 {
@@ -20,11 +20,7 @@ order_book::order_book(const std::string& symbol, uint64_t timestamp, size_t max
 #endif
 }
 
-order_book::~order_book()
-{
-}
-
-void order_book::add(order&& order)
+void order_book::add(order order)
 {
     switch (order.side) {
     case side_type::buy: {
@@ -45,7 +41,7 @@ void order_book::add(order&& order)
     _orders.emplace(std::move(order));
 }
 
-void order_book::replace(uint64_t order_id, order&& order)
+void order_book::replace(uint64_t order_id, order order)
 {
     remove(order_id);
     add(std::move(order));

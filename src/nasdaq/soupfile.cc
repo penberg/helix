@@ -9,7 +9,7 @@ namespace helix {
 namespace nasdaq {
 
 soupfile_session::soupfile_session(shared_ptr<net::message_parser> parser)
-    : _parser{parser}
+    : _parser{std::move(parser)}
 {
 }
 

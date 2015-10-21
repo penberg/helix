@@ -22,7 +22,7 @@ namespace nasdaq {
 class binaryfile_session : public net::message_parser {
     std::shared_ptr<net::message_parser> _parser;
 public:
-    binaryfile_session(std::shared_ptr<net::message_parser> parser);
+    explicit binaryfile_session(std::shared_ptr<net::message_parser> parser);
 
     virtual size_t parse(const net::packet_view& packet) override;
 };

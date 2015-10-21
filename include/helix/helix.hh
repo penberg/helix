@@ -38,9 +38,9 @@ struct trade {
     uint64_t    size;
     trade_sign  sign;
 
-    trade(const std::string& symbol_, uint64_t timestamp_,
+    trade(std::string symbol_, uint64_t timestamp_,
           uint64_t price_, uint64_t size_, trade_sign sign_)
-        : symbol{symbol_}
+        : symbol{std::move(symbol_)}
         , timestamp{timestamp_}
         , price{price_}
         , size{size_}
@@ -55,14 +55,14 @@ using trade_callback = std::function<void(const trade&)>;
 class session {
     void* _data;
 public:
-    session(void* data)
+    explicit session(void* data)
         : _data{data}
     { }
 
     virtual ~session()
     { }
 
-    void* data() const {
+    void* data() {
         return _data;
     }
 

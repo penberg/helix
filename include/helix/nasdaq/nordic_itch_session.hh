@@ -18,7 +18,7 @@ private:
     std::shared_ptr<nordic_itch_handler> _handler;
     std::shared_ptr<net::message_parser> _transport_session;
 public:
-    nordic_itch_session(std::shared_ptr<nordic_itch_handler>&&, std::shared_ptr<net::message_parser>&&, void *data);
+    nordic_itch_session(std::shared_ptr<nordic_itch_handler>, std::shared_ptr<net::message_parser>, void *data);
     virtual void subscribe(const std::string& symbol, size_t max_orders) override;
     virtual void register_callback(core::ob_callback process_ob) override;
     virtual void register_callback(core::trade_callback process_trade) override;
@@ -28,8 +28,8 @@ public:
 class nordic_itch_protocol : public core::protocol {
     std::string _name;
 public:
-    nordic_itch_protocol(const std::string& name)
-        : _name{name}
+    explicit nordic_itch_protocol(std::string name)
+        : _name{std::move(name)}
     { }
     virtual nordic_itch_session* new_session(void *) override;
 };

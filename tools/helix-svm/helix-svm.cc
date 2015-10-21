@@ -76,7 +76,7 @@ class svm_session {
 
 	ostream& _output;
 public:
-	svm_session(ostream& output)
+	explicit svm_session(ostream& output)
 		: _output{output}
 	{ }
 	void process_ob_event(helix_order_book_t ob) {
