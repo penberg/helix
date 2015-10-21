@@ -40,7 +40,7 @@ set(libSrcs ${libSrcs}
 
 add_library(helix ${libSrcs} include/helix/nasdaq/moldudp_messages.h)
 
-set(headers
+set(cxxHeaders
     include/helix/nasdaq/moldudp_messages.h
     include/helix/nasdaq/nordic_itch_handler.hh
     include/helix/nasdaq/nordic_itch_messages.h
@@ -51,12 +51,15 @@ set(headers
     include/helix/net.hh
     include/helix/helix.hh
     include/helix/order_book.hh
+)
+set(cHeaders
     include/helix-c/helix.h
 )
 
 configure_file("helix.pc.in" "helix.pc" @ONLY)
 
-install(FILES ${headers} DESTINATION include)
+install(FILES ${cxxHeaders} DESTINATION include/helix)
+install(FILES ${cHeaders} DESTINATION include/helix-c)
 install(TARGETS helix DESTINATION lib)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/helix.pc"
               DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
