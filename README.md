@@ -21,6 +21,14 @@ cmake .
 make
 ```
 
+To install Helix:
+
+```
+make install
+```
+
+Please note that Helix generates a ``pkg-config`` file so you can use ``pkg-config`` to integrate Helix with your project build system.
+
 ## Usage
 
 To convert a NASDAQ TotaView-ITCH 5.0 file to CSV:

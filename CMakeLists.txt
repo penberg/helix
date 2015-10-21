@@ -2,10 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(helix)
 
-set(VERSION_MAJOR   0   CACHE STRING "Project major version number.")
-set(VERSION_MINOR   1   CACHE STRING "Project minor version number.")
-set(VERSION_PATCH   0   CACHE STRING "Project patch version number.")
-mark_as_advanced(VERSION_MAJOR VERSION_MINOR VERSION_PATCH)
+set(HELIX_VERSION "0.3.0")
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
@@ -57,9 +54,12 @@ set(headers
     include/helix-c/helix.h
 )
 
+configure_file("helix.pc.in" "helix.pc" @ONLY)
+
 install(FILES ${headers} DESTINATION include)
 install(TARGETS helix DESTINATION lib)
-
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/helix.pc"
+              DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
 add_executable(helix-svm tools/helix-svm/helix-svm.cc)
 target_link_libraries(helix-svm helix ${LIBUV_LIBRARIES})
 

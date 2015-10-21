@@ -1,6 +1,7 @@
 #
 # Build artifacts:
 #
+/helix.pc
 /libhelix.a
 /helix-svm
 /helix-top

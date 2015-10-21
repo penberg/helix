@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: @CMAKE_PROJECT_NAME@
+Description: Helix, a market data feed handler for C and C++.
+Version: @HELIX_VERSION@
+Libs: -L${libdir} -lhelix
+Libs.private: @PRIVATE_LIBS@
+Cflags: -I${includedir}
