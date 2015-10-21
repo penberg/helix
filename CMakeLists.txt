@@ -43,6 +43,23 @@ set(libSrcs ${libSrcs}
 
 add_library(helix ${libSrcs} include/helix/nasdaq/moldudp_messages.h)
 
+set(headers
+    include/helix/nasdaq/moldudp_messages.h
+    include/helix/nasdaq/nordic_itch_handler.hh
+    include/helix/nasdaq/nordic_itch_messages.h
+    include/helix/nasdaq/itch50_session.hh
+    include/helix/nasdaq/nordic_itch_session.hh
+    include/helix/nasdaq/itch50_handler.hh
+    include/helix/nasdaq/itch50_messages.h
+    include/helix/net.hh
+    include/helix/helix.hh
+    include/helix/order_book.hh
+    include/helix-c/helix.h
+)
+
+install(FILES ${headers} DESTINATION include)
+install(TARGETS helix DESTINATION lib)
+
 add_executable(helix-svm tools/helix-svm/helix-svm.cc)
 target_link_libraries(helix-svm helix ${LIBUV_LIBRARIES})
 
