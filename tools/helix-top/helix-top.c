@@ -106,7 +106,7 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 		int opt_idx = 0;
 		int c;
 
-		c = getopt_long(argc, argv, "s:m:c:a:p:h", trace_options, &opt_idx);
+		c = getopt_long(argc, argv, "s:m:P:a:p:h", trace_options, &opt_idx);
 		if (c == -1)
 			break;
 
@@ -117,7 +117,7 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 		case 'm':
 			cfg->max_orders = strtol(optarg, NULL, 10);
 			break;
-		case 'c':
+		case 'P':
 			cfg->proto = optarg;
 			break;
 		case 'a':
@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
 	}
 
 	if (!cfg.proto) {
-		fprintf(stderr, "error: multicast protocol is not specified. Use the '-c' option to specify it.\n");
+		fprintf(stderr, "error: multicast protocol is not specified. Use the '-P' option to specify it.\n");
 		exit(1);
 	}
 
