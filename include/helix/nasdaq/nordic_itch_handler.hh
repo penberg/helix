@@ -63,10 +63,6 @@ public:
     {
     }
     void subscribe(std::string sym, size_t max_orders) {
-        auto padding = ITCH_SYMBOL_LEN - sym.size();
-        if (padding > 0) {
-            sym.insert(sym.size(), padding, ' ');
-        }
         _symbols.insert(sym);
         _symbol_max_orders.emplace(sym, max_orders);
         size_t max_all_orders = 0;
