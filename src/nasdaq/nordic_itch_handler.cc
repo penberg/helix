@@ -18,6 +18,31 @@ namespace helix {
 
 namespace nasdaq {
 
+nordic_itch_handler::nordic_itch_handler()
+{
+}
+
+void nordic_itch_handler::subscribe(std::string sym, size_t max_orders)
+{
+    _symbols.insert(sym);
+    _symbol_max_orders.emplace(sym, max_orders);
+    size_t max_all_orders = 0;
+    for (auto&& kv : _symbol_max_orders) {
+         max_all_orders += kv.second;
+    }
+    order_id_map.reserve(max_all_orders);
+}
+
+void nordic_itch_handler::register_callback(core::ob_callback process_ob)
+{
+    _process_ob = process_ob;
+}
+
+void nordic_itch_handler::register_callback(core::trade_callback process_trade)
+{
+    _process_trade = process_trade;
+}
+
 static side_type itch_side(char c)
 {
     switch (c) {
@@ -245,6 +270,11 @@ void nordic_itch_handler::process_msg(const itch_broken_trade* m)
 
 void nordic_itch_handler::process_msg(const itch_noii* m)
 {
+}
+
+uint64_t nordic_itch_handler::timestamp() const
+{
+    return time_sec * 1000 + time_msec;
 }
 
 }

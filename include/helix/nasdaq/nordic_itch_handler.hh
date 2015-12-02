@@ -34,7 +34,6 @@ namespace nasdaq {
 //   April 7, 2014
 //
 class nordic_itch_handler : public net::message_parser {
-private:
     //! Seconds since midnight in CET (Central European Time).
     uint64_t time_sec;
     //! Milliseconds since @time_sec.
@@ -58,25 +57,10 @@ public:
             : logic_error(std::move(cause))
         { }
     };
-public:
-    nordic_itch_handler()
-    {
-    }
-    void subscribe(std::string sym, size_t max_orders) {
-        _symbols.insert(sym);
-        _symbol_max_orders.emplace(sym, max_orders);
-        size_t max_all_orders = 0;
-        for (auto&& kv : _symbol_max_orders) {
-            max_all_orders += kv.second;
-        }
-        order_id_map.reserve(max_all_orders);
-    }
-    void register_callback(core::ob_callback process_ob) {
-        _process_ob = process_ob;
-    }
-    void register_callback(core::trade_callback process_trade) {
-        _process_trade = process_trade;
-    }
+    nordic_itch_handler();
+    void subscribe(std::string sym, size_t max_orders);
+    void register_callback(core::ob_callback process_ob);
+    void register_callback(core::trade_callback process_trade);
     virtual size_t parse(const net::packet_view& packet) override;
 private:
     template<typename T>
@@ -97,11 +81,8 @@ private:
     void process_msg(const itch_cross_trade* m);
     void process_msg(const itch_broken_trade* m);
     void process_msg(const itch_noii* m);
-
     //! Timestamp in milliseconds
-    inline uint64_t timestamp() const {
-        return time_sec * 1000 + time_msec;
-    }
+    uint64_t timestamp() const;
 };
 
 }

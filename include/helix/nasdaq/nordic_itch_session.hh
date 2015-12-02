@@ -14,7 +14,6 @@ namespace nasdaq {
 class nordic_itch_handler;
 
 class nordic_itch_session : public core::session {
-private:
     std::shared_ptr<nordic_itch_handler> _handler;
     std::shared_ptr<net::message_parser> _transport_session;
 public:
@@ -28,9 +27,7 @@ public:
 class nordic_itch_protocol : public core::protocol {
     std::string _name;
 public:
-    explicit nordic_itch_protocol(std::string name)
-        : _name{std::move(name)}
-    { }
+    explicit nordic_itch_protocol(std::string name);
     virtual nordic_itch_session* new_session(void *) override;
 };
 

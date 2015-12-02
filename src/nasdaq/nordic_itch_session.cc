@@ -43,8 +43,12 @@ void nordic_itch_session::register_callback(core::trade_callback process_trade)
    _handler->register_callback(process_trade);
 }
 
-nordic_itch_session*
-nordic_itch_protocol::new_session(void *data)
+nordic_itch_protocol::nordic_itch_protocol(std::string name)
+    : _name{std::move(name)}
+{
+}
+
+nordic_itch_session* nordic_itch_protocol::new_session(void *data)
 {
     auto is = make_shared<nordic_itch_handler>();
     shared_ptr<net::message_parser> ts;
