@@ -31,6 +31,16 @@ inline helix::core::trade* unwrap(helix_trade_t ob)
     return reinterpret_cast<helix::core::trade*>(ob);
 }
 
+inline helix_event_t wrap(helix::core::event* ob)
+{
+    return reinterpret_cast<helix_event_t>(ob);
+}
+
+inline helix::core::event* unwrap(helix_event_t ob)
+{
+    return reinterpret_cast<helix::core::event*>(ob);
+}
+
 inline helix_protocol_t wrap(helix::core::protocol* proto)
 {
     return reinterpret_cast<helix_protocol_t>(proto);
@@ -63,14 +73,11 @@ helix_protocol_t helix_protocol_lookup(const char *name)
 }
 
 helix_session_t
-helix_session_create(helix_protocol_t proto, helix_order_book_callback_t ob_callback, helix_trade_callback_t trade_callback, void *data)
+helix_session_create(helix_protocol_t proto, helix_event_callback_t callback, void *data)
 {
     auto session = unwrap(proto)->new_session(data);
-    session->register_callback([session, ob_callback](const helix::core::order_book& ob) {
-        ob_callback(wrap(session), wrap(const_cast<helix::core::order_book*>(&ob)));
-    });
-    session->register_callback([session, trade_callback](const helix::core::trade& trade) {
-        trade_callback(wrap(session), wrap(const_cast<helix::core::trade*>(&trade)));
+    session->register_callback([session, callback](const helix::core::event& event) {
+        callback(wrap(session), wrap(const_cast<helix::core::event*>(&event)));
     });
     return wrap(session);
 }
@@ -88,6 +95,21 @@ void *helix_session_data(helix_session_t session)
 size_t helix_session_process_packet(helix_session_t session, const char* buf, size_t len)
 {
     return unwrap(session)->process_packet(helix::net::packet_view{buf, len});
+}
+
+helix_event_mask_t helix_event_mask(helix_event_t ev)
+{
+    return static_cast<helix_event_mask_t>(unwrap(ev)->get_mask());
+}
+
+helix_order_book_t helix_event_order_book(helix_event_t ev)
+{
+    return wrap(unwrap(ev)->get_ob());
+}
+
+helix_trade_t helix_event_trade(helix_event_t ev)
+{
+    return wrap(unwrap(ev)->get_trade());
 }
 
 const char *helix_order_book_symbol(helix_order_book_t ob)

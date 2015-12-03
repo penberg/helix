@@ -33,14 +33,9 @@ size_t nordic_itch_session::process_packet(const net::packet_view& packet)
     return _transport_session->parse(packet);
 }
 
-void nordic_itch_session::register_callback(core::ob_callback process_ob)
+void nordic_itch_session::register_callback(core::event_callback callback)
 {
-   _handler->register_callback(process_ob);
-}
-
-void nordic_itch_session::register_callback(core::trade_callback process_trade)
-{
-   _handler->register_callback(process_trade);
+   _handler->register_callback(callback);
 }
 
 nordic_itch_protocol::nordic_itch_protocol(std::string name)

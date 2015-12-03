@@ -38,10 +38,8 @@ class nordic_itch_handler : public net::message_parser {
     uint64_t time_sec;
     //! Milliseconds since @time_sec.
     uint64_t time_msec;
-    //! Callback function for processing order book events.
-    core::ob_callback _process_ob;
-    //! Callback function for processing trade events.
-    core::trade_callback _process_trade;
+    //! Callback function for processing events.
+    core::event_callback _process_event;
     //! A map of order books by order book ID.
     std::unordered_map<uint64_t, helix::core::order_book> order_book_id_map;
     //! A map of order books by order ID.
@@ -59,8 +57,7 @@ public:
     };
     nordic_itch_handler();
     void subscribe(std::string sym, size_t max_orders);
-    void register_callback(core::ob_callback process_ob);
-    void register_callback(core::trade_callback process_trade);
+    void register_callback(core::event_callback callback);
     virtual size_t parse(const net::packet_view& packet) override;
 private:
     template<typename T>

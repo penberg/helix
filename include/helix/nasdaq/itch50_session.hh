@@ -20,8 +20,7 @@ private:
 public:
     itch50_session(std::shared_ptr<itch50_handler>, std::shared_ptr<net::message_parser>, void *data);
     virtual void subscribe(const std::string& symbol, size_t max_orders) override;
-    virtual void register_callback(core::ob_callback process_ob) override;
-    virtual void register_callback(core::trade_callback process_trade) override;
+    virtual void register_callback(core::event_callback callback) override;
     virtual size_t process_packet(const net::packet_view& packet) override;
 };
 

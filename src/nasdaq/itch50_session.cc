@@ -32,14 +32,9 @@ size_t itch50_session::process_packet(const net::packet_view& packet)
     return _transport_session->parse(packet);
 }
 
-void itch50_session::register_callback(core::ob_callback process_ob)
+void itch50_session::register_callback(core::event_callback callback)
 {
-   _handler->register_callback(process_ob);
-}
-
-void itch50_session::register_callback(core::trade_callback process_trade)
-{
-   _handler->register_callback(process_trade);
+   _handler->register_callback(callback);
 }
 
 itch50_session*

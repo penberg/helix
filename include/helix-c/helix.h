@@ -67,16 +67,48 @@ typedef struct helix_opaque_order_book *helix_order_book_t;
 typedef struct helix_opaque_trade *helix_trade_t;
 
 /*!
- * @typedef  helix_order_book_callback_t
- * @abstract Type of an order book update callback.
+ * @typedef  helix_event_t
+ * @abstract Type of an event.
  */
-typedef void (*helix_order_book_callback_t)(helix_session_t, helix_order_book_t);
+typedef struct helix_opaque_event *helix_event_t;
 
 /*!
- * @typedef  helix_trade_callback_t
- * @abstract Type of a trade callback.
+ * @enum     helix_event_mask_t
+ * @abstract Event mask.
  */
-typedef void (*helix_trade_callback_t)(helix_session_t, helix_trade_t);
+typedef enum {
+    /*! Order book update. */
+    HELIX_EVENT_ORDER_BOOK_UPDATE = 1UL << 0,
+    /*! Trade. */
+    HELIX_EVENT_TRADE = 1UL << 1,
+} helix_event_mask_t;
+
+/*!
+ * @abstract Returns the event mask.
+ */
+helix_event_mask_t helix_event_mask(helix_event_t);
+
+/*!
+ * @abstract Returns an order book from an event.
+ *
+ * The function returns an order book object if HELIX_EVENT_ORDER_BOOK_UPDATE
+ * bit is set in the event mask.
+ */
+helix_order_book_t helix_event_order_book(helix_event_t);
+
+/*!
+ * @abstract Returns a trade from an event object.
+ *
+ * The function returns a trade object if HELIX_EVEN_TRADE bit is set in the
+ * event mask.
+ */
+helix_trade_t helix_event_trade(helix_event_t);
+
+/*!
+ * @typedef  helix_event_callback_t
+ * @abstract Type of an event callback.
+ */
+typedef void (*helix_event_callback_t)(helix_session_t, helix_event_t);
 
 /*!
  * @enum     helix_trading_state_t
@@ -201,7 +233,7 @@ helix_protocol_t helix_protocol_lookup(const char *name);
 /*!
  * Create a new session.
  */
-helix_session_t helix_session_create(helix_protocol_t, helix_order_book_callback_t, helix_trade_callback_t, void *data);
+helix_session_t helix_session_create(helix_protocol_t, helix_event_callback_t, void *data);
 
 /*!
  * @abstract Returns session opaque context data.

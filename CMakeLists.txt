@@ -27,6 +27,7 @@ set(CMAKE_C_FLAGS "-Iinclude -Wall -O3 -g -std=gnu11")
 set(CMAKE_CXX_FLAGS "-Iinclude -Wall -O3 -g -std=c++14")
 
 set(libSrcs ${libSrcs}
+    src/event.cc
     src/helix.cc
     src/order_book.cc
     src/nasdaq/binaryfile.cc

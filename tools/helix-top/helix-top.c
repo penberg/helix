@@ -58,9 +58,16 @@ static void process_ob_event(helix_session_t session, helix_order_book_t ob)
 	print_top(ob);
 }
 
-static void process_trade_event(helix_session_t session, helix_trade_t trade)
+static void process_event(helix_session_t session, helix_event_t event)
 {
+	helix_event_mask_t mask = helix_event_mask(event);
+
+	if (mask & HELIX_EVENT_ORDER_BOOK_UPDATE) {
+		helix_order_book_t ob = helix_event_order_book(event);
+		process_ob_event(session, ob);
+	}
 }
+
 
 static void recv_packet(uv_udp_t* handle, ssize_t nread, const uv_buf_t* buf, const struct sockaddr* addr, unsigned flags)
 {
@@ -173,7 +180,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	session = helix_session_create(proto, process_ob_event, process_trade_event, NULL);
+	session = helix_session_create(proto, process_event, NULL);
 	if (!session) {
 		fprintf(stderr, "error: unable to create new session\n");
 		exit(1);

@@ -28,10 +28,8 @@ namespace nasdaq {
 //
 class itch50_handler : public net::message_parser {
 private:
-    //! Callback function for processing order book events.
-    core::ob_callback _process_ob;
-    //! Callback function for processing trade events.
-    core::trade_callback _process_trade;
+    //! Callback function for processing events.
+    core::event_callback _process_event;
     //! A map of order books by order book ID.
     std::unordered_map<uint64_t, helix::core::order_book> order_book_id_map;
     //! A set of symbols that we are interested in.
@@ -61,11 +59,8 @@ public:
         }
         order_book_id_map.reserve(max_all_orders);
     }
-    void register_callback(core::ob_callback process_ob) {
-        _process_ob = process_ob;
-    }
-    void register_callback(core::trade_callback process_trade) {
-        _process_trade = process_trade;
+    void register_callback(core::event_callback callback) {
+        _process_event = callback;
     }
     virtual size_t parse(const net::packet_view& packet) override;
 private:

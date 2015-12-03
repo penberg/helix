@@ -48,9 +48,28 @@ struct trade {
     { }
 };
 
-using ob_callback = std::function<void(const order_book&)>;
+using event_mask = uint32_t;
+enum {
+    ev_order_book_update = 1UL << 0,
+    ev_trade             = 1UL << 1,
+};
 
-using trade_callback = std::function<void(const trade&)>;
+class event {
+    event_mask  _mask;
+    order_book* _ob;
+    trade*      _trade;
+public:
+    event(event_mask mask, order_book* ob, trade*);
+    event_mask get_mask() const;
+    order_book* get_ob() const;
+    trade* get_trade() const;
+};
+
+event make_event(order_book*, trade*);
+event make_ob_event(order_book*);
+event make_trade_event(trade*);
+
+using event_callback = std::function<void(const event&)>;
 
 class session {
     void* _data;
@@ -68,9 +87,7 @@ public:
 
     virtual void subscribe(const std::string& symbol, size_t max_orders) = 0;
 
-    virtual void register_callback(core::ob_callback process_ob) = 0;
-
-    virtual void register_callback(core::trade_callback process_trade) = 0;
+    virtual void register_callback(core::event_callback callback) = 0;
 
     virtual size_t process_packet(const net::packet_view& packet) = 0;
 };
