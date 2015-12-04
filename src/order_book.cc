@@ -10,6 +10,13 @@ namespace helix {
 
 namespace core {
 
+execution::execution(uint64_t price, side_type side, uint64_t remaining)
+    : price{price}
+    , side{side}
+    , remaining{remaining}
+{
+}
+
 order_book::order_book(std::string symbol, uint64_t timestamp, size_t max_orders)
     : _symbol{std::move(symbol)}
     , _timestamp{timestamp}
@@ -62,21 +69,21 @@ void order_book::cancel(uint64_t order_id, uint64_t quantity)
     }
 }
 
-std::pair<uint64_t, side_type> order_book::execute(uint64_t order_id, uint64_t quantity)
+execution order_book::execute(uint64_t order_id, uint64_t quantity)
 {
     auto it = _orders.find(order_id);
     if (it == _orders.end()) {
         throw invalid_argument(string("invalid order id: ") + to_string(order_id));
     }
-    auto ret = std::make_pair(it->price, it->side);
     _orders.modify(it, [quantity](order& order) {
         order.quantity -= quantity;
         order.level->size -= quantity;
     });
+    auto result = execution(it->price, it->side, it->level->size);
     if (!it->quantity) {
         remove(it);
     }
-    return ret;
+    return result;
 }
 
 void order_book::remove(uint64_t order_id)

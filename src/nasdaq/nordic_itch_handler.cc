@@ -190,8 +190,8 @@ void nordic_itch_handler::process_msg(const itch_order_executed* m)
        auto& ob = it->second;
        auto result = ob.execute(order_id, quantity);
        ob.set_timestamp(timestamp());
-       trade t{ob.symbol(), timestamp(), result.first, quantity, itch_trade_sign(result.second)};
-        _process_event(make_event(&ob, &t));
+       trade t{ob.symbol(), timestamp(), result.price, quantity, itch_trade_sign(result.side)};
+        _process_event(make_event(&ob, &t, sweep_event(result)));
    }
 }
 
@@ -205,8 +205,8 @@ void nordic_itch_handler::process_msg(const itch_order_executed_with_price* m)
         auto& ob = it->second;
         auto result = ob.execute(order_id, quantity);
         ob.set_timestamp(timestamp());
-        trade t{ob.symbol(), timestamp(), price, quantity, itch_trade_sign(result.second)};
-        _process_event(make_event(&ob, &t));
+        trade t{ob.symbol(), timestamp(), price, quantity, itch_trade_sign(result.side)};
+        _process_event(make_event(&ob, &t, sweep_event(result)));
     }
 }
 
@@ -272,6 +272,14 @@ void nordic_itch_handler::process_msg(const itch_noii* m)
 uint64_t nordic_itch_handler::timestamp() const
 {
     return time_sec * 1000 + time_msec;
+}
+
+event_mask nordic_itch_handler::sweep_event(const execution& e) const
+{
+    if (e.remaining > 0) {
+        return 0;
+    }
+    return ev_sweep;
 }
 
 }

@@ -86,6 +86,8 @@ private:
     void process_msg(const itch50_broken_trade* m);
     void process_msg(const itch50_noii* m);
     void process_msg(const itch50_rpii* m);
+    //! Generate a sweep event if execution cleared a price level.
+    core::event_mask sweep_event(const core::execution&) const;
 };
 
 }

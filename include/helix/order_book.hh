@@ -83,6 +83,18 @@ struct price_level {
     uint64_t size;
 };
 
+/// \brief Order execution details.
+struct execution {
+    //! The price order was executed with.
+    uint64_t price;
+    //! The side of the liquidity taker of the trade.
+    side_type side;
+    //! The number of remaining quantity on the traded price level.
+    uint64_t remaining;
+
+    execution(uint64_t price, side_type side, uint64_t remaining);
+};
+
 /// \brief Order book is a price-time prioritized list of buy and sell
 /// orders.
 
@@ -127,7 +139,7 @@ public:
     void add(order order);
     void replace(uint64_t order_id, order order);
     void cancel(uint64_t order_id, uint64_t quantity);
-    std::pair<uint64_t, side_type> execute(uint64_t order_id, uint64_t quantity);
+    execution execute(uint64_t order_id, uint64_t quantity);
     void remove(uint64_t order_id);
     side_type side(uint64_t order_id) const;
 

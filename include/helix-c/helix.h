@@ -81,6 +81,8 @@ typedef enum {
     HELIX_EVENT_ORDER_BOOK_UPDATE = 1UL << 0,
     /*! Trade. */
     HELIX_EVENT_TRADE = 1UL << 1,
+    /*! Top of book price level sweep. */
+    HELIX_EVENT_SWEEP = 1UL << 2,
 } helix_event_mask_t;
 
 /*!

@@ -172,8 +172,8 @@ void itch50_handler::process_msg(const itch50_order_executed* m)
         auto& ob = it->second;
         auto result = ob.execute(m->OrderReferenceNumber, quantity);
         ob.set_timestamp(timestamp);
-        trade t{ob.symbol(), timestamp, result.first, quantity, itch50_trade_sign(result.second)};
-        _process_event(make_event(&ob, &t));
+        trade t{ob.symbol(), timestamp, result.price, quantity, itch50_trade_sign(result.side)};
+        _process_event(make_event(&ob, &t, sweep_event(result)));
     }
 }
 
@@ -187,8 +187,8 @@ void itch50_handler::process_msg(const itch50_order_executed_with_price* m)
         auto& ob = it->second;
         auto result = ob.execute(m->OrderReferenceNumber, quantity);
         ob.set_timestamp(timestamp);
-        trade t{ob.symbol(), timestamp, price, quantity, itch50_trade_sign(result.second)};
-        _process_event(make_event(&ob, &t));
+        trade t{ob.symbol(), timestamp, price, quantity, itch50_trade_sign(result.side)};
+        _process_event(make_event(&ob, &t, sweep_event(result)));
     }
 }
 
@@ -265,6 +265,14 @@ void itch50_handler::process_msg(const itch50_noii* m)
 
 void itch50_handler::process_msg(const itch50_rpii* m)
 {
+}
+
+event_mask itch50_handler::sweep_event(const execution& e) const
+{
+    if (e.remaining > 0) {
+        return 0;
+    }
+    return ev_sweep;
 }
 
 }

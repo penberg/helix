@@ -52,6 +52,7 @@ using event_mask = uint32_t;
 enum {
     ev_order_book_update = 1UL << 0,
     ev_trade             = 1UL << 1,
+    ev_sweep             = 1UL << 2,
 };
 
 class event {
@@ -65,9 +66,9 @@ public:
     trade* get_trade() const;
 };
 
-event make_event(order_book*, trade*);
-event make_ob_event(order_book*);
-event make_trade_event(trade*);
+event make_event(order_book*, trade*, event_mask mask = 0);
+event make_ob_event(order_book*, event_mask mask = 0);
+event make_trade_event(trade*, event_mask mask = 0);
 
 using event_callback = std::function<void(const event&)>;
 
