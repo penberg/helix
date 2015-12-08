@@ -40,6 +40,13 @@ struct config {
 	const char *output;
 };
 
+struct trace_session {
+       uint64_t	bid_price = 0;
+       uint64_t	bid_size  = 0;
+       uint64_t	ask_price = UINT64_MAX;
+       uint64_t	ask_size  = 0;
+};
+
 struct trace_fmt_ops {
 	void (*fmt_header)(void);
 	void (*fmt_ob)(helix_session_t session, helix_order_book_t ob);
@@ -67,14 +74,34 @@ static void fmt_pretty_ob(helix_session_t session, helix_order_book_t ob)
 	uint64_t seconds = (timestamp_in_sec - (hours * 60 * 60) - (minutes * 60));
 
 	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
+		auto* ts = reinterpret_cast<trace_session*>(helix_session_data(session));
+		auto bid_price = (double)helix_order_book_bid_price(ob, 0);
+		uint64_t bid_size = helix_order_book_bid_size(ob, 0);
+		auto ask_price = (double)helix_order_book_ask_price(ob, 0);
+		uint64_t ask_size = helix_order_book_ask_size(ob, 0);
+
+		if (!bid_size || !ask_size) {
+			return;
+		}
+		if (bid_price == ts->bid_price
+				&& bid_size == ts->bid_size
+				&& ask_price == ts->ask_price
+				&& ask_size == ts->ask_size) {
+			return;
+		}
 		fprintf(output, "%s | %02" PRIu64":%02" PRIu64":%02" PRIu64" %" PRIu64" | %6" PRIu64"  %.3f  %.3f  %-6" PRIu64" |\n",
 			helix_order_book_symbol(ob),
 			hours, minutes, seconds, timestamp,
-			helix_order_book_bid_size(ob, 0),
-			(double)helix_order_book_bid_price(ob, 0)/10000.0,
-			(double)helix_order_book_ask_price(ob, 0)/10000.0,
-			helix_order_book_ask_size(ob, 0)
+			bid_size,
+			(double)bid_price/10000.0,
+			(double)ask_price/10000.0,
+			ask_size
 			);
+
+		ts->bid_price = bid_price;
+		ts->bid_size = bid_size;
+		ts->ask_price = ask_price;
+		ts->ask_size = ask_size;
 	}
 }
 
@@ -109,25 +136,40 @@ static void fmt_csv_header(void)
 
 static void fmt_csv_ob(helix_session_t session, helix_order_book_t ob)
 {
-	double bid_price;
-	double ask_price;
-
 	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
-		bid_price = (double)helix_order_book_bid_price(ob, 0)/10000.0;
-		ask_price = (double)helix_order_book_ask_price(ob, 0)/10000.0;
+		auto* ts = reinterpret_cast<trace_session*>(helix_session_data(session));
+		auto bid_price = helix_order_book_bid_price(ob, 0);
+		auto bid_size = helix_order_book_bid_size(ob, 0);
+		auto ask_price = helix_order_book_ask_price(ob, 0);
+		auto ask_size = helix_order_book_ask_size(ob, 0);
+
+		if (!bid_size || !ask_size) {
+			return;
+		}
+		if (bid_price == ts->bid_price
+				&& bid_size == ts->bid_size
+				&& ask_price == ts->ask_price
+				&& ask_size == ts->ask_size) {
+			return;
+		}
 		if (bid_price >= ask_price) {
-			fprintf(stderr, "order book crossed, bid: %f / ask: %f\n", bid_price, ask_price);
+			fprintf(stderr, "order book crossed, bid: %f / ask: %f\n", (double)bid_price/10000.0, (double)ask_price/10000.0);
 		}
 
 		fprintf(output, "%s,%" PRIu64",%f,%" PRIu64",%f,%" PRIu64",,\n",
 			helix_order_book_symbol(ob),
 			helix_order_book_timestamp(ob),
-			bid_price,
-			helix_order_book_bid_size(ob, 0),
-			ask_price,
-			helix_order_book_ask_size(ob, 0)
+			(double)bid_price/10000.0,
+			bid_size,
+			(double)ask_price/10000.0,
+			ask_size
 			);
 		if (flush) fflush(output);
+
+		ts->bid_price = bid_price;
+		ts->bid_size = bid_size;
+		ts->ask_price = ask_price;
+		ts->ask_size = ask_size;
 	}
 }
 
@@ -287,6 +329,7 @@ int main(int argc, char *argv[])
 	helix_protocol_t proto;
 	struct config cfg = {};
 	struct stat input_st;
+	trace_session ts;
 	void *input_mmap;
 	uv_udp_t socket;
 	int input_fd;
@@ -333,7 +376,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	session = helix_session_create(proto, process_event, NULL);
+	session = helix_session_create(proto, process_event, &ts);
 	if (!session) {
 		fprintf(stderr, "error: unable to create new session\n");
 		exit(1);
