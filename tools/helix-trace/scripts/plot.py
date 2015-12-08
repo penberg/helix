@@ -18,6 +18,9 @@ ax = fig.add_subplot(111)
 
 last = data['LastPrice']
 
+vwap = data['VWAP']
+fill_missing(vwap)
+
 bid = data['BidPrice']
 fill_missing(bid)
 
@@ -27,4 +30,5 @@ fill_missing(ask)
 ax.plot(data['Timestamp'], last, 'ko')
 ax.plot(data['Timestamp'], bid,  'g-')
 ax.plot(data['Timestamp'], ask,  'r-')
+ax.plot(data['Timestamp'], vwap, 'y-')
 plt.show()
