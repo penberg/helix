@@ -5,6 +5,7 @@
  * @file  helix.h
  * @abstract Helix C bindings.
  */
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -241,6 +242,11 @@ helix_session_t helix_session_create(helix_protocol_t, helix_event_callback_t, v
  * @abstract Returns session opaque context data.
  */
 void *helix_session_data(helix_session_t);
+
+/*!
+ * @abstract Returns true if timestamp is in the range of regular trading hours.
+ */
+bool helix_session_is_rth_timestamp(helix_session_t, helix_timestamp_t);
 
 /*!
  * @abstract Process a packet for a session.

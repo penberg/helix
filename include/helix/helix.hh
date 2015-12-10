@@ -86,6 +86,8 @@ public:
         return _data;
     }
 
+    virtual bool is_rth_timestamp(uint64_t timestamp) = 0;
+
     virtual void subscribe(const std::string& symbol, size_t max_orders) = 0;
 
     virtual void register_callback(core::event_callback callback) = 0;

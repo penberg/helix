@@ -5,9 +5,12 @@
 #include "soupfile.hh"
 #include "moldudp.hh"
 
+#include <chrono>
 #include <memory>
 #include <vector>
 
+using namespace std::chrono_literals;
+using namespace std::chrono;
 using namespace std;
 
 namespace helix {
@@ -21,6 +24,14 @@ nordic_itch_session::nordic_itch_session(shared_ptr<nordic_itch_handler> handler
     , _handler{std::move(handler)}
     , _transport_session{std::move(transport_session)}
 {
+}
+
+bool nordic_itch_session::is_rth_timestamp(uint64_t timestamp)
+{
+    // FIXME: This is valid only for Stockholm and Helsinki equities.
+    constexpr uint64_t rth_start = duration_cast<milliseconds>(9h).count();
+    constexpr uint64_t rth_end   = duration_cast<milliseconds>(17h + 25min).count();
+    return timestamp >= rth_start && timestamp < rth_end;
 }
 
 void nordic_itch_session::subscribe(const std::string& symbol, size_t max_orders)

@@ -73,7 +73,7 @@ static void fmt_pretty_ob(helix_session_t session, helix_order_book_t ob)
 	uint64_t minutes = (timestamp_in_sec - (hours * 60 * 60)) / 60;
 	uint64_t seconds = (timestamp_in_sec - (hours * 60 * 60) - (minutes * 60));
 
-	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
+	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING && helix_session_is_rth_timestamp(session, timestamp)) {
 		auto* ts = reinterpret_cast<trace_session*>(helix_session_data(session));
 		auto bid_price = (double)helix_order_book_bid_price(ob, 0);
 		uint64_t bid_size = helix_order_book_bid_size(ob, 0);
@@ -119,12 +119,16 @@ const char trade_sign(helix_trade_sign_t sign)
 
 static void fmt_pretty_trade(helix_session_t session, helix_trade_t trade)
 {
-	fprintf(output, "%s | %.3f | %c | %.3f | \n",
-		helix_trade_symbol(trade),
-		helix_trade_price(trade)/10000.0,
-		trade_sign(helix_trade_sign(trade)),
-		volume_ccy / (double)volume_shs
-		);
+	auto timestamp = helix_trade_timestamp(trade);
+
+	if (helix_session_is_rth_timestamp(session, timestamp)) {
+		fprintf(output, "%s | %.3f | %c | %.3f | \n",
+			helix_trade_symbol(trade),
+			helix_trade_price(trade)/10000.0,
+			trade_sign(helix_trade_sign(trade)),
+			volume_ccy / (double)volume_shs
+			);
+	}
 }
 
 struct trace_fmt_ops fmt_pretty_ops = {
@@ -141,7 +145,8 @@ static void fmt_csv_header(void)
 
 static void fmt_csv_ob(helix_session_t session, helix_order_book_t ob)
 {
-	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
+	uint64_t timestamp = helix_order_book_timestamp(ob);
+	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING && helix_session_is_rth_timestamp(session, timestamp)) {
 		auto* ts = reinterpret_cast<trace_session*>(helix_session_data(session));
 		auto bid_price = helix_order_book_bid_price(ob, 0);
 		auto bid_size = helix_order_book_bid_size(ob, 0);
@@ -180,14 +185,18 @@ static void fmt_csv_ob(helix_session_t session, helix_order_book_t ob)
 
 static void fmt_csv_trade(helix_session_t session, helix_trade_t trade)
 {
-	fprintf(output, "%s,%" PRIu64",,,,,%f,%c,%f\n",
-		helix_trade_symbol(trade),
-		helix_trade_timestamp(trade),
-		helix_trade_price(trade)/10000.0,
-		trade_sign(helix_trade_sign(trade)),
-		volume_ccy / (double)volume_shs
-		);
-	if (flush) fflush(output);
+	auto timestamp = helix_trade_timestamp(trade);
+
+	if (helix_session_is_rth_timestamp(session, timestamp)) {
+		fprintf(output, "%s,%" PRIu64",,,,,%f,%c,%f\n",
+			helix_trade_symbol(trade),
+			helix_trade_timestamp(trade),
+			helix_trade_price(trade)/10000.0,
+			trade_sign(helix_trade_sign(trade)),
+			volume_ccy / (double)volume_shs
+			);
+		if (flush) fflush(output);
+	}
 }
 
 struct trace_fmt_ops fmt_csv_ops = {

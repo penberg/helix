@@ -4,9 +4,12 @@
 #include "binaryfile.hh"
 #include "helix/net.hh"
 
+#include <chrono>
 #include <memory>
 #include <vector>
 
+using namespace std::chrono_literals;
+using namespace std::chrono;
 using namespace std;
 
 namespace helix {
@@ -20,6 +23,13 @@ itch50_session::itch50_session(shared_ptr<itch50_handler> handler,
     , _handler{std::move(handler)}
     , _transport_session{std::move(transport_session)}
 {
+}
+
+bool itch50_session::is_rth_timestamp(uint64_t timestamp)
+{
+    constexpr uint64_t rth_start = duration_cast<nanoseconds>(9h + 30min).count();
+    constexpr uint64_t rth_end   = duration_cast<nanoseconds>(16h).count();
+    return timestamp >= rth_start && timestamp < rth_end;
 }
 
 void itch50_session::subscribe(const std::string& symbol, size_t max_orders)

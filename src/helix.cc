@@ -92,6 +92,11 @@ void *helix_session_data(helix_session_t session)
     return unwrap(session)->data();
 }
 
+bool helix_session_is_rth_timestamp(helix_session_t session, helix_timestamp_t timestamp)
+{
+    return unwrap(session)->is_rth_timestamp(timestamp);
+}
+
 size_t helix_session_process_packet(helix_session_t session, const char* buf, size_t len)
 {
     return unwrap(session)->process_packet(helix::net::packet_view{buf, len});
