@@ -30,8 +30,8 @@ namespace nasdaq {
 // in:
 //
 //   Nordic Equity TotalView-ITCH
-//   Version 1.90.2
-//   April 7, 2014
+//   Version 2.02.2
+//   June 4, 2015
 //
 class nordic_itch_handler : public net::message_parser {
     //! Seconds since midnight in CET (Central European Time).

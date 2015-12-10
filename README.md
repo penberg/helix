@@ -56,7 +56,7 @@ Please note that Helix only works with uncompressed files.
 
 * NASDAQ
   * [x] NASDAQ TotalView-ITCH 5.0
-  * [x] Nordic Equity TotalView-ITCH 1.90.2
+  * [x] Nordic Equity TotalView-ITCH 2.02.2
   * [x] MoldUDP
   * [x] BinaryFILE
   * [x] SoupFILE
