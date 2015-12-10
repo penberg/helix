@@ -16,10 +16,15 @@ data = np.genfromtxt(args.input, delimiter=',', names=True)
 fig = plt.figure()
 ax = fig.add_subplot(111)
 
+timestamp = data['Timestamp']
+
 last = data['LastPrice']
 
 vwap = data['VWAP']
 fill_missing(vwap)
+
+z = np.polyfit(timestamp, vwap, 1)
+p = np.poly1d(z)
 
 bid = data['BidPrice']
 fill_missing(bid)
@@ -31,4 +36,5 @@ ax.plot(data['Timestamp'], last, 'ko')
 ax.plot(data['Timestamp'], bid,  'g-')
 ax.plot(data['Timestamp'], ask,  'r-')
 ax.plot(data['Timestamp'], vwap, 'y-')
+ax.plot(timestamp, p(timestamp), 'b-')
 plt.show()
