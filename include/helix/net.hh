@@ -1,5 +1,6 @@
 #pragma once
 
+#include <experimental/string_view>
 #include <cstddef>
 
 namespace helix {
@@ -25,6 +26,10 @@ public:
 
     const char* end() const {
         return _buf + _len;
+    }
+
+    std::experimental::string_view as_string_view() const {
+        return std::experimental::string_view{_buf, _len};
     }
 
     template<typename T>
