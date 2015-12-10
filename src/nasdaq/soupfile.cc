@@ -15,24 +15,20 @@ soupfile_session::soupfile_session(shared_ptr<net::message_parser> parser)
 
 size_t soupfile_session::parse(const net::packet_view& packet)
 {
-    size_t nr = 0;
-    const char ch = *packet.buf();
-    if (ch != 0x0d) {
-        nr = _parser->parse(packet);
-        if (!nr) {
-            return nr;
-        }
-    }
-    size_t remaining = packet.len() - nr;
-    static constexpr size_t terminator_size = 2;
-    if (remaining < terminator_size) {
+    static std::string terminator = "\r\n";
+    auto view = packet.as_string_view();
+    auto terminator_start = view.find_first_of(terminator);
+    if (terminator_start == std::experimental::string_view::npos) {
         throw runtime_error("packet is truncated");
     }
-    const char* terminator = packet.buf() + nr;
-    if (*terminator++ != 0x0d || *terminator != 0x0a) {
-        throw runtime_error("terminator mismatch");
+    if (!terminator_start) {
+        return 0;
     }
-    return nr + terminator_size;
+    auto nr = _parser->parse(packet);
+    if (nr > terminator_start) {
+        throw runtime_error("parsed message is larger than the framing");
+    }
+    return terminator_start + terminator.size();
 }
 
 }
