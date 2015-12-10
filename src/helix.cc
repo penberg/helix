@@ -107,6 +107,11 @@ helix_event_mask_t helix_event_mask(helix_event_t ev)
     return static_cast<helix_event_mask_t>(unwrap(ev)->get_mask());
 }
 
+helix_timestamp_t helix_event_timestamp(helix_event_t ev)
+{
+    return unwrap(ev)->get_timestamp();
+}
+
 helix_order_book_t helix_event_order_book(helix_event_t ev)
 {
     return wrap(unwrap(ev)->get_ob());

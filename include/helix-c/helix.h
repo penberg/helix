@@ -92,6 +92,11 @@ typedef enum {
 helix_event_mask_t helix_event_mask(helix_event_t);
 
 /*!
+ * @abstract Returns the timestamp of an event.
+ */
+helix_timestamp_t helix_event_timestamp(helix_event_t);
+
+/*!
  * @abstract Returns an order book from an event.
  *
  * The function returns an order book object if HELIX_EVENT_ORDER_BOOK_UPDATE

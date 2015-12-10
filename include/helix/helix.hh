@@ -57,18 +57,20 @@ enum {
 
 class event {
     event_mask  _mask;
+    uint64_t    _timestamp;
     order_book* _ob;
     trade*      _trade;
 public:
-    event(event_mask mask, order_book* ob, trade*);
+    event(event_mask mask, uint64_t timestamp, order_book* ob, trade*);
     event_mask get_mask() const;
+    uint64_t get_timestamp() const;
     order_book* get_ob() const;
     trade* get_trade() const;
 };
 
-event make_event(order_book*, trade*, event_mask mask = 0);
-event make_ob_event(order_book*, event_mask mask = 0);
-event make_trade_event(trade*, event_mask mask = 0);
+event make_event(uint64_t timestamp, order_book*, trade*, event_mask mask = 0);
+event make_ob_event(uint64_t timestamp, order_book*, event_mask mask = 0);
+event make_trade_event(uint64_t timestamp, trade*, event_mask mask = 0);
 
 using event_callback = std::function<void(const event&)>;
 

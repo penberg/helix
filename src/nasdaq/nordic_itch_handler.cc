@@ -156,7 +156,7 @@ void nordic_itch_handler::process_msg(const itch_add_order* m)
 
         order_id_map.insert({order_id, ob});
         ob.set_timestamp(timestamp());
-        _process_event(make_ob_event(&ob));
+        _process_event(make_ob_event(timestamp(), &ob));
     }
 }
 
@@ -177,7 +177,7 @@ void nordic_itch_handler::process_msg(const itch_add_order_mpid* m)
 
         order_id_map.insert({order_id, ob});
         ob.set_timestamp(timestamp());
-        _process_event(make_ob_event(&ob));
+        _process_event(make_ob_event(timestamp(), &ob));
     }
 }
 
@@ -191,7 +191,7 @@ void nordic_itch_handler::process_msg(const itch_order_executed* m)
        auto result = ob.execute(order_id, quantity);
        ob.set_timestamp(timestamp());
        trade t{ob.symbol(), timestamp(), result.price, quantity, itch_trade_sign(result.side)};
-        _process_event(make_event(&ob, &t, sweep_event(result)));
+        _process_event(make_event(timestamp(), &ob, &t, sweep_event(result)));
    }
 }
 
@@ -206,7 +206,7 @@ void nordic_itch_handler::process_msg(const itch_order_executed_with_price* m)
         auto result = ob.execute(order_id, quantity);
         ob.set_timestamp(timestamp());
         trade t{ob.symbol(), timestamp(), price, quantity, itch_trade_sign(result.side)};
-        _process_event(make_event(&ob, &t, sweep_event(result)));
+        _process_event(make_event(timestamp(), &ob, &t, sweep_event(result)));
     }
 }
 
@@ -219,7 +219,7 @@ void nordic_itch_handler::process_msg(const itch_order_cancel* m)
         auto& ob = it->second;
         ob.cancel(order_id, quantity);
         ob.set_timestamp(timestamp());
-        _process_event(make_ob_event(&ob));
+        _process_event(make_ob_event(timestamp(), &ob));
     }
 }
 
@@ -231,7 +231,7 @@ void nordic_itch_handler::process_msg(const itch_order_delete* m)
         auto& ob = it->second;
         ob.remove(order_id);
         ob.set_timestamp(timestamp());
-        _process_event(make_ob_event(&ob));
+        _process_event(make_ob_event(timestamp(), &ob));
     }
 }
 
@@ -244,7 +244,7 @@ void nordic_itch_handler::process_msg(const itch_trade* m)
         uint64_t quantity = itch_uatoi(m->Quantity, sizeof(m->Quantity));
         auto& ob = it->second;
         trade t{ob.symbol(), timestamp(), trade_price, quantity, trade_sign::non_displayable};
-        _process_event(make_trade_event(&t));
+        _process_event(make_trade_event(timestamp(), &t));
     }
 }
 
@@ -257,7 +257,7 @@ void nordic_itch_handler::process_msg(const itch_cross_trade* m)
         uint64_t quantity = itch_uatoi(m->Quantity, sizeof(m->Quantity));
         auto& ob = it->second;
         trade t{ob.symbol(), timestamp(), cross_price, quantity, trade_sign::crossing};
-        _process_event(make_trade_event(&t));
+        _process_event(make_trade_event(timestamp(), &t));
     }
 }
 
