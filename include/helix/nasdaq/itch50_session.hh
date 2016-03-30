@@ -31,6 +31,7 @@ public:
     explicit itch50_protocol(std::string name)
         : _name{std::move(name)}
     { }
+    static bool supports(const std::string& name);
     virtual itch50_session* new_session(void *) override;
 };
 

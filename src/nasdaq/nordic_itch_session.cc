@@ -54,6 +54,12 @@ nordic_itch_protocol::nordic_itch_protocol(std::string name)
 {
 }
 
+bool nordic_itch_protocol::supports(const std::string& name)
+{
+    return name == "nasdaq-nordic-moldudp-itch"
+        || name == "nasdaq-nordic-soupfile-itch";
+}
+
 nordic_itch_session* nordic_itch_protocol::new_session(void *data)
 {
     auto is = make_shared<nordic_itch_handler>();

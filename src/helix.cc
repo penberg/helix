@@ -63,10 +63,10 @@ inline helix::core::session* unwrap(helix_session_t session)
 
 helix_protocol_t helix_protocol_lookup(const char *name)
 {
-    if (!strcmp(name, "nasdaq-nordic-moldudp-itch") || !strcmp(name, "nasdaq-nordic-soupfile-itch")) {
+    if (helix::nasdaq::nordic_itch_protocol::supports(name)) {
         return wrap(new helix::nasdaq::nordic_itch_protocol{name});
     }
-    if (!strcmp(name, "nasdaq-binaryfile-itch50")) {
+    if (helix::nasdaq::itch50_protocol::supports(name)) {
         return wrap(new helix::nasdaq::itch50_protocol{name});
     }
     return NULL;

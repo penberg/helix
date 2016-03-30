@@ -47,6 +47,11 @@ void itch50_session::register_callback(core::event_callback callback)
    _handler->register_callback(callback);
 }
 
+bool itch50_protocol::supports(const std::string& name)
+{
+    return name == "nasdaq-binaryfile-itch50";
+}
+
 itch50_session*
 itch50_protocol::new_session(void *data)
 {

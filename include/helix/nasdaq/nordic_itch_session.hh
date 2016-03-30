@@ -27,6 +27,7 @@ public:
 class nordic_itch_protocol : public core::protocol {
     std::string _name;
 public:
+    static bool supports(const std::string& name);
     explicit nordic_itch_protocol(std::string name);
     virtual nordic_itch_session* new_session(void *) override;
 };
