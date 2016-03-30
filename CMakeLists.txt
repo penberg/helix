@@ -37,6 +37,9 @@ set(libSrcs ${libSrcs}
     src/nasdaq/moldudp.cc
     src/nasdaq/nordic_itch_session.cc
     src/nasdaq/soupfile.cc
+    src/parity/moldudp64.cc
+    src/parity/pmd_handler.cc
+    src/parity/pmd_session.cc
 )
 
 add_library(helix ${libSrcs} include/helix/nasdaq/moldudp_messages.h)

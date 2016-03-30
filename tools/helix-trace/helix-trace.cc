@@ -273,6 +273,7 @@ static void usage(void)
 		"              nasdaq-nordic-moldudp-itch\n"
 		"              nasdaq-nordic-soupfile-itch\n"
 		"              nasdaq-binaryfile-itch50\n"
+		"              parity-moldudp64-pmd\n"
 		"    -a, --multicast-addr addr    UDP multicast address to listen to.\n"
 		"    -p, --multicast-port port    UDP multicast port to listen to.\n"
 		"    -i, --input filename         Input filename.\n"

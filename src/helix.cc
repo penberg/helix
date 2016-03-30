@@ -2,6 +2,7 @@
 
 #include "helix/nasdaq/nordic_itch_session.hh"
 #include "helix/nasdaq/itch50_session.hh"
+#include "helix/parity/pmd_session.hh"
 #include "helix/net.hh"
 
 #include <cassert>
@@ -68,6 +69,9 @@ helix_protocol_t helix_protocol_lookup(const char *name)
     }
     if (helix::nasdaq::itch50_protocol::supports(name)) {
         return wrap(new helix::nasdaq::itch50_protocol{name});
+    }
+    if (helix::parity::pmd_protocol::supports(name)) {
+        return wrap(new helix::parity::pmd_protocol{name});
     }
     return NULL;
 }
