@@ -365,7 +365,7 @@ int main(int argc, char *argv[])
 	}
 
 	if (!cfg.proto) {
-		fprintf(stderr, "error: multicast protocol is not specified. Use the '-c' option to specify it.\n");
+		fprintf(stderr, "error: multicast protocol is not specified. Use the '-P' option to specify it.\n");
 		exit(1);
 	}
 
