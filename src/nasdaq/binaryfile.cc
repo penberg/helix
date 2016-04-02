@@ -1,8 +1,8 @@
 #include "binaryfile.hh"
 
-#include <stdexcept>
+#include "helix/compat/endian.h"
 
-#include <endian.h>
+#include <stdexcept>
 
 using namespace std;
 

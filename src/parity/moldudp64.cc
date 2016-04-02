@@ -1,10 +1,10 @@
 #include "moldudp64.hh"
 
 #include "helix/parity/moldudp64_messages.h"
+#include "helix/compat/endian.h"
 #include <cassert>
 #include <cstdlib>
 #include <string>
-#include <endian.h>
 
 using namespace std;
 
