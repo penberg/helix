@@ -16,6 +16,8 @@ endif(DOXYGEN_FOUND)
 
 find_package(Boost REQUIRED)
 
+find_package(Curses)
+
 find_package(PkgConfig)
 
 pkg_check_modules(LIBUV REQUIRED libuv>=1.0)
