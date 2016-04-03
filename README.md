@@ -58,8 +58,11 @@ Please note that Helix only works with uncompressed files.
   * [x] NASDAQ TotalView-ITCH 5.0
   * [x] Nordic Equity TotalView-ITCH 2.02.2
   * [x] MoldUDP
+  * [x] MoldUDP64
   * [x] BinaryFILE
   * [x] SoupFILE
+* Parity
+  * [x] PMD
 
 ## License
 
