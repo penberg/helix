@@ -65,9 +65,6 @@ class svm_session {
 		stationary	= 0,
 	};
 
-	// Current time:
-	time_point current_time = 0;
-
 	// Look-ahead interval ahead of current time:
 	static constexpr duration lookahead_interval = 5;
 
@@ -180,7 +177,7 @@ struct svm_fmt_ops *fmt_ops;
 
 static void process_ob_event(helix_session_t session, helix_order_book_t ob)
 {
-	struct svm_session* s = reinterpret_cast<struct svm_session*>(helix_session_data(session));
+	class svm_session* s = reinterpret_cast<class svm_session*>(helix_session_data(session));
 
 	s->process_ob_event(ob);
 }
