@@ -1,5 +1,6 @@
 #include "helix/nasdaq/itch50_handler.hh"
 
+#include "helix/compat/endian.h"
 #include "helix/order_book.hh"
 
 #include <unordered_map>
@@ -10,8 +11,6 @@
 #include <cstdio>
 #include <memory>
 #include <string>
-
-#include <endian.h>
 
 using namespace helix::core;
 using namespace std;

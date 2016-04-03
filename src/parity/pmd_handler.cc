@@ -1,10 +1,10 @@
 #include "helix/parity/pmd_handler.hh"
 
+#include "helix/compat/endian.h"
 #include "helix/order_book.hh"
 
 #include <unordered_map>
 #include <stdexcept>
-#include <endian.h>
 #include <cstring>
 #include <cstdint>
 #include <cassert>
