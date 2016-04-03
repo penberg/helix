@@ -65,9 +65,6 @@ class svm_session {
 		stationary	= 0,
 	};
 
-	// Current time:
-	time_point current_time = 0;
-
 	// Look-ahead interval ahead of current time:
 	static constexpr duration lookahead_interval = 5;
 
