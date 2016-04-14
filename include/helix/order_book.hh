@@ -97,14 +97,17 @@ struct execution {
 
 /// \brief Order book is a price-time prioritized list of buy and sell
 /// orders.
-
-using namespace boost::multi_index;
-
-typedef multi_index_container<order, indexed_by<
-    hashed_unique<member<order, uint64_t, &order::id>>>> order_set;
-
 class order_book {
-private:
+    using order_set = boost::multi_index::multi_index_container<
+                          order,
+                          boost::multi_index::indexed_by<
+                              boost::multi_index::hashed_unique<
+                                  boost::multi_index::member<order, uint64_t, &order::id>
+                              >
+                          >
+                      >;
+    using iterator = order_set::iterator;
+
     std::string _symbol;
     uint64_t _timestamp;
     trading_state _state;
@@ -112,8 +115,6 @@ private:
     std::map<uint64_t, price_level, std::greater<uint64_t>> _bids;
     std::map<uint64_t, price_level, std::less   <uint64_t>> _asks;
 public:
-    using iterator = order_set::iterator;
-
     order_book(std::string symbol, uint64_t timestamp, size_t max_orders = 0);
 
     const std::string& symbol() const {
