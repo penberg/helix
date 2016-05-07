@@ -29,8 +29,6 @@ public:
     { }
 };
 
-namespace core {
-
 enum class trade_sign {
     buyer_initiated,
     seller_initiated,
@@ -99,7 +97,7 @@ public:
 
     virtual void subscribe(const std::string& symbol, size_t max_orders) = 0;
 
-    virtual void register_callback(core::event_callback callback) = 0;
+    virtual void register_callback(event_callback callback) = 0;
 
     virtual size_t process_packet(const net::packet_view& packet) = 0;
 };
@@ -108,7 +106,5 @@ class protocol {
 public:
     virtual session* new_session(void*) = 0;
 };
-
-}
 
 }

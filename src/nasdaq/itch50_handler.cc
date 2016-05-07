@@ -13,7 +13,6 @@
 #include <memory>
 #include <string>
 
-using namespace helix::core;
 using namespace std;
 
 namespace helix {
@@ -70,7 +69,7 @@ void itch50_handler::subscribe(std::string sym, size_t max_orders) {
     order_book_id_map.reserve(max_all_orders);
 }
 
-void itch50_handler::register_callback(core::event_callback callback) {
+void itch50_handler::register_callback(event_callback callback) {
     _process_event = callback;
 }
 

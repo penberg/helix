@@ -39,11 +39,11 @@ class nordic_itch_handler {
     //! Milliseconds since @time_sec.
     uint64_t time_msec;
     //! Callback function for processing events.
-    core::event_callback _process_event;
+    event_callback _process_event;
     //! A map of order books by order book ID.
-    std::unordered_map<uint64_t, helix::core::order_book> order_book_id_map;
+    std::unordered_map<uint64_t, helix::order_book> order_book_id_map;
     //! A map of order books by order ID.
-    std::unordered_map<uint64_t, helix::core::order_book&> order_id_map;
+    std::unordered_map<uint64_t, helix::order_book&> order_id_map;
     //! A set of symbols that we are interested in.
     std::set<std::string> _symbols;
     //! A map of pre-allocation size by symbol.
@@ -52,7 +52,7 @@ public:
     nordic_itch_handler();
     bool is_rth_timestamp(uint64_t timestamp) const;
     void subscribe(std::string sym, size_t max_orders);
-    void register_callback(core::event_callback callback);
+    void register_callback(event_callback callback);
     size_t process_packet(const net::packet_view& packet);
 private:
     template<typename T>
@@ -74,7 +74,7 @@ private:
     void process_msg(const itch_broken_trade* m);
     void process_msg(const itch_noii* m);
     //! Generate a sweep event if execution cleared a price level.
-    core::event_mask sweep_event(const core::execution&) const;
+    event_mask sweep_event(const execution&) const;
     //! Timestamp in milliseconds
     uint64_t timestamp() const;
 };

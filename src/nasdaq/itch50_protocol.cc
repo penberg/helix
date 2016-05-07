@@ -17,7 +17,7 @@ itch50_protocol::itch50_protocol(std::string name)
 {
 }
 
-core::session* itch50_protocol::new_session(void *data)
+session* itch50_protocol::new_session(void *data)
 {
     if (_name == "nasdaq-binaryfile-itch50") {
         return new binaryfile_session<itch50_handler>(data);

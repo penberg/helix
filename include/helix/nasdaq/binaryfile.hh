@@ -20,7 +20,7 @@ namespace helix {
 namespace nasdaq {
 
 template<typename Handler>
-class binaryfile_session : public core::session {
+class binaryfile_session : public session {
     Handler _handler;
 public:
     explicit binaryfile_session(void* data);
@@ -29,7 +29,7 @@ public:
 
     virtual void subscribe(const std::string& symbol, size_t max_orders) override;
 
-    virtual void register_callback(core::event_callback callback) override;
+    virtual void register_callback(event_callback callback) override;
 
     virtual size_t process_packet(const net::packet_view& packet) override;
 };
@@ -53,7 +53,7 @@ void binaryfile_session<Handler>::subscribe(const std::string& symbol, size_t ma
 }
 
 template<typename Handler>
-void binaryfile_session<Handler>::register_callback(core::event_callback callback)
+void binaryfile_session<Handler>::register_callback(event_callback callback)
 {
     _handler.register_callback(callback);
 }

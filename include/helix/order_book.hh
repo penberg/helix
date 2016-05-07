@@ -21,8 +21,6 @@
 
 namespace helix {
 
-namespace core {
-
 /// \addtogroup order-book
 /// @{
 
@@ -165,7 +163,5 @@ private:
 };
 
 /// @}
-
-}
 
 }

@@ -12,7 +12,6 @@
 #include <memory>
 #include <string>
 
-using namespace helix::core;
 using namespace std;
 
 namespace helix {
@@ -48,7 +47,7 @@ bool pmd_handler::is_rth_timestamp(uint64_t timestamp) const
 
 void pmd_handler::subscribe(std::string sym, size_t max_orders)
 {
-    helix::core::order_book ob{sym, 0, max_orders};
+    helix::order_book ob{sym, 0, max_orders};
     ob.set_state(trading_state::trading);
     auto padding = PMD_INSTRUMENT_LEN - sym.size();
     if (padding > 0) {
@@ -58,7 +57,7 @@ void pmd_handler::subscribe(std::string sym, size_t max_orders)
     _order_book_id_map.emplace(sym, std::move(ob));
 }
 
-void pmd_handler::register_callback(core::event_callback callback)
+void pmd_handler::register_callback(event_callback callback)
 {
     _process_event = callback;
 }

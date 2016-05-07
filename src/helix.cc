@@ -12,54 +12,54 @@
 
 using namespace std;
 
-inline helix_order_book_t wrap(helix::core::order_book* ob)
+inline helix_order_book_t wrap(helix::order_book* ob)
 {
     return reinterpret_cast<helix_order_book_t>(ob);
 }
 
-inline helix::core::order_book* unwrap(helix_order_book_t ob)
+inline helix::order_book* unwrap(helix_order_book_t ob)
 {
-    return reinterpret_cast<helix::core::order_book*>(ob);
+    return reinterpret_cast<helix::order_book*>(ob);
 }
 
-inline helix_trade_t wrap(helix::core::trade* ob)
+inline helix_trade_t wrap(helix::trade* ob)
 {
     return reinterpret_cast<helix_trade_t>(ob);
 }
 
-inline helix::core::trade* unwrap(helix_trade_t ob)
+inline helix::trade* unwrap(helix_trade_t ob)
 {
-    return reinterpret_cast<helix::core::trade*>(ob);
+    return reinterpret_cast<helix::trade*>(ob);
 }
 
-inline helix_event_t wrap(helix::core::event* ob)
+inline helix_event_t wrap(helix::event* ob)
 {
     return reinterpret_cast<helix_event_t>(ob);
 }
 
-inline helix::core::event* unwrap(helix_event_t ob)
+inline helix::event* unwrap(helix_event_t ob)
 {
-    return reinterpret_cast<helix::core::event*>(ob);
+    return reinterpret_cast<helix::event*>(ob);
 }
 
-inline helix_protocol_t wrap(helix::core::protocol* proto)
+inline helix_protocol_t wrap(helix::protocol* proto)
 {
     return reinterpret_cast<helix_protocol_t>(proto);
 }
 
-inline helix::core::protocol* unwrap(helix_protocol_t proto)
+inline helix::protocol* unwrap(helix_protocol_t proto)
 {
-    return reinterpret_cast<helix::core::protocol*>(proto);
+    return reinterpret_cast<helix::protocol*>(proto);
 }
 
-inline helix_session_t wrap(helix::core::session* session)
+inline helix_session_t wrap(helix::session* session)
 {
     return reinterpret_cast<helix_session_t>(session);
 }
 
-inline helix::core::session* unwrap(helix_session_t session)
+inline helix::session* unwrap(helix_session_t session)
 {
-    return reinterpret_cast<helix::core::session*>(session);
+    return reinterpret_cast<helix::session*>(session);
 }
 
 helix_protocol_t helix_protocol_lookup(const char *name)
@@ -80,8 +80,8 @@ helix_session_t
 helix_session_create(helix_protocol_t proto, helix_event_callback_t callback, void *data)
 {
     auto session = unwrap(proto)->new_session(data);
-    session->register_callback([session, callback](const helix::core::event& event) {
-        callback(wrap(session), wrap(const_cast<helix::core::event*>(&event)));
+    session->register_callback([session, callback](const helix::event& event) {
+        callback(wrap(session), wrap(const_cast<helix::event*>(&event)));
     });
     return wrap(session);
 }
@@ -178,7 +178,7 @@ helix_price_t helix_order_book_midprice(helix_order_book_t ob, size_t level)
 
 helix_trading_state_t helix_order_book_state(helix_order_book_t ob)
 {
-    using namespace helix::core;
+    using namespace helix;
     switch (unwrap(ob)->state()) {
     case trading_state::unknown:        return HELIX_TRADING_STATE_UNKNOWN;
     case trading_state::halted:         return HELIX_TRADING_STATE_HALTED;
@@ -213,10 +213,10 @@ uint64_t helix_trade_size(helix_trade_t trade)
 helix_trade_sign_t helix_trade_sign(helix_trade_t trade)
 {
     switch (unwrap(trade)->sign) {
-    case helix::core::trade_sign::buyer_initiated:  return HELIX_TRADE_SIGN_BUYER_INITIATED;
-    case helix::core::trade_sign::seller_initiated: return HELIX_TRADE_SIGN_SELLER_INITIATED;
-    case helix::core::trade_sign::crossing:         return HELIX_TRADE_SIGN_CROSSING;
-    case helix::core::trade_sign::non_displayable:  return HELIX_TRADE_SIGN_NON_DISPLAYABLE;
+    case helix::trade_sign::buyer_initiated:  return HELIX_TRADE_SIGN_BUYER_INITIATED;
+    case helix::trade_sign::seller_initiated: return HELIX_TRADE_SIGN_SELLER_INITIATED;
+    case helix::trade_sign::crossing:         return HELIX_TRADE_SIGN_CROSSING;
+    case helix::trade_sign::non_displayable:  return HELIX_TRADE_SIGN_NON_DISPLAYABLE;
     }
     assert(0);
 }

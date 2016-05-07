@@ -8,8 +8,6 @@ using namespace std;
 
 namespace helix {
 
-namespace core {
-
 execution::execution(uint64_t price, side_type side, uint64_t remaining)
     : price{price}
     , side{side}
@@ -222,8 +220,6 @@ uint64_t order_book::midprice(size_t level) const
     auto bid = bid_price(level);
     auto ask = ask_price(level);
     return (bid + ask) / 2;
-}
-
 }
 
 }

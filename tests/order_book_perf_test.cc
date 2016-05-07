@@ -2,7 +2,7 @@
 #include <iostream>
 #include <chrono>
 
-using namespace helix::core;
+using namespace helix;
 
 using clock_type = std::chrono::high_resolution_clock;
 

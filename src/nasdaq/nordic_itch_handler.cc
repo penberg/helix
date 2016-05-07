@@ -12,7 +12,6 @@
 #include <memory>
 #include <string>
 
-using namespace helix::core;
 using namespace std;
 
 namespace helix {
@@ -34,7 +33,7 @@ void nordic_itch_handler::subscribe(std::string sym, size_t max_orders)
     order_id_map.reserve(max_all_orders);
 }
 
-void nordic_itch_handler::register_callback(core::event_callback callback)
+void nordic_itch_handler::register_callback(event_callback callback)
 {
     _process_event = callback;
 }

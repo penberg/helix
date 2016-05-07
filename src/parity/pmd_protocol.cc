@@ -17,7 +17,7 @@ pmd_protocol::pmd_protocol(std::string name)
 {
 }
 
-core::session* pmd_protocol::new_session(void *data)
+session* pmd_protocol::new_session(void *data)
 {
     return new nasdaq::moldudp64_session<pmd_handler>(data);
 }

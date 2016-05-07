@@ -8,12 +8,12 @@ namespace helix {
 
 namespace nasdaq {
 
-class itch50_protocol : public core::protocol {
+class itch50_protocol : public protocol {
     std::string _name;
 public:
     explicit itch50_protocol(std::string name);
     static bool supports(const std::string& name);
-    virtual core::session* new_session(void *) override;
+    virtual session* new_session(void *) override;
 };
 
 }

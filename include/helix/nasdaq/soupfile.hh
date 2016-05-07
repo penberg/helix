@@ -18,7 +18,7 @@ namespace helix {
 namespace nasdaq {
 
 template<typename Handler>
-class soupfile_session : public core::session {
+class soupfile_session : public session {
     Handler _handler;
 public:
     explicit soupfile_session(void* data);
@@ -27,7 +27,7 @@ public:
 
     virtual void subscribe(const std::string& symbol, size_t max_orders) override;
 
-    virtual void register_callback(core::event_callback callback) override;
+    virtual void register_callback(event_callback callback) override;
 
     virtual size_t process_packet(const net::packet_view& packet) override;
 };
@@ -51,7 +51,7 @@ void soupfile_session<Handler>::subscribe(const std::string& symbol, size_t max_
 }
 
 template<typename Handler>
-void soupfile_session<Handler>::register_callback(core::event_callback callback)
+void soupfile_session<Handler>::register_callback(event_callback callback)
 {
     _handler.register_callback(callback);
 }

@@ -19,7 +19,7 @@ bool nordic_itch_protocol::supports(const std::string& name)
         || name == "nasdaq-nordic-soupfile-itch";
 }
 
-core::session* nordic_itch_protocol::new_session(void *data)
+session* nordic_itch_protocol::new_session(void *data)
 {
     if (_name == "nasdaq-nordic-moldudp-itch") {
         return new moldudp_session<nordic_itch_handler>(data);

@@ -11,13 +11,13 @@ namespace helix {
 
 namespace parity {
 
-class pmd_protocol : public core::protocol {
+class pmd_protocol : public protocol {
     std::string _name;
 public:
     static bool supports(const std::string& name);
 
     explicit pmd_protocol(std::string name);
-    virtual core::session* new_session(void *) override;
+    virtual session* new_session(void *) override;
 };
 
 }

@@ -21,7 +21,7 @@ namespace helix {
 namespace nasdaq {
 
 template<typename Handler>
-class moldudp64_session : public core::session {
+class moldudp64_session : public session {
     Handler _handler;
     uint64_t _seq_num;
 public:
@@ -31,7 +31,7 @@ public:
 
     virtual void subscribe(const std::string& symbol, size_t max_orders) override;
 
-    virtual void register_callback(core::event_callback callback) override;
+    virtual void register_callback(event_callback callback) override;
 
     virtual size_t process_packet(const net::packet_view& packet) override;
 };
@@ -56,7 +56,7 @@ void moldudp64_session<Handler>::subscribe(const std::string& symbol, size_t max
 }
 
 template<typename Handler>
-void moldudp64_session<Handler>::register_callback(core::event_callback callback)
+void moldudp64_session<Handler>::register_callback(event_callback callback)
 {
     _handler.register_callback(callback);
 }

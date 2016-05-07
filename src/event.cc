@@ -2,8 +2,6 @@
 
 namespace helix {
 
-namespace core {
-
 event::event(event_mask mask, uint64_t timestamp, order_book* ob, trade* t)
     : _mask{mask}
     , _timestamp{timestamp}
@@ -45,8 +43,6 @@ event make_ob_event(uint64_t timestamp, order_book* ob, event_mask mask)
 event make_trade_event(uint64_t timestamp, trade* t, event_mask mask)
 {
     return event{mask | ev_trade, timestamp, nullptr, t};
-}
-
 }
 
 }
