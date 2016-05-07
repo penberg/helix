@@ -4,8 +4,6 @@
 #include <stdexcept>
 #include <limits>
 
-using namespace std;
-
 namespace helix {
 
 execution::execution(uint64_t price, side_type side, uint64_t remaining)
@@ -41,7 +39,7 @@ void order_book::add(order order)
         break;
     }
     default:
-        throw invalid_argument(string("invalid side: ") + static_cast<char>(order.side));
+        throw std::invalid_argument(std::string("invalid side: ") + static_cast<char>(order.side));
     }
     _orders.emplace(std::move(order));
 }
@@ -56,7 +54,7 @@ void order_book::cancel(uint64_t order_id, uint64_t quantity)
 {
     auto it = _orders.find(order_id);
     if (it == _orders.end()) {
-        throw invalid_argument(string("invalid order id: ") + to_string(order_id));
+        throw std::invalid_argument(std::string("invalid order id: ") + std::to_string(order_id));
     }
     _orders.modify(it, [quantity](order& order) {
         order.quantity -= quantity;
@@ -71,7 +69,7 @@ execution order_book::execute(uint64_t order_id, uint64_t quantity)
 {
     auto it = _orders.find(order_id);
     if (it == _orders.end()) {
-        throw invalid_argument(string("invalid order id: ") + to_string(order_id));
+        throw std::invalid_argument(std::string("invalid order id: ") + std::to_string(order_id));
     }
     _orders.modify(it, [quantity](order& order) {
         order.quantity -= quantity;
@@ -88,7 +86,7 @@ void order_book::remove(uint64_t order_id)
 {
     auto it = _orders.find(order_id);
     if (it == _orders.end()) {
-        throw invalid_argument(string("invalid order id: ") + to_string(order_id));
+        throw std::invalid_argument(std::string("invalid order id: ") + std::to_string(order_id));
     }
     remove(it);
 }
@@ -106,7 +104,7 @@ void order_book::remove(iterator& iter)
         break;
     }
     default:
-        throw invalid_argument(string("invalid side: ") + static_cast<char>(order.side));
+        throw std::invalid_argument(std::string("invalid side: ") + static_cast<char>(order.side));
     }
     _orders.erase(iter);
 }
@@ -116,7 +114,7 @@ void order_book::remove(const order& o, T& levels)
 {
     auto it = levels.find(o.price);
     if (it == levels.end()) {
-        throw invalid_argument(string("invalid price: ") + to_string(o.price));
+        throw std::invalid_argument(std::string("invalid price: ") + std::to_string(o.price));
     }
     auto&& level = it->second;
     o.level->size -= o.quantity;
@@ -142,7 +140,7 @@ side_type order_book::side(uint64_t order_id) const
 {
     auto it = _orders.find(order_id);
     if (it == _orders.end()) {
-        throw invalid_argument(string("invalid order id: ") + to_string(order_id));
+        throw std::invalid_argument(std::string("invalid order id: ") + std::to_string(order_id));
     }
     return it->side;
 }
