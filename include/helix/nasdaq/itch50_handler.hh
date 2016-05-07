@@ -37,13 +37,6 @@ private:
     //! A map of pre-allocation size by symbol.
     std::unordered_map<std::string, size_t> _symbol_max_orders;
 public:
-    class unknown_message_type : public std::logic_error {
-    public:
-        unknown_message_type(std::string cause)
-            : logic_error(std::move(cause))
-        { }
-    };
-public:
     itch50_handler()
     { }
     bool is_rth_timestamp(uint64_t timestamp) const;

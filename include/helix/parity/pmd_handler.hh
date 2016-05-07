@@ -36,13 +36,6 @@ class pmd_handler {
     //! Number of seconds since midnight when the trading session started.
     uint32_t _seconds;
 public:
-    class unknown_message_type : public std::logic_error {
-    public:
-        unknown_message_type(std::string cause)
-            : logic_error(std::move(cause))
-        { }
-    };
-public:
     pmd_handler();
     bool is_rth_timestamp(uint64_t timestamp) const;
     void subscribe(std::string sym, size_t max_orders);

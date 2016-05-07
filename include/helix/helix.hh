@@ -22,6 +22,13 @@ class packet_view;
 
 }
 
+class unknown_message_type : public std::logic_error {
+public:
+    explicit unknown_message_type(std::string cause)
+            : logic_error(std::move(cause))
+    { }
+};
+
 namespace core {
 
 enum class trade_sign {

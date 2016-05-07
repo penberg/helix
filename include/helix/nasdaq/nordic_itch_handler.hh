@@ -49,12 +49,6 @@ class nordic_itch_handler {
     //! A map of pre-allocation size by symbol.
     std::unordered_map<std::string, size_t> _symbol_max_orders;
 public:
-    class unknown_message_type : public std::logic_error {
-    public:
-        explicit unknown_message_type(std::string cause)
-            : logic_error(std::move(cause))
-        { }
-    };
     nordic_itch_handler();
     bool is_rth_timestamp(uint64_t timestamp) const;
     void subscribe(std::string sym, size_t max_orders);
