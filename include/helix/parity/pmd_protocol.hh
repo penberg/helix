@@ -14,10 +14,9 @@ namespace parity {
 class pmd_protocol : public core::protocol {
     std::string _name;
 public:
-    explicit pmd_protocol(std::string name)
-        : _name{std::move(name)}
-    { }
     static bool supports(const std::string& name);
+
+    explicit pmd_protocol(std::string name);
     virtual core::session* new_session(void *) override;
 };
 
