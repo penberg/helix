@@ -18,7 +18,7 @@
 
 namespace helix {
 
-namespace parity {
+namespace nasdaq {
 
 class moldudp64_session : public net::message_parser {
 private:

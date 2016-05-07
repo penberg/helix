@@ -1,8 +1,8 @@
 #include "helix/parity/pmd_session.hh"
 
 #include "helix/parity/pmd_handler.hh"
+#include "helix/nasdaq/moldudp64.hh"
 #include "helix/net.hh"
-#include "moldudp64.hh"
 
 #include <memory>
 #include <vector>
@@ -51,7 +51,7 @@ pmd_session*
 pmd_protocol::new_session(void *data)
 {
     auto is = make_shared<pmd_handler>();
-    shared_ptr<net::message_parser> ts = make_shared<moldudp64_session>(is);
+    shared_ptr<net::message_parser> ts = make_shared<nasdaq::moldudp64_session>(is);
     return new pmd_session(std::move(is), std::move(ts), data);
 }
 

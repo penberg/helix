@@ -1,6 +1,6 @@
-#include "moldudp64.hh"
+#include "helix/nasdaq/moldudp64.hh"
 
-#include "helix/parity/moldudp64_messages.h"
+#include "helix/nasdaq/moldudp64_messages.h"
 #include "helix/compat/endian.h"
 #include <cassert>
 #include <cstdlib>
@@ -10,7 +10,7 @@ using namespace std;
 
 namespace helix {
 
-namespace parity {
+namespace nasdaq {
 
 moldudp64_session::moldudp64_session(shared_ptr<net::message_parser> parser)
     : _parser(parser)
