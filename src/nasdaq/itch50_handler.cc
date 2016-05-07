@@ -43,6 +43,10 @@ static uint64_t itch50_timestamp(uint64_t raw_timestamp)
     return be64toh(raw_timestamp << 16);
 }
 
+itch50_handler::itch50_handler()
+{
+}
+
 bool itch50_handler::is_rth_timestamp(uint64_t timestamp) const
 {
     using namespace std::chrono_literals;
@@ -50,6 +54,24 @@ bool itch50_handler::is_rth_timestamp(uint64_t timestamp) const
     constexpr uint64_t rth_start = duration_cast<nanoseconds>(9h + 30min).count();
     constexpr uint64_t rth_end   = duration_cast<nanoseconds>(16h).count();
     return timestamp >= rth_start && timestamp < rth_end;
+}
+
+void itch50_handler::subscribe(std::string sym, size_t max_orders) {
+    auto padding = ITCH_SYMBOL_LEN - sym.size();
+    if (padding > 0) {
+        sym.insert(sym.size(), padding, ' ');
+    }
+    _symbols.insert(sym);
+    _symbol_max_orders.emplace(sym, max_orders);
+    size_t max_all_orders = 0;
+    for (auto&& kv : _symbol_max_orders) {
+        max_all_orders += kv.second;
+    }
+    order_book_id_map.reserve(max_all_orders);
+}
+
+void itch50_handler::register_callback(core::event_callback callback) {
+    _process_event = callback;
 }
 
 size_t itch50_handler::process_packet(const net::packet_view& packet)
