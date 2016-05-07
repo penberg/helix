@@ -38,14 +38,6 @@ public:
     }
 };
 
-class message_parser {
-public:
-    virtual ~message_parser()
-    { }
-
-    virtual size_t parse(const packet_view&) = 0;
-};
-
 }
 
 }

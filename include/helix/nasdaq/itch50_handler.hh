@@ -26,7 +26,7 @@ namespace nasdaq {
 //   Version 5.0
 //   03/06/2015
 //
-class itch50_handler : public net::message_parser {
+class itch50_handler {
 private:
     //! Callback function for processing events.
     core::event_callback _process_event;
@@ -46,6 +46,7 @@ public:
 public:
     itch50_handler()
     { }
+    bool is_rth_timestamp(uint64_t timestamp) const;
     void subscribe(std::string sym, size_t max_orders) {
         auto padding = ITCH_SYMBOL_LEN - sym.size();
         if (padding > 0) {
@@ -62,7 +63,7 @@ public:
     void register_callback(core::event_callback callback) {
         _process_event = callback;
     }
-    virtual size_t parse(const net::packet_view& packet) override;
+    size_t process_packet(const net::packet_view& packet);
 private:
     template<typename T>
     size_t process_msg(const net::packet_view& packet);

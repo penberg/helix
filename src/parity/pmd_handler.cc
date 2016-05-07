@@ -41,6 +41,11 @@ pmd_handler::pmd_handler()
 {
 }
 
+bool pmd_handler::is_rth_timestamp(uint64_t timestamp) const
+{
+    return true;
+}
+
 void pmd_handler::subscribe(std::string sym, size_t max_orders)
 {
     helix::core::order_book ob{sym, 0, max_orders};
@@ -58,7 +63,7 @@ void pmd_handler::register_callback(core::event_callback callback)
     _process_event = callback;
 }
 
-size_t pmd_handler::parse(const net::packet_view& packet)
+size_t pmd_handler::process_packet(const net::packet_view& packet)
 {
     auto* msg = packet.cast<pmd_message>();
     switch (msg->MessageType) {

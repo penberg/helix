@@ -33,7 +33,7 @@ namespace nasdaq {
 //   Version 2.02.2
 //   June 4, 2015
 //
-class nordic_itch_handler : public net::message_parser {
+class nordic_itch_handler {
     //! Seconds since midnight in CET (Central European Time).
     uint64_t time_sec;
     //! Milliseconds since @time_sec.
@@ -56,9 +56,10 @@ public:
         { }
     };
     nordic_itch_handler();
+    bool is_rth_timestamp(uint64_t timestamp) const;
     void subscribe(std::string sym, size_t max_orders);
     void register_callback(core::event_callback callback);
-    virtual size_t parse(const net::packet_view& packet) override;
+    size_t process_packet(const net::packet_view& packet);
 private:
     template<typename T>
     size_t process_msg(const net::packet_view& packet);

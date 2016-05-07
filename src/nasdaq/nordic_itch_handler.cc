@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <cstring>
 #include <cstdint>
+#include <chrono>
 #include <cstdio>
 #include <memory>
 #include <string>
@@ -56,7 +57,17 @@ trade_sign itch_trade_sign(side_type s)
     }
 }
 
-size_t nordic_itch_handler::parse(const net::packet_view& packet)
+bool nordic_itch_handler::is_rth_timestamp(uint64_t timestamp) const
+{
+    using namespace std::chrono_literals;
+    using namespace std::chrono;
+    // FIXME: This is valid only for Stockholm and Helsinki equities.
+    constexpr uint64_t rth_start = duration_cast<milliseconds>(9h).count();
+    constexpr uint64_t rth_end   = duration_cast<milliseconds>(17h + 25min).count();
+    return timestamp >= rth_start && timestamp < rth_end;
+}
+
+size_t nordic_itch_handler::process_packet(const net::packet_view& packet)
 {
     auto* msg = packet.cast<itch_message>();
     switch (msg->MsgType) {

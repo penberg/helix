@@ -24,7 +24,7 @@ namespace parity {
 //
 //   https://github.com/jvirtanen/parity/blob/master/parity-net/doc/PMD.md
 //
-class pmd_handler : public net::message_parser {
+class pmd_handler {
     //! Callback function for processing events.
     core::event_callback _process_event;
     //! A map of order books by order book ID.
@@ -44,9 +44,10 @@ public:
     };
 public:
     pmd_handler();
+    bool is_rth_timestamp(uint64_t timestamp) const;
     void subscribe(std::string sym, size_t max_orders);
     void register_callback(core::event_callback callback);
-    virtual size_t parse(const net::packet_view& packet) override;
+    size_t process_packet(const net::packet_view& packet);
 private:
     template<typename T>
     size_t process_msg(const net::packet_view& packet);

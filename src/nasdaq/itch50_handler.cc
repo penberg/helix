@@ -8,6 +8,7 @@
 #include <cstring>
 #include <cstdint>
 #include <cassert>
+#include <chrono>
 #include <cstdio>
 #include <memory>
 #include <string>
@@ -42,7 +43,16 @@ static uint64_t itch50_timestamp(uint64_t raw_timestamp)
     return be64toh(raw_timestamp << 16);
 }
 
-size_t itch50_handler::parse(const net::packet_view& packet)
+bool itch50_handler::is_rth_timestamp(uint64_t timestamp) const
+{
+    using namespace std::chrono_literals;
+    using namespace std::chrono;
+    constexpr uint64_t rth_start = duration_cast<nanoseconds>(9h + 30min).count();
+    constexpr uint64_t rth_end   = duration_cast<nanoseconds>(16h).count();
+    return timestamp >= rth_start && timestamp < rth_end;
+}
+
+size_t itch50_handler::process_packet(const net::packet_view& packet)
 {
     auto* msg = packet.cast<itch50_message>();
     switch (msg->MessageType) {
