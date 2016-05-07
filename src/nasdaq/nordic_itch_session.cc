@@ -2,8 +2,8 @@
 
 #include "helix/nasdaq/nordic_itch_handler.hh"
 #include "helix/net.hh"
-#include "soupfile.hh"
-#include "moldudp.hh"
+#include "helix/nasdaq/soupfile.hh"
+#include "helix/nasdaq/moldudp.hh"
 
 #include <memory>
 #include <vector>

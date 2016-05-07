@@ -1,7 +1,7 @@
 #include "helix/nasdaq/itch50_session.hh"
 
 #include "helix/nasdaq/itch50_handler.hh"
-#include "binaryfile.hh"
+#include "helix/nasdaq/binaryfile.hh"
 #include "helix/net.hh"
 
 #include <chrono>
