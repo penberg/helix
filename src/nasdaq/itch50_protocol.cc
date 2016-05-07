@@ -1,4 +1,4 @@
-#include "helix/nasdaq/itch50_session.hh"
+#include "helix/nasdaq/itch50_protocol.hh"
 
 #include "helix/nasdaq/itch50_handler.hh"
 #include "helix/nasdaq/binaryfile.hh"

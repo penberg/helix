@@ -32,12 +32,12 @@ set(libSrcs ${libSrcs}
     src/event.cc
     src/helix.cc
     src/order_book.cc
-    src/nasdaq/itch50_session.cc
+    src/nasdaq/itch50_protocol.cc
     src/nasdaq/itch50_handler.cc
     src/nasdaq/nordic_itch_handler.cc
-    src/nasdaq/nordic_itch_session.cc
+    src/nasdaq/nordic_itch_protocol.cc
     src/parity/pmd_handler.cc
-    src/parity/pmd_session.cc
+    src/parity/pmd_protocol.cc
 )
 
 add_library(helix ${libSrcs} include/helix/nasdaq/moldudp_messages.h)
@@ -46,8 +46,8 @@ set(cxxHeaders
     include/helix/nasdaq/moldudp_messages.h
     include/helix/nasdaq/nordic_itch_handler.hh
     include/helix/nasdaq/nordic_itch_messages.h
-    include/helix/nasdaq/itch50_session.hh
-    include/helix/nasdaq/nordic_itch_session.hh
+    include/helix/nasdaq/itch50_protocol.hh
+    include/helix/nasdaq/nordic_itch_protocol.hh
     include/helix/nasdaq/itch50_handler.hh
     include/helix/nasdaq/itch50_messages.h
     include/helix/net.hh

@@ -1,8 +1,8 @@
 #include "helix-c/helix.h"
 
-#include "helix/nasdaq/nordic_itch_session.hh"
-#include "helix/nasdaq/itch50_session.hh"
-#include "helix/parity/pmd_session.hh"
+#include "helix/nasdaq/nordic_itch_protocol.hh"
+#include "helix/nasdaq/itch50_protocol.hh"
+#include "helix/parity/pmd_protocol.hh"
 #include "helix/net.hh"
 
 #include <cassert>
