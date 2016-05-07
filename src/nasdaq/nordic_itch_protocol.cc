@@ -1,12 +1,8 @@
 #include "helix/nasdaq/nordic_itch_protocol.hh"
 
 #include "helix/nasdaq/nordic_itch_handler.hh"
-#include "helix/net.hh"
 #include "helix/nasdaq/soupfile.hh"
 #include "helix/nasdaq/moldudp.hh"
-
-#include <memory>
-#include <vector>
 
 namespace helix {
 
