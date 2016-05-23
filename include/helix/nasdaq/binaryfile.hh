@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include "helix/compat/endian.h"
 #include "helix/helix.hh"
 
 #include <memory>
