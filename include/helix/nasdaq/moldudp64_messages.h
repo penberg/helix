@@ -28,6 +28,12 @@ struct moldudp64_message_block {
     uint16_t MessageLength;
 } __attribute__ ((packed));
 
+struct moldudp64_request_packet {
+    char     Session[10];
+    uint64_t SequenceNumber;
+    uint16_t MessageCount;
+} __attribute__ ((packed));
+
 #ifdef __cplusplus
 }
 #endif
