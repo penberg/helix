@@ -106,7 +106,9 @@ size_t moldudp64_session<Handler>::process_packet(const net::packet_view& packet
         auto* msg_block = reinterpret_cast<const moldudp64_message_block*>(p);
         p += sizeof(moldudp64_message_block);
         auto message_length = be16toh(msg_block->MessageLength);
-        _handler.process_packet(net::packet_view{p, message_length});
+        if (message_length) {
+            _handler.process_packet(net::packet_view{p, message_length});
+        }
         p += message_length;
         _expected_seq_no++;
     }
