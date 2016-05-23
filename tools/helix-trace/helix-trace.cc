@@ -69,7 +69,7 @@ struct trace_fmt_ops {
 
 socket_address parse_socket_address(std::string raw_addr)
 {
-	int pos = raw_addr.find_first_of(':');
+	size_t pos = raw_addr.find_first_of(':');
 	if (pos == std::string::npos) {
 		throw std::invalid_argument(raw_addr + " is not a valid socket address");
 	}
