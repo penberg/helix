@@ -12,6 +12,7 @@
 #include <math.h>
 #include <uv.h>
 
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -29,18 +30,31 @@ double volume_ccy		= 0.0;
 double high				= -INFINITY;
 double low				= +INFINITY;
 
+struct socket_address {
+	std::string addr;
+	int port;
+	socket_address()
+	{}
+	socket_address(std::string addr, int port)
+		: addr{addr}, port{port}
+	{}
+};
+
 struct config {
 	std::vector<std::string> symbols;
 	size_t max_orders;
 	const char *proto;
 	const char *multicast_addr;
 	int multicast_port;
+	const char *request_server;
 	const char *format;
 	const char *input;
 	const char *output;
 };
 
 struct trace_session {
+       socket_address addr;
+       uv_udp_t request_socket;
        uint64_t	bid_price = 0;
        uint64_t	bid_size  = 0;
        uint64_t	ask_price = UINT64_MAX;
@@ -52,6 +66,21 @@ struct trace_fmt_ops {
 	void (*fmt_ob)(helix_session_t session, helix_order_book_t ob);
 	void (*fmt_trade)(helix_session_t session, helix_trade_t trade);
 };
+
+socket_address parse_socket_address(std::string raw_addr)
+{
+	int pos = raw_addr.find_first_of(':');
+	if (pos == std::string::npos) {
+		throw std::invalid_argument(raw_addr + " is not a valid socket address");
+	}
+	try {
+		auto addr = raw_addr.substr(0, pos);
+		auto port = raw_addr.substr(pos + 1);
+		return socket_address{addr, std::stoi(port)};
+	} catch (...) {
+		throw std::invalid_argument(raw_addr + " is not a valid socket address");
+	}
+}
 
 static void alloc_packet(uv_handle_t* handle, size_t size, uv_buf_t* buf)
 {
@@ -255,6 +284,26 @@ static void recv_packet(uv_udp_t* handle, ssize_t nread, const uv_buf_t* buf, co
 	}
 }
 
+static void udp_send_done(uv_udp_send_t* req, int status)
+{
+	delete req;
+}
+
+static void process_send(helix_session_t session, char* base, size_t len)
+{
+	auto* ts = reinterpret_cast<trace_session*>(helix_session_data(session));
+
+	static char tx_buf[1024];
+	memcpy(tx_buf, base, len);
+
+	uv_udp_send_t *send_req = new uv_udp_send_t;
+	uv_buf_t msg = uv_buf_init(tx_buf, len);
+
+	struct sockaddr_in saddr;
+	uv_ip4_addr(ts->addr.addr.c_str(), ts->addr.port, &saddr);
+	uv_udp_send(send_req, &ts->request_socket, &msg, 1, (const struct sockaddr *)&saddr, udp_send_done);
+}
+
 static void libuv_error(const char *s, int err)
 {
 	fprintf(stderr, "error: %s: %s (%s)\n", s, uv_strerror(err), uv_err_name(err));
@@ -266,20 +315,21 @@ static void usage(void)
 	fprintf(stdout,
 		"usage: %s [options]\n"
 		"  options:\n"
-		"    -s, --symbol symbol          Ticker symbol to listen to.\n"
-		"    -m, --max-orders number      Maximum number of orders per symbol (for pre-allocation).\n"
-		"    -P, --proto proto            Market data protocol to listen to\n"
+		"    -s, --symbol symbol            Ticker symbol to listen to.\n"
+		"    -m, --max-orders number        Maximum number of orders per symbol (for pre-allocation).\n"
+		"    -P, --proto proto              Market data protocol to listen to\n"
 		"          or read from. Supported values:\n"
 		"              nasdaq-nordic-moldudp-itch\n"
 		"              nasdaq-nordic-soupfile-itch\n"
 		"              nasdaq-binaryfile-itch50\n"
 		"              parity-moldudp64-pmd\n"
-		"    -a, --multicast-addr addr    UDP multicast address to listen to.\n"
-		"    -p, --multicast-port port    UDP multicast port to listen to.\n"
-		"    -i, --input filename         Input filename.\n"
-		"    -o, --output filename        Output filename.\n"
-		"    -f, --format format          Output format (pretty, csv).\n"
-		"    -h, --help                   display this help and exit\n",
+		"    -a, --multicast-addr addr      UDP multicast address to listen to.\n"
+		"    -p, --multicast-port port      UDP multicast port to listen to.\n"
+		"    -r, --request-server addr:port UDP request server to connect to.\n"
+		"    -i, --input filename           Input filename.\n"
+		"    -o, --output filename          Output filename.\n"
+		"    -f, --format format            Output format (pretty, csv).\n"
+		"    -h, --help                     display this help and exit\n",
 		program);
 	exit(1);
 }
@@ -290,6 +340,7 @@ static struct option trace_options[] = {
 	{"proto",           required_argument, 0, 'P'},
 	{"multicast-addr",  required_argument, 0, 'a'},
 	{"multicast-port",  required_argument, 0, 'p'},
+	{"request-server",  required_argument, 0, 'r'},
 	{"input",           required_argument, 0, 'i'},
 	{"output",          required_argument, 0, 'o'},
 	{"format",          required_argument, 0, 'f'},
@@ -305,7 +356,7 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 		int opt_idx = 0;
 		int c;
 
-		c = getopt_long(argc, argv, "s:m:P:a:i:o:p:f:h", trace_options, &opt_idx);
+		c = getopt_long(argc, argv, "s:m:P:a:r:i:o:p:f:h", trace_options, &opt_idx);
 		if (c == -1)
 			break;
 
@@ -321,6 +372,9 @@ static void parse_options(struct config *cfg, int argc, char *argv[])
 			break;
 		case 'a':
 			cfg->multicast_addr = optarg;
+			break;
+		case 'r':
+			cfg->request_server = optarg;
 			break;
 		case 'i':
 			cfg->input = optarg;
@@ -369,6 +423,12 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
+	if (!cfg.request_server) {
+		fprintf(stderr, "error: no request server specified. Use the '-r' option to specify it.\n");
+		exit(1);
+	}
+	ts.addr = parse_socket_address(cfg.request_server);
+
 	if (!strcmp(cfg.format, "pretty")) {
 		fmt_ops = &fmt_pretty_ops;
 	} else if (!strcmp(cfg.format, "csv")) {
@@ -405,6 +465,8 @@ int main(int argc, char *argv[])
 	for (auto&& symbol : cfg.symbols) {
 		helix_session_subscribe(session, symbol.c_str(), cfg.max_orders);
 	}
+
+	helix_session_set_send_callback(session, process_send);
 
 	if (cfg.input) {
 		const char* p;
@@ -461,6 +523,12 @@ int main(int argc, char *argv[])
 		}
 		socket.data = session;
 
+		err = uv_udp_init(uv_default_loop(), &ts.request_socket);
+		if (err) {
+			libuv_error("uv_udp_init", err);
+		}
+		ts.request_socket.data = session;
+
 		err = uv_ip4_addr("0.0.0.0", cfg.multicast_port, &addr);
 		if (err) {
 			libuv_error("uv_ip4_addr", err);
@@ -477,6 +545,11 @@ int main(int argc, char *argv[])
 		}
 
 		err = uv_udp_recv_start(&socket, alloc_packet, recv_packet);
+		if (err) {
+			libuv_error("uv_udp_recv_start", err);
+		}
+
+		err = uv_udp_recv_start(&ts.request_socket, alloc_packet, recv_packet);
 		if (err) {
 			libuv_error("uv_udp_recv_start", err);
 		}
