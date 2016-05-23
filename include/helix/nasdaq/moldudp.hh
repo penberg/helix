@@ -40,6 +40,8 @@ public:
 
     virtual void register_callback(event_callback callback) override;
 
+    virtual void set_send_callback(send_callback callback) override;
+
     virtual size_t process_packet(const net::packet_view& packet) override;
 
 };
@@ -67,6 +69,11 @@ template<typename Handler>
 void moldudp_session<Handler>::register_callback(event_callback callback)
 {
     _handler.register_callback(callback);
+}
+
+template<typename Handler>
+void moldudp_session<Handler>::set_send_callback(send_callback send_cb)
+{
 }
 
 template<typename Handler>

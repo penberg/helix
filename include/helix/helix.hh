@@ -79,6 +79,8 @@ event make_trade_event(uint64_t timestamp, trade*, event_mask mask = 0);
 
 using event_callback = std::function<void(const event&)>;
 
+using send_callback = std::function<void(char*, size_t)>;
+
 class session {
     void* _data;
 public:
@@ -98,6 +100,8 @@ public:
     virtual void subscribe(const std::string& symbol, size_t max_orders) = 0;
 
     virtual void register_callback(event_callback callback) = 0;
+
+    virtual void set_send_callback(send_callback callback) = 0;
 
     virtual size_t process_packet(const net::packet_view& packet) = 0;
 };

@@ -23,6 +23,7 @@ namespace nasdaq {
 template<typename Handler>
 class moldudp64_session : public session {
     Handler _handler;
+    send_callback _send_cb;
     uint64_t _seq_num;
 public:
     explicit moldudp64_session(void *data);
@@ -32,6 +33,8 @@ public:
     virtual void subscribe(const std::string& symbol, size_t max_orders) override;
 
     virtual void register_callback(event_callback callback) override;
+
+    virtual void set_send_callback(send_callback callback) override;
 
     virtual size_t process_packet(const net::packet_view& packet) override;
 };
@@ -59,6 +62,12 @@ template<typename Handler>
 void moldudp64_session<Handler>::register_callback(event_callback callback)
 {
     _handler.register_callback(callback);
+}
+
+template<typename Handler>
+void moldudp64_session<Handler>::set_send_callback(send_callback send_cb)
+{
+    _send_cb = send_cb;
 }
 
 template<typename Handler>
