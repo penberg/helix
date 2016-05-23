@@ -91,6 +91,13 @@ void helix_session_subscribe(helix_session_t session, const char *symbol, size_t
     unwrap(session)->subscribe(symbol, max_orders);
 }
 
+void helix_session_set_send_callback(helix_session_t session, helix_send_callback_t callback)
+{
+    unwrap(session)->set_send_callback([session, callback](char* base, size_t len) {
+        callback(session, base, len);
+    });
+}
+
 void *helix_session_data(helix_session_t session)
 {
     return unwrap(session)->data();

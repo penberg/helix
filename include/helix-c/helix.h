@@ -119,6 +119,12 @@ helix_trade_t helix_event_trade(helix_event_t);
 typedef void (*helix_event_callback_t)(helix_session_t, helix_event_t);
 
 /*!
+ * @typedef  helix_send_callback_t
+ * @abstract Type of a send packet callback.
+ */
+typedef void (*helix_send_callback_t)(helix_session_t, char*, size_t);
+
+/*!
  * @enum     helix_trading_state_t
  * @abstract Order book instrument trading state.
  */
@@ -242,6 +248,11 @@ helix_protocol_t helix_protocol_lookup(const char *name);
  * Create a new session.
  */
 helix_session_t helix_session_create(helix_protocol_t, helix_event_callback_t, void *data);
+
+/*!
+ * @abstract Sets the session send callback.
+ */
+void helix_session_set_send_callback(helix_session_t, helix_send_callback_t);
 
 /*!
  * @abstract Returns session opaque context data.
