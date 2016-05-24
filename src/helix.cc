@@ -91,6 +91,11 @@ helix_session_create(helix_protocol_t proto, helix_event_callback_t callback, vo
     return wrap(session);
 }
 
+void helix_session_destroy(helix_session_t session)
+{
+    delete unwrap(session);
+}
+
 void helix_session_subscribe(helix_session_t session, const char *symbol, size_t max_orders)
 {
     unwrap(session)->subscribe(symbol, max_orders);

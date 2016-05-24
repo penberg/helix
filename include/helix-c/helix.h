@@ -255,6 +255,11 @@ void helix_protocol_destroy(helix_protocol_t proto);
 helix_session_t helix_session_create(helix_protocol_t, helix_event_callback_t, void *data);
 
 /*!
+ * Destroy a session object.
+ */
+void helix_session_destroy(helix_session_t session);
+
+/*!
  * @abstract Sets the session send callback.
  */
 void helix_session_set_send_callback(helix_session_t, helix_send_callback_t);
