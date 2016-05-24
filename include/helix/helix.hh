@@ -108,6 +108,9 @@ public:
 
 class protocol {
 public:
+    virtual ~protocol()
+    { }
+
     virtual session* new_session(void*) = 0;
 };
 

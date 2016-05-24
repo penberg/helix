@@ -245,6 +245,11 @@ uint64_t helix_trade_size(helix_trade_t);
 helix_protocol_t helix_protocol_lookup(const char *name);
 
 /*!
+ * @abstract Destroy a protocol object.
+ */
+void helix_protocol_destroy(helix_protocol_t proto);
+
+/*!
  * Create a new session.
  */
 helix_session_t helix_session_create(helix_protocol_t, helix_event_callback_t, void *data);

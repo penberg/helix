@@ -76,6 +76,11 @@ helix_protocol_t helix_protocol_lookup(const char *name)
     return NULL;
 }
 
+void helix_protocol_destroy(helix_protocol_t proto)
+{
+    delete unwrap(proto);
+}
+
 helix_session_t
 helix_session_create(helix_protocol_t proto, helix_event_callback_t callback, void *data)
 {
