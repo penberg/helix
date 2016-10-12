@@ -48,9 +48,9 @@ Please note that Helix only works with uncompressed files.
 * [x] Order book view
 * [x] Data normalization
 * [x] Data filtering
+* [x] Retransmission requests
 * [ ] Order book aggregation
 * [ ] Synthetic NBBO
-* [ ] Retransmission requests
 
 ### Protocols
 
