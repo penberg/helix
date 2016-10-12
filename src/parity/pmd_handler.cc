@@ -62,38 +62,38 @@ void pmd_handler::register_callback(event_callback callback)
     _process_event = callback;
 }
 
-size_t pmd_handler::process_packet(const net::packet_view& packet)
+size_t pmd_handler::process_packet(const net::packet_view& packet, bool sync)
 {
     auto* msg = packet.cast<pmd_message>();
     switch (msg->MessageType) {
-    case 'V': return process_msg<pmd_version>(packet);
-    case 'S': return process_msg<pmd_second>(packet);
-    case 'A': return process_msg<pmd_order_added>(packet);
-    case 'E': return process_msg<pmd_order_executed>(packet);
-    case 'X': return process_msg<pmd_order_canceled>(packet);
-    case 'D': return process_msg<pmd_order_deleted>(packet);
-    case 'B': return process_msg<pmd_broken_trade>(packet);
+    case 'V': return process_msg<pmd_version>(packet, sync);
+    case 'S': return process_msg<pmd_second>(packet, sync);
+    case 'A': return process_msg<pmd_order_added>(packet, sync);
+    case 'E': return process_msg<pmd_order_executed>(packet, sync);
+    case 'X': return process_msg<pmd_order_canceled>(packet, sync);
+    case 'D': return process_msg<pmd_order_deleted>(packet, sync);
+    case 'B': return process_msg<pmd_broken_trade>(packet, sync);
     default:  throw unknown_message_type("unknown type: " + std::string(1, msg->MessageType));
     }
 }
 
 template<typename T>
-size_t pmd_handler::process_msg(const net::packet_view& packet)
+size_t pmd_handler::process_msg(const net::packet_view& packet, bool sync)
 {
-    process_msg(packet.cast<T>());
+    process_msg(packet.cast<T>(), sync);
     return sizeof(T);
 }
 
-void pmd_handler::process_msg(const pmd_version* m)
+void pmd_handler::process_msg(const pmd_version* m, bool sync)
 {
 }
 
-void pmd_handler::process_msg(const pmd_second* m)
+void pmd_handler::process_msg(const pmd_second* m, bool sync)
 {
     _seconds = be32toh(m->Second);
 }
 
-void pmd_handler::process_msg(const pmd_order_added* m)
+void pmd_handler::process_msg(const pmd_order_added* m, bool sync)
 {
     std::string symbol{m->Instrument, PMD_INSTRUMENT_LEN};
     auto it = _order_book_id_map.find(symbol);
@@ -108,11 +108,13 @@ void pmd_handler::process_msg(const pmd_order_added* m)
         ob.add(std::move(o));
         ob.set_timestamp(timestamp);
         _order_id_map.insert({order_id, ob});
-        _process_event(make_ob_event(timestamp, &ob));
+        if (sync) {
+            _process_event(make_ob_event(timestamp, &ob));
+        }
     }
 }
 
-void pmd_handler::process_msg(const pmd_order_executed* m)
+void pmd_handler::process_msg(const pmd_order_executed* m, bool sync)
 {
     uint64_t order_id = be64toh(m->OrderNumber);
     auto it = _order_id_map.find(order_id);
@@ -123,11 +125,13 @@ void pmd_handler::process_msg(const pmd_order_executed* m)
         auto result = ob.execute(order_id, quantity);
         ob.set_timestamp(timestamp);
         trade t{ob.symbol(), timestamp, result.price, quantity, pmd_trade_sign(result.side)};
-        _process_event(make_event(timestamp, &ob, &t, sweep_event(result)));
+        if (sync) {
+            _process_event(make_event(timestamp, &ob, &t, sweep_event(result)));
+        }
     }
 }
 
-void pmd_handler::process_msg(const pmd_order_canceled* m)
+void pmd_handler::process_msg(const pmd_order_canceled* m, bool sync)
 {
     uint64_t order_id = be64toh(m->OrderNumber);
     auto it = _order_id_map.find(order_id);
@@ -137,11 +141,13 @@ void pmd_handler::process_msg(const pmd_order_canceled* m)
         uint64_t timestamp = to_timestamp(be32toh(m->Timestamp));
         ob.cancel(order_id, quantity);
         ob.set_timestamp(timestamp);
-        _process_event(make_ob_event(timestamp, &ob));
+        if (sync) {
+            _process_event(make_ob_event(timestamp, &ob));
+        }
     }
 }
 
-void pmd_handler::process_msg(const pmd_order_deleted* m)
+void pmd_handler::process_msg(const pmd_order_deleted* m, bool sync)
 {
     uint64_t order_id = be64toh(m->OrderNumber);
     auto it = _order_id_map.find(order_id);
@@ -150,11 +156,13 @@ void pmd_handler::process_msg(const pmd_order_deleted* m)
         uint64_t timestamp = to_timestamp(be32toh(m->Timestamp));
         ob.remove(order_id);
         ob.set_timestamp(timestamp);
-        _process_event(make_ob_event(timestamp, &ob));
+        if (sync) {
+            _process_event(make_ob_event(timestamp, &ob));
+        }
     }
 }
 
-void pmd_handler::process_msg(const pmd_broken_trade* m)
+void pmd_handler::process_msg(const pmd_broken_trade* m, bool sync)
 {
 }
 

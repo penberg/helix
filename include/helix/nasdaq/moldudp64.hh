@@ -101,13 +101,14 @@ size_t moldudp64_session<Handler>::process_packet(const net::packet_view& packet
         }
         return packet.len();
     }
+    bool sync = _state == moldudp64_state::synchronized;
     p += sizeof(moldudp64_header);
     for (int i = 0; i < be16toh(header->MessageCount); i++) {
         auto* msg_block = reinterpret_cast<const moldudp64_message_block*>(p);
         p += sizeof(moldudp64_message_block);
         auto message_length = be16toh(msg_block->MessageLength);
         if (message_length) {
-            _handler.process_packet(net::packet_view{p, message_length});
+            _handler.process_packet(net::packet_view{p, message_length}, sync);
         }
         p += message_length;
         _expected_seq_no++;
