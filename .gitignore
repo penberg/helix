@@ -3,7 +3,6 @@
 #
 /helix.pc
 /libhelix.a
-/helix-svm
 /helix-top
 /helix-trace
 /order_book_perf_test

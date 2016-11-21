@@ -65,8 +65,6 @@ install(FILES ${cHeaders} DESTINATION include/helix-c)
 install(TARGETS helix DESTINATION lib)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/helix.pc"
               DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
-add_executable(helix-svm tools/helix-svm/helix-svm.cc)
-target_link_libraries(helix-svm helix ${LIBUV_LIBRARIES})
 
 add_executable(helix-trace tools/helix-trace/helix-trace.cc)
 target_link_libraries(helix-trace helix ${LIBUV_LIBRARIES})
