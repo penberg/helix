@@ -423,11 +423,13 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	if (!cfg.request_server) {
-		fprintf(stderr, "error: no request server specified. Use the '-r' option to specify it.\n");
-		exit(1);
+	if (!cfg.input) {
+		if (!cfg.request_server) {
+			fprintf(stderr, "error: no request server specified. Use the '-r' option to specify it.\n");
+			exit(1);
+		}
+		ts.addr = parse_socket_address(cfg.request_server);
 	}
-	ts.addr = parse_socket_address(cfg.request_server);
 
 	if (!strcmp(cfg.format, "pretty")) {
 		fmt_ops = &fmt_pretty_ops;
