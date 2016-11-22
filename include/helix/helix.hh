@@ -42,12 +42,14 @@ struct trade {
     uint64_t    size;
     trade_sign  sign;
 
-    trade(uint64_t timestamp_,
-          uint64_t price_, uint64_t size_, trade_sign sign_)
-        : timestamp{timestamp_}
-        , price{price_}
-        , size{size_}
-        , sign{sign_}
+    trade(uint64_t timestamp,
+          uint64_t price,
+          uint64_t size,
+          trade_sign sign)
+        : timestamp{timestamp}
+        , price{price}
+        , size{size}
+        , sign{sign}
     { }
 };
 
