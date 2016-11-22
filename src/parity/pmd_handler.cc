@@ -109,7 +109,7 @@ void pmd_handler::process_msg(const pmd_order_added* m, bool sync)
         ob.set_timestamp(timestamp);
         _order_id_map.insert({order_id, ob});
         if (sync) {
-            _process_event(make_ob_event(timestamp, &ob));
+            _process_event(make_ob_event(ob.symbol(), timestamp, &ob));
         }
     }
 }
@@ -124,9 +124,9 @@ void pmd_handler::process_msg(const pmd_order_executed* m, bool sync)
         uint64_t timestamp = to_timestamp(be32toh(m->Timestamp));
         auto result = ob.execute(order_id, quantity);
         ob.set_timestamp(timestamp);
-        trade t{ob.symbol(), timestamp, result.price, quantity, pmd_trade_sign(result.side)};
+        trade t{timestamp, result.price, quantity, pmd_trade_sign(result.side)};
         if (sync) {
-            _process_event(make_event(timestamp, &ob, &t, sweep_event(result)));
+            _process_event(make_event(ob.symbol(), timestamp, &ob, &t, sweep_event(result)));
         }
     }
 }
@@ -142,7 +142,7 @@ void pmd_handler::process_msg(const pmd_order_canceled* m, bool sync)
         ob.cancel(order_id, quantity);
         ob.set_timestamp(timestamp);
         if (sync) {
-            _process_event(make_ob_event(timestamp, &ob));
+            _process_event(make_ob_event(ob.symbol(), timestamp, &ob));
         }
     }
 }
@@ -157,7 +157,7 @@ void pmd_handler::process_msg(const pmd_order_deleted* m, bool sync)
         ob.remove(order_id);
         ob.set_timestamp(timestamp);
         if (sync) {
-            _process_event(make_ob_event(timestamp, &ob));
+            _process_event(make_ob_event(ob.symbol(), timestamp, &ob));
         }
     }
 }

@@ -92,6 +92,11 @@ typedef enum {
 helix_event_mask_t helix_event_mask(helix_event_t);
 
 /*!
+ * @abstract Returns the event symbol.
+ */
+const char *helix_event_symbol(helix_event_t);
+
+/*!
  * @abstract Returns the timestamp of an event.
  */
 helix_timestamp_t helix_event_timestamp(helix_event_t);
@@ -165,11 +170,6 @@ typedef enum {
 helix_trading_state_t helix_order_book_state(helix_order_book_t);
 
 /*!
- * @abstract Returns the order book symbol.
- */
-const char *helix_order_book_symbol(helix_order_book_t);
-
-/*!
  * @abstract Returns the order book timestamp.
  */
 uint64_t helix_order_book_timestamp(helix_order_book_t);
@@ -213,11 +213,6 @@ uint64_t helix_order_book_ask_size(helix_order_book_t, size_t);
  * @abstract Returns midprice for a price level in the order book.
  */
 helix_price_t helix_order_book_midprice(helix_order_book_t, size_t);
-
-/*!
- * @abstract Returns the trade symbol.
- */
-const char *helix_trade_symbol(helix_trade_t);
 
 /*!
  * @abstract Returns the trade timestamp.

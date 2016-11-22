@@ -37,16 +37,14 @@ enum class trade_sign {
 };
 
 struct trade {
-    std::string symbol;
     uint64_t    timestamp;
     uint64_t    price;
     uint64_t    size;
     trade_sign  sign;
 
-    trade(std::string symbol_, uint64_t timestamp_,
+    trade(uint64_t timestamp_,
           uint64_t price_, uint64_t size_, trade_sign sign_)
-        : symbol{std::move(symbol_)}
-        , timestamp{timestamp_}
+        : timestamp{timestamp_}
         , price{price_}
         , size{size_}
         , sign{sign_}
@@ -62,20 +60,22 @@ enum {
 
 class event {
     event_mask  _mask;
+    std::string _symbol;
     uint64_t    _timestamp;
     order_book* _ob;
     trade*      _trade;
 public:
-    event(event_mask mask, uint64_t timestamp, order_book* ob, trade*);
+    event(event_mask mask, const std::string& symbol, uint64_t timestamp, order_book* ob, trade*);
     event_mask get_mask() const;
+    const std::string& get_symbol() const;
     uint64_t get_timestamp() const;
     order_book* get_ob() const;
     trade* get_trade() const;
 };
 
-event make_event(uint64_t timestamp, order_book*, trade*, event_mask mask = 0);
-event make_ob_event(uint64_t timestamp, order_book*, event_mask mask = 0);
-event make_trade_event(uint64_t timestamp, trade*, event_mask mask = 0);
+event make_event(const std::string& symbol, uint64_t timestamp, order_book*, trade*, event_mask mask = 0);
+event make_ob_event(const std::string& symbol, uint64_t timestamp, order_book*, event_mask mask = 0);
+event make_trade_event(const std::string& symbol, uint64_t timestamp, trade*, event_mask mask = 0);
 
 using event_callback = std::function<void(const event&)>;
 

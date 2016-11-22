@@ -24,8 +24,9 @@ static void alloc_packet(uv_handle_t* handle, size_t size, uv_buf_t* buf)
 	buf->len  = sizeof(rx_buffer);
 }
 
-static void print_top(helix_order_book_t ob)
+static void print_top(helix_event_t event)
 {
+	helix_order_book_t ob = helix_event_order_book(event);
 	uint64_t timestamp = helix_order_book_timestamp(ob);
 	uint64_t timestamp_in_sec = timestamp / 1000;
 	uint64_t hours   = timestamp_in_sec / 60 / 60;
@@ -37,7 +38,7 @@ static void print_top(helix_order_book_t ob)
 		clear();
 		move(0, 0);
 		printw("%16s    %02lu:%02lu:%02lu.%03lu\n",
-			helix_order_book_symbol(ob),
+			helix_event_symbol(event),
 			hours, minutes, seconds, msecs
 			);
 		for (unsigned i = 0; i < 5; i++) {
@@ -53,18 +54,12 @@ static void print_top(helix_order_book_t ob)
 	}
 }
 
-static void process_ob_event(helix_session_t session, helix_order_book_t ob)
-{
-	print_top(ob);
-}
-
 static void process_event(helix_session_t session, helix_event_t event)
 {
 	helix_event_mask_t mask = helix_event_mask(event);
 
 	if (mask & HELIX_EVENT_ORDER_BOOK_UPDATE) {
-		helix_order_book_t ob = helix_event_order_book(event);
-		process_ob_event(session, ob);
+		print_top(event);
 	}
 }
 

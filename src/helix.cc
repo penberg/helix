@@ -128,6 +128,11 @@ helix_event_mask_t helix_event_mask(helix_event_t ev)
     return static_cast<helix_event_mask_t>(unwrap(ev)->get_mask());
 }
 
+const char *helix_event_symbol(helix_event_t ev)
+{
+    return unwrap(ev)->get_symbol().c_str();
+}
+
 helix_timestamp_t helix_event_timestamp(helix_event_t ev)
 {
     return unwrap(ev)->get_timestamp();
@@ -141,11 +146,6 @@ helix_order_book_t helix_event_order_book(helix_event_t ev)
 helix_trade_t helix_event_trade(helix_event_t ev)
 {
     return wrap(unwrap(ev)->get_trade());
-}
-
-const char *helix_order_book_symbol(helix_order_book_t ob)
-{
-    return unwrap(ob)->symbol().c_str();
 }
 
 helix_timestamp_t helix_order_book_timestamp(helix_order_book_t ob)
@@ -205,11 +205,6 @@ helix_trading_state_t helix_order_book_state(helix_order_book_t ob)
     case trading_state::auction:        return HELIX_TRADING_STATE_AUCTION;
     }
     assert(0);
-}
-
-const char *helix_trade_symbol(helix_trade_t trade)
-{
-    return unwrap(trade)->symbol.c_str();
 }
 
 uint64_t helix_trade_timestamp(helix_trade_t trade)
