@@ -136,9 +136,10 @@ static void fmt_pretty_event(helix_session_t session, helix_event_t event)
 	uint64_t hours   = timestamp_in_sec / 60 / 60;
 	uint64_t minutes = (timestamp_in_sec - (hours * 60 * 60)) / 60;
 	uint64_t seconds = (timestamp_in_sec - (hours * 60 * 60) - (minutes * 60));
-	fprintf(output, "%s | %02" PRIu64":%02" PRIu64":%02" PRIu64" %" PRIu64" |",
+	uint64_t milliseconds = timestamp % 1000;
+	fprintf(output, "%s | %02" PRIu64":%02" PRIu64":%02" PRIu64".%03" PRIu64 " |",
 		helix_event_symbol(event),
-		hours, minutes, seconds, timestamp);
+		hours, minutes, seconds, milliseconds);
 	auto event_mask = helix_event_mask(event);
 	if (event_mask & HELIX_EVENT_ORDER_BOOK_UPDATE) {
 		auto ob = helix_event_order_book(event);
