@@ -6,8 +6,6 @@
 #include <stdexcept>
 #include <chrono>
 
-using namespace std;
-
 namespace helix {
 
 namespace nasdaq {
@@ -17,7 +15,7 @@ static side_type itch50_side(char c)
     switch (c) {
     case 'B': return side_type::buy;
     case 'S': return side_type::sell;
-    default:  throw invalid_argument(string("invalid argument: ") + to_string(c));
+    default:  throw std::invalid_argument(std::string("invalid argument: ") + std::to_string(c));
     }
 }
 
@@ -26,7 +24,7 @@ trade_sign itch50_trade_sign(side_type s)
     switch (s) {
     case side_type::buy:  return trade_sign::seller_initiated;
     case side_type::sell: return trade_sign::buyer_initiated;
-    default:              throw invalid_argument(string("invalid argument"));
+    default:              throw std::invalid_argument(std::string("invalid argument"));
     }
 }
 
@@ -125,7 +123,7 @@ void itch50_handler::process_msg(const itch50_stock_trading_action* m)
         case 'P': ob.set_state(trading_state::paused); break;
         case 'Q': ob.set_state(trading_state::quotation_only); break;
         case 'T': ob.set_state(trading_state::trading); break;
-        default:  throw invalid_argument(string("invalid trading state: ") + to_string(m->TradingState));
+        default:  throw std::invalid_argument(std::string("invalid trading state: ") + std::to_string(m->TradingState));
         }
     }
 }
