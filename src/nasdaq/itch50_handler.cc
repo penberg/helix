@@ -3,15 +3,8 @@
 #include "helix/compat/endian.h"
 #include "helix/order_book.hh"
 
-#include <unordered_map>
 #include <stdexcept>
-#include <cstring>
-#include <cstdint>
-#include <cassert>
 #include <chrono>
-#include <cstdio>
-#include <memory>
-#include <string>
 
 using namespace std;
 
