@@ -3,7 +3,7 @@
 #include "helix/compat/endian.h"
 #include "helix/order_book.hh"
 
-using namespace std;
+#include <stdexcept>
 
 namespace helix {
 
@@ -14,7 +14,7 @@ static side_type pmd_side(char c)
     switch (c) {
     case 'B': return side_type::buy;
     case 'S': return side_type::sell;
-    default:  throw invalid_argument(string("invalid argument: ") + to_string(c));
+    default:  throw std::invalid_argument(std::string("invalid argument: ") + std::to_string(c));
     }
 }
 
@@ -23,7 +23,7 @@ trade_sign pmd_trade_sign(side_type s)
     switch (s) {
     case side_type::buy:  return trade_sign::seller_initiated;
     case side_type::sell: return trade_sign::buyer_initiated;
-    default:              throw invalid_argument(string("invalid argument"));
+    default:              throw std::invalid_argument(std::string("invalid argument"));
     }
 }
 
