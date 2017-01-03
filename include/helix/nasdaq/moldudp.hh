@@ -80,9 +80,9 @@ template<typename Handler>
 size_t moldudp_session<Handler>::process_packet(const net::packet_view& packet)
 {
     auto* p = packet.buf();
-
-    assert(packet.len() >= sizeof(moldudp_header));
-
+    if (packet.len() < sizeof(moldudp_header)) {
+        throw std::runtime_error("truncated packet");
+    }
     auto* header = packet.cast<moldudp_header>();
     if (header->SequenceNumber != _seq_num) {
         throw std::runtime_error(std::string("invalid sequence number: ") + std::to_string(header->SequenceNumber) + ", expected: " + std::to_string(_seq_num));
