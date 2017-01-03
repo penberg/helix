@@ -3,15 +3,6 @@
 #include "helix/compat/endian.h"
 #include "helix/order_book.hh"
 
-#include <unordered_map>
-#include <stdexcept>
-#include <cstring>
-#include <cstdint>
-#include <cassert>
-#include <cstdio>
-#include <memory>
-#include <string>
-
 using namespace std;
 
 namespace helix {
