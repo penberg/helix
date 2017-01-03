@@ -86,7 +86,7 @@ size_t moldudp64_session<Handler>::process_packet(const net::packet_view& packet
 {
     auto* p = packet.buf();
     if (packet.len() < sizeof(moldudp64_header)) {
-        throw std::invalid_argument("truncated packet");
+        throw truncated_packet_error("MoldUDP64 header is truncated");
     }
     auto* header = packet.cast<moldudp64_header>();
     auto recv_seq_no = be64toh(header->SequenceNumber);

@@ -29,6 +29,13 @@ public:
     { }
 };
 
+class truncated_packet_error : public std::runtime_error {
+public:
+    explicit truncated_packet_error(std::string&& cause)
+        : std::runtime_error{std::move(cause)}
+    { }
+};
+
 enum class trade_sign {
     buyer_initiated,
     seller_initiated,

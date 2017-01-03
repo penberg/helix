@@ -81,7 +81,7 @@ size_t moldudp_session<Handler>::process_packet(const net::packet_view& packet)
 {
     auto* p = packet.buf();
     if (packet.len() < sizeof(moldudp_header)) {
-        throw std::runtime_error("truncated packet");
+        throw truncated_packet_error("MoldUDP header is truncated");
     }
     auto* header = packet.cast<moldudp_header>();
     if (header->SequenceNumber != _seq_num) {
