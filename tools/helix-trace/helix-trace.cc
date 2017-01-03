@@ -300,7 +300,11 @@ static void process_event(helix_session_t session, helix_event_t event)
 static void recv_packet(uv_udp_t* handle, ssize_t nread, const uv_buf_t* buf, const struct sockaddr* addr, unsigned flags)
 {
 	if (nread > 0) {
-		helix_session_process_packet(reinterpret_cast<helix_session_t>(handle->data), buf->base, nread);
+		int nr = helix_session_process_packet(reinterpret_cast<helix_session_t>(handle->data), buf->base, nread);
+		if (nr < 0) {
+			fprintf(stderr, "error: %s\n", helix_strerror(nr));
+			exit(1);
+		}
 	}
 }
 
@@ -514,12 +518,15 @@ int main(int argc, char *argv[])
 		p = reinterpret_cast<char*>(input_mmap);
 		size = input_st.st_size;
 		while (size > 0) {
-			size_t nr;
+			int nr;
 
 			nr = helix_session_process_packet(session, p, size);
 			if (!nr)
 				break;
-
+			if (nr < 0) {
+				fprintf(stderr, "error: %s: %s\n", cfg.input, helix_strerror(nr));
+				exit(1);
+			}
 			p += nr;
 			size -= nr;
 		}

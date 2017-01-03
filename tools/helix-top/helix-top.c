@@ -67,7 +67,11 @@ static void process_event(helix_session_t session, helix_event_t event)
 static void recv_packet(uv_udp_t* handle, ssize_t nread, const uv_buf_t* buf, const struct sockaddr* addr, unsigned flags)
 {
 	if (nread > 0) {
-		helix_session_process_packet(handle->data, buf->base, nread);
+		int nr = helix_session_process_packet(handle->data, buf->base, nread);
+		if (nr < 0) {
+			fprintf(stderr, "error: %s\n", helix_strerror(nr));
+			exit(1);
+		}
 	}
 }
 

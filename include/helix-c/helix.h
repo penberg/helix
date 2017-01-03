@@ -14,6 +14,19 @@ extern "C" {
 #endif
 
 /*!
+ * @enum     helix_error_t
+ * @abstract Function result.
+ */
+typedef enum {
+    /*! An unknown message type was received. */
+    HELIX_ERROR_UNKNOWN_MESSAGE_TYPE = -1,
+    /*! A truncated packet was received. */
+    HELIX_ERROR_TRUNCATED_PACKET = -2,
+    /*! An unknown error occurred. */
+    HELIX_ERROR_UNKNOWN = -3,
+} helix_result_t;
+
+/*!
  * @typedef helix_timestamp_t
  * @abstract Type of a timestamp.
  */
@@ -85,6 +98,11 @@ typedef enum {
     /*! Top of book price level sweep. */
     HELIX_EVENT_SWEEP = 1UL << 2,
 } helix_event_mask_t;
+
+/*!
+ * @abstract Returns a human-readable string for an error code.
+ */
+const char *helix_strerror(int error);
 
 /*!
  * @abstract Returns the event mask.
@@ -274,7 +292,7 @@ bool helix_session_is_rth_timestamp(helix_session_t, helix_timestamp_t);
  *
  * This function is called by the packet I/O code to process raw packet data.
  */
-size_t helix_session_process_packet(helix_session_t, const char* buf, size_t len);
+int helix_session_process_packet(helix_session_t, const char* buf, size_t len);
 
 /*!
  * @abstract Subscribe to listening to market data updates for a symbol.

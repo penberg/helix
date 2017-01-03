@@ -61,6 +61,16 @@ inline helix::session* unwrap(helix_session_t session)
     return reinterpret_cast<helix::session*>(session);
 }
 
+const char *helix_strerror(int error)
+{
+    switch (error) {
+    case HELIX_ERROR_UNKNOWN_MESSAGE_TYPE: return "unknown message type";
+    case HELIX_ERROR_TRUNCATED_PACKET: return "truncated packet";
+    case HELIX_ERROR_UNKNOWN: return "unknown error";
+    default: return "invalid error";
+    }
+}
+
 helix_protocol_t helix_protocol_lookup(const char *name)
 {
     if (helix::nasdaq::nordic_itch_protocol::supports(name)) {
@@ -117,9 +127,17 @@ bool helix_session_is_rth_timestamp(helix_session_t session, helix_timestamp_t t
     return unwrap(session)->is_rth_timestamp(timestamp);
 }
 
-size_t helix_session_process_packet(helix_session_t session, const char* buf, size_t len)
+int helix_session_process_packet(helix_session_t session, const char* buf, size_t len)
 {
-    return unwrap(session)->process_packet(helix::net::packet_view{buf, len});
+    try {
+        return unwrap(session)->process_packet(helix::net::packet_view{buf, len});
+    } catch (const helix::unknown_message_type& e) {
+        return HELIX_ERROR_UNKNOWN_MESSAGE_TYPE;
+    } catch (const helix::truncated_packet_error& e) {
+        return HELIX_ERROR_TRUNCATED_PACKET;
+    } catch (...) {
+       return HELIX_ERROR_UNKNOWN;
+    }
 }
 
 helix_event_mask_t helix_event_mask(helix_event_t ev)
