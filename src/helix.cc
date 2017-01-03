@@ -5,7 +5,6 @@
 #include "helix/parity/pmd_protocol.hh"
 #include "helix/net.hh"
 
-#include <cassert>
 #include <cstring>
 #include <string>
 #include <vector>
@@ -204,7 +203,6 @@ helix_trading_state_t helix_order_book_state(helix_order_book_t ob)
     case trading_state::trading:        return HELIX_TRADING_STATE_TRADING;
     case trading_state::auction:        return HELIX_TRADING_STATE_AUCTION;
     }
-    assert(0);
 }
 
 uint64_t helix_trade_timestamp(helix_trade_t trade)
@@ -230,5 +228,4 @@ helix_trade_sign_t helix_trade_sign(helix_trade_t trade)
     case helix::trade_sign::crossing:         return HELIX_TRADE_SIGN_CROSSING;
     case helix::trade_sign::non_displayable:  return HELIX_TRADE_SIGN_NON_DISPLAYABLE;
     }
-    assert(0);
 }
