@@ -22,10 +22,10 @@ class packet_view;
 
 }
 
-class unknown_message_type : public std::logic_error {
+class unknown_message_type : public std::runtime_error {
 public:
-    explicit unknown_message_type(std::string cause)
-            : logic_error(std::move(cause))
+    explicit unknown_message_type(std::string&& cause)
+        : runtime_error{std::move(cause)}
     { }
 };
 
