@@ -8,11 +8,18 @@ Helix core does not include networking functionality and expects applications to
 
 ## Building
 
-Helix requires libuv 1.0 or later. If you build it from sources, you need to tell pkg-config where to find the configuration files:
+### Prerequisites
+
+* libuv 1.0 or later
+* Boost libraries
+
+**macOS**:
 
 ```
-export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
+brew install libuv boost
 ```
+
+### Building and Installing
 
 To build Helix:
 
@@ -27,7 +34,11 @@ To install Helix:
 make install
 ```
 
-Please note that Helix generates a ``pkg-config`` file so you can use ``pkg-config`` to integrate Helix with your project build system.
+Please note that Helix generates a ``pkg-config`` file so you can use ``pkg-config`` to integrate Helix with your project build system. If you installed Helix in the default location `/usr/local/`, you need to set the `PKG_CONFIG_PATH` environment variable as follows:
+
+```
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
+```
 
 ## Usage
 
