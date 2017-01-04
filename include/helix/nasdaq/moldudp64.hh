@@ -114,7 +114,7 @@ size_t moldudp64_session<Handler>::process_packet(const net::packet_view& packet
         _expected_seq_no++;
     }
     if (_state == moldudp64_state::gap_fill) {
-        if (_expected_seq_no >= _sync_to_seq_no.value()) {
+        if (_expected_seq_no >= *_sync_to_seq_no) {
             _state = moldudp64_state::synchronized;
             _sync_to_seq_no = std::experimental::nullopt;
         } else {
