@@ -9,8 +9,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 inline helix_order_book_t wrap(helix::order_book* ob)
 {
     return reinterpret_cast<helix_order_book_t>(ob);
