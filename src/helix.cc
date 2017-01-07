@@ -5,10 +5,6 @@
 #include "helix/parity/pmd_protocol.hh"
 #include "helix/net.hh"
 
-#include <cstring>
-#include <string>
-#include <vector>
-
 inline helix_order_book_t wrap(helix::order_book* ob)
 {
     return reinterpret_cast<helix_order_book_t>(ob);
