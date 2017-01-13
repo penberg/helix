@@ -35,7 +35,7 @@ static void print_top(helix_event_t event)
 	uint64_t msecs   = timestamp - (timestamp_in_sec * 1000);
 
 	if (helix_order_book_state(ob) == HELIX_TRADING_STATE_TRADING) {
-		clear();
+		erase();
 		move(0, 0);
 		printw("%16s    %02lu:%02lu:%02lu.%03lu\n",
 			helix_event_symbol(event),
