@@ -126,13 +126,9 @@ void order_book::remove(const order& o, T& levels)
 template<typename T>
 price_level& order_book::lookup_or_create(T& levels, uint64_t price)
 {
-    auto it = levels.find(price);
-    if (it != levels.end()) {
-        return it->second;
-    }
     price_level level{price};
-    levels.emplace(price, level);
-    it = levels.find(price);
+    auto it = levels.emplace(price, level).first;
+
     return it->second;
 }
 
