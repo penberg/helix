@@ -22,7 +22,7 @@ namespace parity {
 //
 // PMD is specified in:
 //
-//   https://github.com/jvirtanen/parity/blob/master/parity-net/doc/PMD.md
+//   https://github.com/paritytrading/parity/blob/master/libraries/net/doc/PMD.md
 //
 class pmd_handler {
     //! Callback function for processing events.
