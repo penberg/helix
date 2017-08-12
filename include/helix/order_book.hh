@@ -56,11 +56,11 @@ struct order final {
     price_level* level;
     uint64_t     id;
     uint64_t     price;
-    uint32_t     quantity;
+    uint64_t     quantity;
     side_type    side;
     uint64_t     timestamp;
 
-    order(uint64_t id, uint64_t price, uint32_t quantity, side_type side, uint64_t timestamp)
+    order(uint64_t id, uint64_t price, uint64_t quantity, side_type side, uint64_t timestamp)
         : level{nullptr}
         , id{id}
         , price{price}
