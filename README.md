@@ -16,7 +16,7 @@ Helix core does not include networking functionality and expects applications to
 **macOS**:
 
 ```
-brew install libuv boost
+brew install boost cmake libuv pkg-config
 ```
 
 ### Building and Installing
