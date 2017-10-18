@@ -25,6 +25,8 @@ include_directories(${LIBUV_INCLUDE_DIRS})
 
 include_directories("include")
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fno-omit-frame-pointer")
+
 set(CMAKE_C_FLAGS "-Iinclude -Wall -O3 -g -std=gnu11")
 set(CMAKE_CXX_FLAGS "-Iinclude -Wall -O3 -g -std=c++14")
 

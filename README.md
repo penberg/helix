@@ -28,6 +28,14 @@ cmake .
 make
 ```
 
+To build a debug version of Helix that enables AddressSanitizer:
+
+```
+mkdir -p build/debug
+cd build/debug
+cmake -DCMAKE_BUILD_TYPE=debug ../..
+```
+
 To install Helix:
 
 ```
